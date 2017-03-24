@@ -1,0 +1,49 @@
+#include "ServerSocket.h"
+#include "SupportClass.h"
+
+using namespace std;
+
+#define POST 5555
+extern ServerSocket *serverSocket = NULL;
+extern SupportClass *supt = new SupportClass();
+
+int main() {
+  // 1.创建连接Socket
+  //serverSocket = new ServerSocket(POST);
+
+  // 1.1文件接收
+ // string file_name = serverSocket->serverReceive();
+	string file_name = "UAVForXStreamPerformTestV6+border+path+perform.xml";
+  // 1.测试用例放入共享内存中
+	if (supt->putTestCasesInMem(file_name)){
+		//2.创建子程序
+		int ERRORNUM = 0, a[supt->getTestCaseCount()];
+		do {
+			//出现异常时 flag 为true
+			supt->flag = false;
+			supt->createPidAndPolling();
+
+			/*std::cout << "当前测试用例ID:" << supt->getCurrentIndex()
+			<< "	所有测试用例数目:" << supt->getTestCaseCount()
+			<< std::endl;
+			*/
+			if (supt->flag){
+				a[ERRORNUM++] = supt->getCurrentIndex() - 1;
+			}
+		} while (supt->flag && (supt->getCurrentIndex() <=
+			supt->getTestCaseCount()));
+
+		//serverSocket->sendResult(supt->showResult());
+		cout << "最终结果,测试的用例 统计: "
+			<< "\n\t总条数：" << supt->getTestCaseCount()
+			<< "\n\t错误总数：" << ERRORNUM
+			<< "\n\t出错序号：" << a[0];
+		for (int i = 1; i < ERRORNUM; ++i)
+		{
+			cout << " " << a[i];
+		}
+		// cout<<"\n\t成功用例结果:\n"<<supt->showResult()<<endl;
+		supt->pullMem();
+	}
+  return 0;
+}

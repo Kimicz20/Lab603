@@ -1,0 +1,430 @@
+﻿生成启动时间为 2017/3/16 11:20:43。
+     1>项目“E:\项目\SVN\飞控资源文件\模型驱动V2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\Projects\Projects.vcxproj”在节点 2 上(Build 个目标)。
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(942,5): warning MSB8027: Two or more files with the name of AnalogIn.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are Fantasy\Coptermaster\coptermaster\AP_HAL_Empty\AnalogIn.cpp, Fantasy\Coptermaster\coptermaster\AP_HAL_SITL\AnalogIn.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(942,5): warning MSB8027: Two or more files with the name of RCInput.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are Fantasy\Coptermaster\coptermaster\AP_HAL_Empty\RCInput.cpp, Fantasy\Coptermaster\coptermaster\AP_HAL_SITL\RCInput.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(942,5): warning MSB8027: Two or more files with the name of RCOutput.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are Fantasy\Coptermaster\coptermaster\AP_HAL_Empty\RCOutput.cpp, Fantasy\Coptermaster\coptermaster\AP_HAL_SITL\RCOutput.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(942,5): warning MSB8027: Two or more files with the name of Scheduler.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are Fantasy\Coptermaster\coptermaster\AP_HAL_Empty\Scheduler.cpp, Fantasy\Coptermaster\coptermaster\AP_HAL_SITL\Scheduler.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(942,5): warning MSB8027: Two or more files with the name of Storage.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are Fantasy\Coptermaster\coptermaster\AP_HAL_Empty\Storage.cpp, Fantasy\Coptermaster\coptermaster\AP_HAL_SITL\Storage.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(942,5): warning MSB8027: Two or more files with the name of UARTDriver.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are Fantasy\Coptermaster\coptermaster\AP_HAL_Empty\UARTDriver.cpp, Fantasy\Coptermaster\coptermaster\AP_HAL_SITL\UARTDriver.cpp.
+     1>ClCompile:
+         D:\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Fantasy\Coptermaster\coptermaster\ArduCopter\ArduCopter.cpp Fantasy\Coptermaster\coptermaster\ArduCopter\system.cpp
+         system.cpp
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\arducopter\copter.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_common\ap_common.h(8): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_common\ap_common.h(9): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_common\ap_common.h(10): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_common\ap_common.h(11): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_param\ap_param.h(116): warning C4244: “=”: 从“uint16_t”转换到“uint8_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\gcs_mavlink\gcs_mavlink.h(37): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\gcs_mavlink\gcs_mavlink.h(38): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\gcs_mavlink\gcs_mavlink.h(125): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_gps\ap_gps.h(249): warning C4244: “return”: 从“float”转换到“uint32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_compass\compasscalibrator.h(86): warning C4099: “CompassCalibrator::param_t”: 类型名称以前使用“class”现在使用的是“struct”
+                 e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_compass\compasscalibrator.h(44) : 参见“CompassCalibrator::param_t”的声明
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_compass\compass.h(196): warning C4244: “参数”: 从“int”转换到“const float”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_compass\compass.h(200): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_airspeed\ap_airspeed.h(112): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_opticalflow\opticalflow.h(40): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_ahrs\ap_ahrs.h(81): warning C4244: “参数”: 从“float”转换到“const int8_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_motors\ap_motorsmulticopter.h(66): warning C4244: “return”: 从“float”转换到“int16_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_motors\ap_motorsmulticopter.h(138): warning C4244: “return”: 从“float”转换到“int16_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_motors\ap_motorsheli_single.h(113): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_attitudecontrol\ac_attitudecontrol.h(119): warning C4244: “=”: 从“const int32_t”转换到“float”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_attitudecontrol\ac_attitudecontrol.h(203): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_wpnav.h(81): warning C4244: “=”: 从“float”转换到“int16_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_wpnav.h(215): warning C4244: “return”: 从“float”转换到“int32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_wpnav.h(216): warning C4244: “return”: 从“float”转换到“int32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_circle.h(54): warning C4244: “return”: 从“float”转换到“int32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_circle.h(55): warning C4244: “return”: 从“float”转换到“int32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_circle.h(56): warning C4244: “return”: 从“const float”转换到“int32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_fence\ac_fence.h(42): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_sprayer\ac_sprayer.h(50): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_epm\ap_epm.h(39): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_parachute\ap_parachute.h(52): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_precland\ac_precland.h(64): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\supportclass\supportclass.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_param\ap_param.h(423): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+                 e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_param\ap_param.h(422): 编译类 模板 成员函数“bool AP_ParamT<int8_t,AP_PARAM_INT8>::set_and_save(const T &)”时
+                 with
+                 [
+                     T=int8_t
+                 ]
+                 e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_attitudecontrol\ac_attitudecontrol.h(200): 参见对正在编译的函数 模板 实例化“bool AP_ParamT<int8_t,AP_PARAM_INT8>::set_and_save(const T &)”的引用
+                 with
+                 [
+                     T=int8_t
+                 ]
+                 e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_vehicle\ap_vehicle.h(31): 参见对正在编译的类 模板 实例化“AP_ParamT<int8_t,AP_PARAM_INT8>”的引用
+         ArduCopter.cpp
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\arducopter\copter.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_common\ap_common.h(8): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_common\ap_common.h(9): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_common\ap_common.h(10): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_common\ap_common.h(11): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_param\ap_param.h(116): warning C4244: “=”: 从“uint16_t”转换到“uint8_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\gcs_mavlink\gcs_mavlink.h(37): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\gcs_mavlink\gcs_mavlink.h(38): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\gcs_mavlink\gcs_mavlink.h(125): warning C4068: 未知的杂注
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_gps\ap_gps.h(249): warning C4244: “return”: 从“float”转换到“uint32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_compass\compasscalibrator.h(86): warning C4099: “CompassCalibrator::param_t”: 类型名称以前使用“class”现在使用的是“struct”
+                 e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_compass\compasscalibrator.h(44) : 参见“CompassCalibrator::param_t”的声明
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_compass\compass.h(196): warning C4244: “参数”: 从“int”转换到“const float”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_compass\compass.h(200): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_airspeed\ap_airspeed.h(112): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_opticalflow\opticalflow.h(40): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_ahrs\ap_ahrs.h(81): warning C4244: “参数”: 从“float”转换到“const int8_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_motors\ap_motorsmulticopter.h(66): warning C4244: “return”: 从“float”转换到“int16_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_motors\ap_motorsmulticopter.h(138): warning C4244: “return”: 从“float”转换到“int16_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_motors\ap_motorsheli_single.h(113): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_attitudecontrol\ac_attitudecontrol.h(119): warning C4244: “=”: 从“const int32_t”转换到“float”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_attitudecontrol\ac_attitudecontrol.h(203): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_wpnav.h(81): warning C4244: “=”: 从“float”转换到“int16_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_wpnav.h(215): warning C4244: “return”: 从“float”转换到“int32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_wpnav.h(216): warning C4244: “return”: 从“float”转换到“int32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_circle.h(54): warning C4244: “return”: 从“float”转换到“int32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_circle.h(55): warning C4244: “return”: 从“float”转换到“int32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_wpnav\ac_circle.h(56): warning C4244: “return”: 从“const float”转换到“int32_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_fence\ac_fence.h(42): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_sprayer\ac_sprayer.h(50): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_epm\ap_epm.h(39): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_parachute\ap_parachute.h(52): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_precland\ac_precland.h(64): warning C4800: “const int8_t”: 将值强制为布尔值“true”或“false”(性能警告)
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\supportclass\supportclass.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\arducopter\arducopter.cpp(758): warning C4244: “=”: 从“float”转换到“int16_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\arducopter\arducopter.cpp(759): warning C4244: “=”: 从“float”转换到“int16_t”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\arducopter\arducopter.cpp(771): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+     1>e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_param\ap_param.h(423): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+                 e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_param\ap_param.h(422): 编译类 模板 成员函数“bool AP_ParamT<int8_t,AP_PARAM_INT8>::set_and_save(const T &)”时
+                 with
+                 [
+                     T=int8_t
+                 ]
+                 e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ac_attitudecontrol\ac_attitudecontrol.h(200): 参见对正在编译的函数 模板 实例化“bool AP_ParamT<int8_t,AP_PARAM_INT8>::set_and_save(const T &)”的引用
+                 with
+                 [
+                     T=int8_t
+                 ]
+                 e:\项目\svn\飞控资源文件\模型驱动v2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\projects\fantasy\coptermaster\coptermaster\ap_vehicle\ap_vehicle.h(31): 参见对正在编译的类 模板 实例化“AP_ParamT<int8_t,AP_PARAM_INT8>”的引用
+         正在生成代码...
+       Link:
+         D:\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\项目\SVN\飞控资源文件\模型驱动V2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\Debug\Projects.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\项目\SVN\飞控资源文件\模型驱动V2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\Debug\Projects.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\项目\SVN\飞控资源文件\模型驱动V2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\Debug\Projects.lib" /MACHINE:X86 Debug\AC_AttitudeControl.obj
+         Debug\AC_AttitudeControl_Heli.obj
+         Debug\AC_AttitudeControl_Multi.obj
+         Debug\AC_PosControl.obj
+         Debug\AC_Fence.obj
+         Debug\AC_HELI_PID.obj
+         Debug\AC_P.obj
+         Debug\AC_PID.obj
+         Debug\AC_PI_2D.obj
+         Debug\AC_PrecLand.obj
+         Debug\AC_PrecLand_Companion.obj
+         Debug\AC_PrecLand_IRLock.obj
+         Debug\AC_Sprayer.obj
+         Debug\AC_Circle.obj
+         Debug\AC_WPNav.obj
+         Debug\AP_AutoTune.obj
+         Debug\AP_PitchController.obj
+         Debug\AP_RollController.obj
+         Debug\AP_SteerController.obj
+         Debug\AP_YawController.obj
+         Debug\APM_OBC.obj
+         Debug\APM_PI.obj
+         Debug\AP_ADC.obj
+         Debug\AP_ADC_ADS1115.obj
+         Debug\AP_ADC_ADS7844.obj
+         Debug\AP_ADC_AnalogSource.obj
+         Debug\AP_AHRS.obj
+         Debug\AP_AHRS_DCM.obj
+         Debug\AP_AHRS_NavEKF.obj
+         Debug\Airspeed_Calibration.obj
+         Debug\AP_Airspeed.obj
+         Debug\AP_Airspeed_analog.obj
+         Debug\AP_Airspeed_I2C.obj
+         Debug\AP_Airspeed_PX4.obj
+         Debug\AP_Arming.obj
+         Debug\AP_Baro.obj
+         Debug\AP_Baro_Backend.obj
+         Debug\AP_Baro_BMP085.obj
+         Debug\AP_Baro_HIL.obj
+         Debug\AP_Baro_MS5611.obj
+         Debug\AP_Baro_PX4.obj
+         Debug\AP_BattMonitor.obj
+         Debug\AP_BattMonitor_Analog.obj
+         Debug\AP_BattMonitor_Backend.obj
+         Debug\AP_BattMonitor_Bebop.obj
+         Debug\AP_BattMonitor_SMBus_I2C.obj
+         Debug\AP_BattMonitor_SMBus_PX4.obj
+         Debug\AP_BoardConfig.obj
+         Debug\AP_Camera.obj
+         Debug\AP_Common.obj
+         Debug\c++.obj
+         Debug\AP_Compass_AK8963.obj
+         Debug\AP_Compass_Backend.obj
+         Debug\AP_Compass_Calibration.obj
+         Debug\AP_Compass_HIL.obj
+         Debug\AP_Compass_HMC5843.obj
+         Debug\AP_Compass_LSM303D.obj
+         Debug\AP_Compass_PX4.obj
+         Debug\Compass.obj
+         Debug\CompassCalibrator.obj
+         Debug\Compass_learn.obj
+         Debug\AP_Curve.obj
+         Debug\AP_Declination.obj
+         Debug\AP_EPM.obj
+         Debug\AP_Frsky_Telem.obj
+         Debug\AP_GPS.obj
+         Debug\AP_GPS_GSOF.obj
+         Debug\AP_GPS_MTK.obj
+         Debug\AP_GPS_MTK19.obj
+         Debug\AP_GPS_NMEA.obj
+         Debug\AP_GPS_PX4.obj
+         Debug\AP_GPS_SBF.obj
+         Debug\AP_GPS_SBP.obj
+         Debug\AP_GPS_SIRF.obj
+         Debug\AP_GPS_UBLOX.obj
+         Debug\GPS_Backend.obj
+         Debug\ftoa_engine.obj
+         Debug\getopt_cpp.obj
+         Debug\HAL.obj
+         Debug\Print.obj
+         Debug\print_vprintf.obj
+         Debug\Socket.obj
+         Debug\Util.obj
+         Debug\utoa_invert.obj
+         Debug\AnalogIn.obj
+         Debug\GPIO.obj
+         Debug\HAL_Empty_Class.obj
+         Debug\I2CDriver.obj
+         Debug\PrivateMember.obj
+         Debug\RCInput.obj
+         Debug\RCOutput.obj
+         Debug\Scheduler.obj
+         Debug\Semaphores.obj
+         Debug\SPIDriver.obj
+         Debug\Storage.obj
+         Debug\UARTDriver.obj
+         Debug\AnalogIn.obj
+         Debug\HAL_SITL_Class.obj
+         Debug\RCInput.obj
+         Debug\RCOutput.obj
+         Debug\Scheduler.obj
+         Debug\sitl_barometer.obj
+         Debug\SITL_cmdline.obj
+         Debug\sitl_compass.obj
+         Debug\sitl_gps.obj
+         Debug\sitl_ins.obj
+         Debug\sitl_optical_flow.obj
+         Debug\SITL_State.obj
+         Debug\Storage.obj
+         Debug\UARTDriver.obj
+         Debug\AP_InertialNav_NavEKF.obj
+         Debug\AP_InertialSensor.obj
+         Debug\AP_InertialSensor_Backend.obj
+         Debug\AP_InertialSensor_Flymaple.obj
+         Debug\AP_InertialSensor_HIL.obj
+         Debug\AP_InertialSensor_L3G4200D.obj
+         Debug\AP_InertialSensor_LSM9DS0.obj
+         Debug\AP_InertialSensor_MPU6000.obj
+         Debug\AP_InertialSensor_MPU9150.obj
+         Debug\AP_InertialSensor_MPU9250.obj
+         Debug\AP_InertialSensor_Oilpan.obj
+         Debug\AP_InertialSensor_PX4.obj
+         Debug\AP_InertialSensor_UserInteract_MAVLink.obj
+         Debug\AP_InertialSensor_UserInteract_Stream.obj
+         Debug\AuxiliaryBus.obj
+         Debug\AP_IRLock_PX4.obj
+         Debug\IRLock.obj
+         Debug\AP_L1_Control.obj
+         Debug\AP_LandingGear.obj
+         Debug\AP_Math.obj
+         Debug\edc.obj
+         Debug\location.obj
+         Debug\matrix3.obj
+         Debug\matrix_alg.obj
+         Debug\polygon.obj
+         Debug\quaternion.obj
+         Debug\vector2.obj
+         Debug\vector3.obj
+         Debug\AP_Menu.obj
+         Debug\AP_Mission.obj
+         Debug\AP_MotorsCoax.obj
+         Debug\AP_MotorsHeli.obj
+         Debug\AP_MotorsHeli_RSC.obj
+         Debug\AP_MotorsHeli_Single.obj
+         Debug\AP_MotorsHexa.obj
+         Debug\AP_MotorsMatrix.obj
+         Debug\AP_MotorsMulticopter.obj
+         Debug\AP_MotorsOcta.obj
+         Debug\AP_MotorsOctaQuad.obj
+         Debug\AP_MotorsQuad.obj
+         Debug\AP_MotorsSingle.obj
+         Debug\AP_MotorsTri.obj
+         Debug\AP_MotorsY6.obj
+         Debug\AP_Motors_Class.obj
+         Debug\AP_Gimbal.obj
+         Debug\AP_Mount.obj
+         Debug\AP_Mount_Alexmos.obj
+         Debug\AP_Mount_Backend.obj
+         Debug\AP_Mount_MAVLink.obj
+         Debug\AP_Mount_Servo.obj
+         Debug\AP_Mount_SToRM32.obj
+         Debug\AP_Mount_SToRM32_serial.obj
+         Debug\AP_NavEKF2.obj
+         Debug\AP_NavEKF2_AirDataFusion.obj
+         Debug\AP_NavEKF2_Control.obj
+         Debug\AP_NavEKF2_core.obj
+         Debug\AP_NavEKF2_MagFusion.obj
+         Debug\AP_NavEKF2_Measurements.obj
+         Debug\AP_NavEKF2_OptFlowFusion.obj
+         Debug\AP_NavEKF2_Outputs.obj
+         Debug\AP_NavEKF2_PosVelFusion.obj
+         Debug\AP_NavEKF2_VehicleStatus.obj
+         Debug\AP_NavEKF_GyroBias.obj
+         Debug\AP_NavEKF.obj
+         Debug\AP_SmallEKF.obj
+         Debug\AP_BoardLED.obj
+         Debug\AP_Notify.obj
+         Debug\Buzzer.obj
+         Debug\ExternalLED.obj
+         Debug\NavioLED.obj
+         Debug\NavioLED_I2C.obj
+         Debug\OreoLED_PX4.obj
+         Debug\RGBLed.obj
+         Debug\ToneAlarm_Linux.obj
+         Debug\ToneAlarm_PX4.obj
+         Debug\ToshibaLED.obj
+         Debug\ToshibaLED_I2C.obj
+         Debug\ToshibaLED_PX4.obj
+         Debug\VRBoard_LED.obj
+         Debug\AP_OpticalFlow_HIL.obj
+         Debug\AP_OpticalFlow_Linux.obj
+         Debug\AP_OpticalFlow_PX4.obj
+         Debug\OpticalFlow.obj
+         Debug\OpticalFlow_backend.obj
+         Debug\AP_Parachute.obj
+         Debug\AP_Param.obj
+         Debug\AP_PerfMon.obj
+         Debug\AP_Progmem_AVR.obj
+         Debug\AP_Rally.obj
+         Debug\AP_RangeFinder_analog.obj
+         Debug\AP_RangeFinder_BBB_PRU.obj
+         Debug\AP_RangeFinder_LightWareI2C.obj
+         Debug\AP_RangeFinder_LightWareSerial.obj
+         Debug\AP_RangeFinder_MaxsonarI2CXL.obj
+         Debug\AP_RangeFinder_PulsedLightLRF.obj
+         Debug\AP_RangeFinder_PX4.obj
+         Debug\AP_RangeFinder_PX4_PWM.obj
+         Debug\RangeFinder.obj
+         Debug\RangeFinder_Backend.obj
+         Debug\AP_RCMapper.obj
+         Debug\AP_Relay.obj
+         Debug\AP_RPM.obj
+         Debug\RPM_Backend.obj
+         Debug\RPM_PX4_PWM.obj
+         Debug\AP_RSSI.obj
+         Debug\AP_Scheduler.obj
+         Debug\AP_SerialManager.obj
+         Debug\AP_ServoRelayEvents.obj
+         Debug\AP_TECS.obj
+         Debug\AP_Terrain.obj
+         Debug\TerrainGCS.obj
+         Debug\TerrainIO.obj
+         Debug\TerrainMission.obj
+         Debug\TerrainUtil.obj
+         Debug\AP_State.obj
+         Debug\ArduCopter.obj
+         Debug\Attitude.obj
+         Debug\capabilities.obj
+         Debug\commands.obj
+         Debug\commands_logic.obj
+         Debug\compassmot.obj
+         Debug\compat.obj
+         Debug\control_acro.obj
+         Debug\control_althold.obj
+         Debug\control_auto.obj
+         Debug\control_autotune.obj
+         Debug\control_brake.obj
+         Debug\control_circle.obj
+         Debug\control_drift.obj
+         Debug\control_flip.obj
+         Debug\control_guided.obj
+         Debug\control_land.obj
+         Debug\control_loiter.obj
+         Debug\control_poshold.obj
+         Debug\control_rtl.obj
+         Debug\control_sport.obj
+         Debug\control_stabilize.obj
+         Debug\Copter.obj
+         Debug\crash_check.obj
+         Debug\ekf_check.obj
+         Debug\esc_calibration.obj
+         Debug\events.obj
+         Debug\failsafe.obj
+         Debug\fence.obj
+         Debug\flight_mode.obj
+         Debug\heli.obj
+         Debug\heli_control_acro.obj
+         Debug\heli_control_stabilize.obj
+         Debug\inertia.obj
+         Debug\landing_gear.obj
+         Debug\land_detector.obj
+         Debug\leds.obj
+         Debug\Log.obj
+         Debug\motors.obj
+         Debug\motor_test.obj
+         Debug\navigation.obj
+         Debug\Parameters.obj
+         Debug\perf_info.obj
+         Debug\position_vector.obj
+         Debug\precision_landing.obj
+         Debug\radio.obj
+         Debug\sensors.obj
+         Debug\setup.obj
+         Debug\switches.obj
+         Debug\system.obj
+         Debug\takeoff.obj
+         Debug\test.obj
+         Debug\tuning.obj
+         Debug\UserCode.obj
+         Debug\DataFlash.obj
+         Debug\DataFlash_APM1.obj
+         Debug\DataFlash_APM2.obj
+         Debug\DataFlash_Backend.obj
+         Debug\DataFlash_Block.obj
+         Debug\DataFlash_Empty.obj
+         Debug\DataFlash_File.obj
+         Debug\DataFlash_SITL.obj
+         Debug\DFMessageWriter.obj
+         Debug\LogFile.obj
+         Debug\DerivativeFilter.obj
+         Debug\LowPassFilter.obj
+         Debug\LowPassFilter2p.obj
+         Debug\GCS_Console.obj
+         Debug\GCS_Common.obj
+         Debug\GCS_Logs.obj
+         Debug\GCS_MAVLink.obj
+         Debug\GCS_serial_control.obj
+         Debug\MAVLink_routing.obj
+         Debug\PID.obj
+         Debug\RC_Channel.obj
+         Debug\RC_Channel_aux.obj
+         Debug\SIM_Aircraft.obj
+         Debug\SIM_Balloon.obj
+         Debug\SIM_CRRCSim.obj
+         Debug\SIM_Gazebo.obj
+         Debug\SIM_Gimbal.obj
+         Debug\SIM_Helicopter.obj
+         Debug\SIM_JSBSim.obj
+         Debug\SIM_last_letter.obj
+         Debug\SIM_Multicopter.obj
+         Debug\SIM_Rover.obj
+         Debug\SIM_Tracker.obj
+         Debug\SITL.obj
+         Debug\StorageManager.obj
+         Debug\SupportClass.obj
+         Projects.vcxproj -> E:\项目\SVN\飞控资源文件\模型驱动V2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\Debug\Projects.exe
+     1>已完成生成项目“E:\项目\SVN\飞控资源文件\模型驱动V2.0\1.被测程序\性能测试\17_03_16(性能高度模型修改完成)\projects\Projects\Projects.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:03.15
