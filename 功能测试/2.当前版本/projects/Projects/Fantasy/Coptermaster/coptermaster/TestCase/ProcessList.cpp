@@ -77,14 +77,14 @@ LinkList ProcessList::findProcessWithID(int ID) {
 /* 查找对应参数 的 数值 */
 string ProcessList::findValueWithProcessNameAndKey(string processName,
                                                    string key) {
-  //LinkList p = this->findProcessWithName(processName);
-	LinkList p = this->processList->next;
+  LinkList p = this->findProcessWithName(processName);
+	/*LinkList p = this->processList->next;
 	while (p) {
 		if (p->processName == processName) {
 			break;
 		}
 		p = p->next;
-	}
+	}*/
   if (p){
 	  string tmp = p->processParameter;
 	  //激励参数为空

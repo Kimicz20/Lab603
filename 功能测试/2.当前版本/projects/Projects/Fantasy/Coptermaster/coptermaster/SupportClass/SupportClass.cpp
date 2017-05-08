@@ -51,7 +51,7 @@ int SupportClass::getParamValueWithNameAndKey(string processName, string key) {
   string value = currentTestCase->getParamValueWithNameAndKey(processName, key);
   //数据值 处理：bool ,string -> int 类型
   if (value == "") {
-	  return -1;
+	  return 0;
   }
   else if (value == "true" || value == "True") {
 	  return 1;

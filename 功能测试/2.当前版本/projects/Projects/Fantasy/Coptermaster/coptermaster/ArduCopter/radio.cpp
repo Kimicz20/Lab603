@@ -388,10 +388,7 @@ void Copter::read_radio()
 
 		// ------------------------  ²å×®µã ---------------------------------
 		start = clock();
-		supt->setCurProcessResult("set_throttle_and_failsafe", start, 1);
-
-		g.failsafe_throttle = supt->getParamValueWithNameAndKey("set_throttle_and_failsafe", "g.failsafe_throttle");
-		g.failsafe_throttle_value = supt->getParamValueWithNameAndKey("set_throttle_and_failsafe", "g.failsafe_throttle_value");
+		supt->setCurProcessResult("set_throttle_and_failsafe", start, 1);	
 		
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
         set_throttle_and_failsafe(channel_throttle->radio_in);
@@ -465,6 +462,10 @@ void Copter::read_radio()
 #define FS_COUNTER 3        // radio failsafe kicks in after 3 consecutive throttle values below failsafe_throttle_value
 void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 {
+	//FixÐÞ¸ÄV1.2
+	string str[] = { "2", "set_pwm", "set_failsafe_radio" };
+	g.failsafe_throttle = supt->getParamValueFormNamesWithKey(str, "g.failsafe_throttle");
+	g.failsafe_throttle_value = supt->getParamValueFormNamesWithKey(str, "g.failsafe_throttle_value");
 	// if failsafe not enabled pass through throttle and exit
 	if (g.failsafe_throttle == FS_THR_DISABLED) {
 		// ------------------------  ²å×®µã ---------------------------------
@@ -480,6 +481,8 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 	}
 	else
 	{
+		//FixÐÞ¸ÄV1.2
+		throttle_pwm = 0;
 		//check for low throttle value
 		if (throttle_pwm < (uint16_t)g.failsafe_throttle_value) {
 			// if we are already in failsafe or motors not armed pass through throttle and exit
@@ -492,7 +495,10 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 			long end = clock();
 			supt->setCurProcessResult("armed", end, 2);
 			supt->setCurProcessResult("armed", (end - start), 3);
-
+			//FixÐÞ¸ÄV1.2
+			failsafe.radio = supt->getParamValueWithNameAndKey("set_failsafe_radio","failsafe.radio");
+			ap.rc_receiver_present = supt->getParamValueWithNameAndKey("set_failsafe_radio", "ap.rc_receiver_present");
+			has_armed = supt->getParamValueWithNameAndKey("set_failsafe_radio", "has_armed");
 			if (failsafe.radio == true || (ap.rc_receiver_present == false && has_armed == false)) {
 
 				// ------------------------  ²å×®µã ---------------------------------
@@ -510,6 +516,8 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 				// check for 3 low throttle values
 				// Note: we do not pass through the low throttle until 3 low throttle values are recieved
 				failsafe.radio_counter++;
+				//FixÐÞ¸ÄV1.2
+				failsafe.radio_counter = supt->getParamValueWithNameAndKey("set_failsafe_radio", "failsafe.radio_counter");
 				if (failsafe.radio_counter >= FS_COUNTER) {
 					failsafe.radio_counter = FS_COUNTER;  // check to ensure we don't overflow the counter
 					// ------------------------  ²å×®µã ---------------------------------
@@ -542,6 +550,8 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 			if (failsafe.radio_counter <= 0) {
 				failsafe.radio_counter = 0;   // check to ensure we don't underflow the counter
 				// disengage failsafe after three (nearly) consecutive valid throttle values
+				//FixÐÞ¸ÄV1.2
+				failsafe.radio = supt->getParamValueWithNameAndKey("set_failsafe_radio", "failsafe.radio");
 				if (failsafe.radio == true) {
 					// ------------------------  ²å×®µã ---------------------------------
 					long start = clock();
