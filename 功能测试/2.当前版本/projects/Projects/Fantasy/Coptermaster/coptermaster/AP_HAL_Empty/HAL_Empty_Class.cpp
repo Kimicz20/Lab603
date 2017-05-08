@@ -85,6 +85,7 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
 		copter.supt->setCurProcessResult("loop", end, 2);
 		copter.supt->setCurProcessResult("loop", (end - start), 3);
 
+		copter.supt->setCurTestCaseResult("OK");
 		/*
 		cout
 			<< (int)copter.channel_roll->control_in << endl

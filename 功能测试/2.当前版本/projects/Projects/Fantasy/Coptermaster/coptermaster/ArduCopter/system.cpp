@@ -123,15 +123,15 @@ void Copter::init_ardupilot()
 
 	// ------------------------  ²å×®µã ---------------------------------
 	start = clock();
-	supt->setCurProcessResult("init1", start, 1);
+	supt->setCurProcessResult("init", start, 1);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
 	// initialise battery monitor
 	battery.init();
 
 	end = clock();
-	supt->setCurProcessResult("init1", end, 2);
-	supt->setCurProcessResult("init1", (end - start), 3);
+	supt->setCurProcessResult("init", end, 2);
+	supt->setCurProcessResult("init", (end - start), 3);
 
 
     // Init RSSI
@@ -139,14 +139,14 @@ void Copter::init_ardupilot()
 	
 	// ------------------------  ²å×®µã ---------------------------------
 	start = clock();
-	supt->setCurProcessResult("init2", start, 1);
+	supt->setCurProcessResult("init", start, 1);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
 	barometer.init();
 	
 	end = clock();
-	supt->setCurProcessResult("init2", end, 2);
-	supt->setCurProcessResult("init2", (end - start), 3);    
+	supt->setCurProcessResult("init", end, 2);
+	supt->setCurProcessResult("init", (end - start), 3);    
 
     // Register the mavlink service callback. This will run
     // anytime there are more than 5ms remaining in a call to

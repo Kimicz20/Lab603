@@ -38,13 +38,6 @@ private:
   StringList testExecPath; //插桩路径保存
   int currentIndex;        //当前测试用例序号
 public:
-	struct myData{
-		double takeoff_alt;
-		double time;
-		double battery_remaining;
-		double wind_speed;
-	};
-	myData mt;
   SupportClass();
   /* 获取当前测试用例  */
   TestCase *getCurrentTestCase();
@@ -87,7 +80,6 @@ public:
   /* 分离 共享内存 */
   void pullMem();
 
-  void setMyData(double wind_speed,double takeoff_alt, double time, double battery_remaining);
 };
 
 

@@ -40,11 +40,6 @@ void SupportClass::setCurTestCaseResult(string exeSituation) {
   if (exeSituation == "OK") {
 	  exeSituation =
         this->ltos(atoi(currentTestCase->getFirstProcessTime().c_str()));
-	  exeSituation += ":takeoff_alt" + this->ltos(mt.takeoff_alt);
-	  exeSituation += ":battery_remaining" + this->ltos(mt.battery_remaining);
-	  exeSituation += ":time" + this->ltos(mt.time);
-	  exeSituation += ":wind_speed" + this->ltos(mt.wind_speed);
-	  cout << exeSituation << endl;
   }
   currentTestCase->setCurrenetTestCaseExecStatus(exeSituation);
   // 2. 设置当前测试用例结果状态
@@ -317,11 +312,4 @@ void SupportClass::pullMem() {
   }else{
     cout << "共享内存从当前进程中分离成功!" << endl;
   }
-}
-
-void SupportClass::setMyData(double wind_speed, double takeoff_alt, double time, double battery_remaining){
-	this->mt.wind_speed = wind_speed;
-	this->mt.takeoff_alt = takeoff_alt;
-	this->mt.time = time;
-	this->mt.battery_remaining = battery_remaining;
 }
