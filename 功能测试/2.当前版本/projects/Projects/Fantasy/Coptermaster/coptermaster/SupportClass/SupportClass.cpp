@@ -48,7 +48,6 @@ void SupportClass::setCurTestCaseResult(string exeSituation) {
 
 /* 在当前 测试用例 中根据激励名称以及参数名 获取参数值 */
 int SupportClass::getParamValueWithNameAndKey(string processName, string key) {
-
   string value = currentTestCase->getParamValueWithNameAndKey(processName, key);
   //数据值 处理：bool ,string -> int 类型
   if (value == "") {

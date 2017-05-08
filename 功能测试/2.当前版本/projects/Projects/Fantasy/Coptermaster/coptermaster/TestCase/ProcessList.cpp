@@ -87,16 +87,24 @@ string ProcessList::findValueWithProcessNameAndKey(string processName,
 	}
   if (p){
 	  string tmp = p->processParameter;
+	  //激励参数为空
+	  if (tmp == "NULL")
+		  return "";
 	  while (true){
+		  string s=tmp;
 		  int pos = tmp.find(",");
-		  string s = tmp.substr(0, pos);
+		  //1.如果没有","
+		  if (pos != tmp.npos){
+			  s = tmp.substr(0, pos);
+		  }
+		  // 组合条件 || 取第一个
 		  if (s.find("||") != s.npos){
-			  // || 取第一个
 			  s = s.substr(0, s.find("|"));
 		  }
 		  int pos2 = s.find("=");
 		  if (s.substr(0, pos2) == key)
 			  return s.substr(pos2 + 1, s.size());
+		  //最后一个 或者只有一个
 		  if (pos == tmp.npos)
 			  break;
 		  tmp = tmp.substr(pos + 1, tmp.size());

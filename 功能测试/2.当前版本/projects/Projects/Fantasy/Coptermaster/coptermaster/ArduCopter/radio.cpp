@@ -207,7 +207,7 @@ void Copter::init_rc_out()
 		//delay(20);
 		//read_radio();
 		///////////////////////////////////////////////////////////////////
-		for (uint8_t i = 0; i < 5; i++) {
+		for (uint8_t i = 0; i < 1; i++) {
 			// ------------------------  ²å×®µã ---------------------------------
 			start = clock();
 			supt->setCurProcessResult("delay", start, 1);
@@ -239,7 +239,8 @@ void Copter::init_rc_out()
 
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
 		// check if we should enter esc calibration mode
-		esc_calibration_startup_check();
+		// FIXÐÞ¸ÄV1.1
+		//esc_calibration_startup_check();
 
 		end = clock();
 		supt->setCurProcessResult("esc_calibration_startup_check", end, 2);
@@ -256,7 +257,8 @@ void Copter::init_rc_out()
 		end = clock();
 		supt->setCurProcessResult("pre_arm_rc_checks", end, 2);
 		supt->setCurProcessResult("pre_arm_rc_checks", (end - start), 3);
-
+		// FIXÐÞ¸ÄV1.1
+		ap.pre_arm_rc_check = supt->getParamValueWithNameAndKey("enable_motor_output","ap.pre_arm_rc_check");
 		if (ap.pre_arm_rc_check) {
 			// ------------------------  ²å×®µã ---------------------------------
 			start = clock();

@@ -69,6 +69,7 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
 			cout << "Break here!" << endl;
 			break;
 		}
+		copter.supt->setHandlerAndAlarm(5);
 		copter.supt->setCurrentTestCase();
 		
 		start = clock();
