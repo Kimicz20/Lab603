@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<TCS>
+  <testcase>
+    <process>
+      <operation>setup</operation>
+      <input>null</input>
+    </process>
+    <process>
+      <operation>init_ardupilot</operation>
+      <input>null</input>
+    </process>
+    <process>
+      <operation>init</operation>
+      <input>null</input>
+    </process>
+    <process>
+      <operation>init</operation>
+      <input>null</input>
+    </process>
+    <process>
+      <operation>init_rc_in</operation>
+      <input>null</input>
+    </process>
+    <process>
+      <operation>set_range</operation>
+      <input>g.throttle_min=32768</input>
+    </process>
+    <process>
+      <operation>default_dead_zones</operation>
+      <input>null</input>
+    </process>
+    <process>
+      <operation>init_rc_out</operation>
+      <input>null</input>
+    </process>
+    <process>
+      <operation>set_update_rate</operation>
+      <input>g.rc_speed=32768</input>
+    </process>
+    <process>
+      <operation>set_frame_orientation</operation>
+      <input>g.frame_orientation=128</input>
+    </process>
+    <process>
+      <operation>set_throttle_range</operation>
+      <input>g.throttle_min=32768</input>
+    </process>
+    <process>
+      <operation>read_radio</operation>
+      <input>null</input>
+    </process>
+    <process>
+      <operation>millis</operation>
+      <input>null</input>
+    </process>
+    <process>
+      <operation>set_pwm</operation>
+      <input border="1">roll_pwm=800,has_new_input=True</input>
+    </process>
+    <process>
+      <operation>set_pwm</operation>
+      <input border="1">pitch_pwm=800,has_new_input=True</input>
+    </process>
+    <process>
+      <operation>set_pwm</operation>
+      <input border="1">throttle_pwm=800,has_new_input=True</input>
+    </process>
+    <process>
+      <operation>set_pwm</operation>
+      <input border="1">yaw_pwm=800,has_new_input=True</input>
+    </process>
+    <process>
+      <operation>set_throttle_and_failsafe</operation>
+      <input border="1">g.failsafe_throttle=0,g.failsafe_throttle_value=925,has_new_input=True</input>
+    </process>
+    <process>
+      <operation>set_failsafe_radio</operation>
+      <input border="1">failsafe.radio_counter=0,g.failsafe_throttle=-128,throttle_pwm=0,g.failsafe_throttle_value=0,has_new_input=True,failsafe.radio=True</input>
+    </process>
+    <process>
+      <operation>set_pwm</operation>
+      <input>g.failsafe_throttle=-128,throttle_pwm=0,g.failsafe_throttle_value=0,has_new_input=True</input>
+    </process>
+    <process>
+      <operation>set_throttle_zero_flag</operation>
+      <input>tnow_ms=65536,has_new_input=True</input>
+    </process>
+    <process>
+      <operation>esc_calibration_startup_check</operation>
+      <input>null</input>
+    </process>
+    <process>
+      <operation>pre_arm_rc_checks</operation>
+      <input>null</input>
+    </process>
+  </testcase>
+</TCS>
