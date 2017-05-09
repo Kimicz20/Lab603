@@ -43,8 +43,15 @@
 
 #define AC_ATTITUDE_CONTROL_ALTHOLD_LEANANGLE_FILT_HZ   1.0f    // filter (in hz) of throttle filter used to limit lean angle so that vehicle does not lose altitude
 
+//Fix–ﬁ∏ƒV1.3
+/*--------------- ∏®÷˙¿‡ -----------------*/
+#include "../SupportClass/SupportClass.h"
+
 class AC_AttitudeControl {
 public:
+	/*--------------- ∏®÷˙¿‡ -----------------*/
+	SupportClass *supt;
+
 	AC_AttitudeControl( AP_AHRS &ahrs,
                         const AP_Vehicle::MultiCopter &aparm,
                         AP_Motors& motors,

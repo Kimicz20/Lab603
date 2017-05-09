@@ -33,10 +33,18 @@
 #define AP_AHRS_NAVEKF_AVAILABLE 1
 #define AP_AHRS_NAVEKF_SETTLE_TIME_MS 20000     // time in milliseconds the ekf needs to settle after being started
 
+//Fix–ﬁ∏ƒV1.3
+/*--------------- ∏®÷˙¿‡ -----------------*/
+#include "../SupportClass/SupportClass.h"
+
+
 class AP_AHRS_NavEKF : public AP_AHRS_DCM
 {
 public:
-    enum Flags {
+	/*--------------- ∏®÷˙¿‡ -----------------*/
+	SupportClass *supt;
+    
+	enum Flags {
         FLAG_NONE = 0,
         FLAG_ALWAYS_USE_EKF = 0x1,
     };

@@ -67,7 +67,18 @@ void AP_AHRS_NavEKF::reset_gyro_drift(void)
 
 void AP_AHRS_NavEKF::update(void)
 {
+	//FixÐÞ¸ÄV1.3
+	long start, end;
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	this->supt->setCurProcessResult("update_DCM", start, 1);
+
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
     update_DCM();
+
+	end = clock();
+	this->supt->setCurProcessResult("update_DCM", end, 2);
+	this->supt->setCurProcessResult("update_DCM", (end - start), 3);
     //update_EKF1();
     //update_EKF2();
 }

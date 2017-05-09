@@ -56,12 +56,6 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
 	long start, end;
 	// 1.创建所需的对象
 	copter.supt = new SupportClass();
-
-	//2.系统初始化
-    scheduler->init(NULL);  
-    _member->init();
-    scheduler->system_initialized();
-
     
     //3.程序执行所有测试用例
 	for (;;) { 
@@ -71,7 +65,13 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
 		}
 		copter.supt->setHandlerAndAlarm(5);
 		copter.supt->setCurrentTestCase();
-		
+		cout << "用例ID：" << copter.supt->getCurrentTestCase()->getTestCaseID() << endl;
+
+		//2.系统初始化
+		scheduler->init(NULL);
+		_member->init();
+		scheduler->system_initialized();
+
 		start = clock();
 		copter.supt->setCurProcessResult("setup", start, 1);
 		copter.setup();

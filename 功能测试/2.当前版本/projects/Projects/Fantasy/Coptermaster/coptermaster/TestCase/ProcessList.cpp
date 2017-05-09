@@ -74,6 +74,30 @@ LinkList ProcessList::findProcessWithID(int ID) {
   return NULL;
 }
 
+/* 字符串 按某 字符 分割成list数组 */
+list<string> stringSplit(string s, const char *str) {
+	int l = 0;
+	int r = 0;
+	list<string> arr;
+	string tmp(str);
+	while (r != std::string::npos) {
+		r = s.find_first_of(tmp, l);
+		if (r != std::string::npos)
+			arr.push_back(s.substr(l, r - l));
+		else
+			arr.push_back(s.substr(l, s.length() - l));
+		l = r + tmp.length();
+	}
+	return arr;
+}
+
+string findValue(string str,string key){
+	int pos = str.find("=");
+	if (str.substr(0, pos) == key)
+		return str.substr(pos + 1, str.size());
+	return "";
+}
+
 /* 查找对应参数 的 数值 */
 string ProcessList::findValueWithProcessNameAndKey(string processName,
                                                    string key) {
@@ -90,7 +114,16 @@ string ProcessList::findValueWithProcessNameAndKey(string processName,
 	  //激励参数为空
 	  if (tmp == "NULL")
 		  return "";
-	  while (true){
+	  
+	  list<string> plist = stringSplit(tmp, ",");
+	  //进行迭代遍历
+	  for (list<string>::iterator iter = plist.begin(); iter != plist.end(); iter++) {
+		  string t = findValue(*iter, key);
+		  if (t != ""){
+			  return t;
+		  }
+	  }
+	 /* while (true){
 		  string s=tmp;
 		  int pos = tmp.find(",");
 		  //1.如果没有","
@@ -108,7 +141,7 @@ string ProcessList::findValueWithProcessNameAndKey(string processName,
 		  if (pos == tmp.npos)
 			  break;
 		  tmp = tmp.substr(pos + 1, tmp.size());
-	  }
+	  }*/
   }	
   return "";
 }

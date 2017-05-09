@@ -48,31 +48,36 @@ void SupportClass::setCurTestCaseResult(string exeSituation) {
 
 /* 在当前 测试用例 中根据激励名称以及参数名 获取参数值 */
 int SupportClass::getParamValueWithNameAndKey(string processName, string key) {
+	if (currentTestCase->findProcessWithName(processName)==NULL){
+		return -1;
+	}
   string value = currentTestCase->getParamValueWithNameAndKey(processName, key);
+  if (processName == "output_armed_zero_throttle")
+	  cout << "_flags.armed:" << value << endl;
   //数据值 处理：bool ,string -> int 类型
   if (value == "") {
 	  return 0;
   }
-  else if (value == "true" || value == "True") {
+  if (value == "true" || value == "True") {
 	  return 1;
   }
-  else if (value == "false" || value == "False") {
+  if (value == "false" || value == "False") {
 	  return 0;
   }
-  else {
-	  return atoi(value.c_str());
-  }
+	return atoi(value.c_str());
 }
 
 /* 在当前 测试用例 中根据激励名称以及参数名 获取参数值 */
 int SupportClass::getParamValueFormNamesWithKey(string processNames[], string key) {
 	string value = "";
 	int size = atoi(processNames[0].c_str());
-	for (int i = 0;i<size; i++){
-		 value = currentTestCase->getParamValueWithNameAndKey(processNames[i], key);
-		 if (value != ""){
-			 break;
-		 }
+	
+	//Fix修改V1.3
+	for (int i = 1;i<=size; i++){
+			value = currentTestCase->getParamValueWithNameAndKey(processNames[i], key);
+			if (value != ""){
+				break;
+			}
 	}
 	//数据值 处理：bool ,string -> int 类型
 	if (value == "") {

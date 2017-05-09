@@ -995,6 +995,8 @@ void Copter::motors_output()
 		this->supt->setCurProcessResult("output", start, 1);
 
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		//FixÐÞ¸ÄV1.3
+		motors.supt = supt;
         motors.output();
 
 		long end = clock();

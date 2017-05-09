@@ -35,10 +35,15 @@
  #define AP_MOTOR_SLOW_START_INCREMENT           3       // max throttle ramp speed (i.e. motors can reach full throttle in 0.8 seconds)
  #define AP_MOTOR_SLOW_START_LOW_END_INCREMENT   1       // min throttle ramp speed (i.e. motors will speed up from zero to _spin_when_armed speed in about 0.3 second)
 #endif
+//Fix–ﬁ∏ƒV1.3
+/*--------------- ∏®÷˙¿‡ -----------------*/
+#include "../SupportClass/SupportClass.h"
 
 /// @class      AP_MotorsMulticopter
 class AP_MotorsMulticopter : public AP_Motors {
 public:
+	/*--------------- ∏®÷˙¿‡ -----------------*/
+	SupportClass *supt;
 
     // Constructor
     AP_MotorsMulticopter(uint16_t loop_rate, uint16_t speed_hz = AP_MOTORS_SPEED_DEFAULT);

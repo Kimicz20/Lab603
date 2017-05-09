@@ -142,6 +142,7 @@ AP_MotorsMulticopter::AP_MotorsMulticopter(uint16_t loop_rate, uint16_t speed_hz
 // output - sends commands to the motors
 void AP_MotorsMulticopter::output()
 {
+	long start, end;
     // update throttle filter
     update_throttle_filter();
 
@@ -156,23 +157,68 @@ void AP_MotorsMulticopter::output()
 
     // move throttle_low_comp towards desired throttle low comp
     update_throttle_thr_mix();
+	//FixÐÞ¸ÄV1.3
+	string str[] = {"4","output_armed_zero_throttle","output_armed_stabilizing","output_armed_not_stabilizing","output_disarmed"};
+	_flags.armed = supt->getParamValueFormNamesWithKey(str, "_flags.armed");
+	_flags.interlock = supt->getParamValueFormNamesWithKey(str, "_flags.interlock");
+	_flags.stabilizing = supt->getParamValueFormNamesWithKey(str, "_flags.stabilizing");
 
-	if (_flags.armed == 1) {
+	if ((int)_flags.armed == 1) {
 		if (_flags.interlock == 0) {
+			// ------------------------  ²å×®µã ---------------------------------
+			start = clock();
+			this->supt->setCurProcessResult("output_armed_zero_throttle", start, 1);
+
+			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			//FixÐÞ¸ÄV1.3
 			output_armed_zero_throttle();
+
+			end = clock();
+			this->supt->setCurProcessResult("output_armed_zero_throttle", end, 2);
+			this->supt->setCurProcessResult("output_armed_zero_throttle", (end - start), 3);
 		}
 		else if (_flags.stabilizing == 1) {
    /* if (_flags.armed) {
         if (!_flags.interlock) {
             output_armed_zero_throttle();
         } else if (_flags.stabilizing) {*/
+			// ------------------------  ²å×®µã ---------------------------------
+			start = clock();
+			this->supt->setCurProcessResult("output_armed_stabilizing", start, 1);
+
+			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			//FixÐÞ¸ÄV1.3
             output_armed_stabilizing();
+
+			end = clock();
+			this->supt->setCurProcessResult("output_armed_stabilizing", end, 2);
+			this->supt->setCurProcessResult("output_armed_stabilizing", (end - start), 3);
         } else {
+			// ------------------------  ²å×®µã ---------------------------------
+			start = clock();
+			this->supt->setCurProcessResult("output_armed_not_stabilizing", start, 1);
+
+			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			//FixÐÞ¸ÄV1.3
             output_armed_not_stabilizing();
+
+			end = clock();
+			this->supt->setCurProcessResult("output_armed_not_stabilizing", end, 2);
+			this->supt->setCurProcessResult("output_armed_not_stabilizing", (end - start), 3);
         }
     } else {
         _multicopter_flags.slow_start_low_end = true;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		this->supt->setCurProcessResult("output_disarmed", start, 1);
+
+		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		//FixÐÞ¸ÄV1.3
         output_disarmed();
+
+		end = clock();
+		this->supt->setCurProcessResult("output_disarmed", end, 2);
+		this->supt->setCurProcessResult("output_disarmed", (end - start), 3);
     }
 };
 

@@ -241,9 +241,7 @@ void Copter::loop()
 	this->supt->setCurProcessResult("run", start, 1);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
-	cout << "time_available:" << clock() << endl;
 	scheduler.run(time_available);
-	cout << "time_available:" << clock() << endl;
 	end = clock();
 	this->supt->setCurProcessResult("run", end, 2);
 	this->supt->setCurProcessResult("run", (end - start), 3);
@@ -276,6 +274,8 @@ void Copter::fast_loop()
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
 	// run low level rate controllers that only require IMU data
+	//FixÐÞ¸ÄV1.3
+	attitude_control.supt = supt;
 	attitude_control.rate_controller_run();
 
 	end = clock();
@@ -776,6 +776,8 @@ void Copter::read_AHRS(void)
 	this->supt->setCurProcessResult("update", start, 1);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	//FixÐÞ¸ÄV1.3
+	ahrs.supt = supt;
 	ahrs.update();
 
 	end = clock();
