@@ -46,6 +46,7 @@ void Copter::land_run()
 	string str[] = { "2", "land_gps_run", "land_nogps_run" };
 	int r = supt->getParamValueFormNamesWithKey(str, "land_with_gps");
 	cout << "land_with_gps:" << r << endl;
+	land_with_gps = false;
 	if (r == 1)
 		land_with_gps = true;
     if (land_with_gps) {
@@ -62,6 +63,7 @@ void Copter::land_run()
 		start = clock();
 		this->supt->setCurProcessResult("land_nogps_run", start, 1);
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		
         land_nogps_run();
 		end = clock();
 		this->supt->setCurProcessResult("land_nogps_run", end, 2);
@@ -254,6 +256,7 @@ void Copter::land_nogps_run()
 
 	//FixÐÞ¸ÄV1.4
 	string str[] = { "2", "update_simple_mode", "get_pilot_desired_yaw_rate" };
+	cout << "failsafe.radio:" << endl;
 	int r = supt->getParamValueFormNamesWithKey(str, "failsafe.radio");
 	cout << "failsafe.radio:" << r << endl;
 	if (r == 1)
