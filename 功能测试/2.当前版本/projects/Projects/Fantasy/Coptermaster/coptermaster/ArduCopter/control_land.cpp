@@ -303,7 +303,6 @@ void Copter::land_nogps_run()
 		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", end, 2);
 		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", (end - start), 3);
     }
-	cout << "@@@@@@@@@@@@@@ 1" << endl;
     // if not auto armed or landed or motor interlock not enabled set throttle to zero and exit immediately
 	// ------------------------  ²å×®µã ---------------------------------
 	start = clock();
@@ -314,15 +313,12 @@ void Copter::land_nogps_run()
 	this->supt->setCurProcessResult("get_interlock", end, 2);
 	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
 	
-	cout << "@@@@@@@@@@@@@@ 2" << endl;
-	
 	//FixÐÞ¸ÄV1.4
 	ap.auto_armed = supt->getParamValueWithNameAndKey("set_throttle_out_unstabilized","ap.auto_armed");
 	ap.land_complete = supt->getParamValueWithNameAndKey("set_throttle_out_unstabilized", "ap.land_complete");
 	has_interlock = supt->getParamValueWithNameAndKey("set_throttle_out_unstabilized","has_interlock");
 
 	if (ap.auto_armed==0 || ap.land_complete==1 || has_interlock==false) {
-		cout << "@@@@@@@@@@@@@@ 2.1" << endl;
 #if FRAME_CONFIG == HELI_FRAME  // Helicopters always stabilize roll/pitch/yaw
         // call attitude controller
         attitude_control.angle_ef_roll_pitch_rate_ef_yaw_smooth(target_roll, target_pitch, target_yaw_rate, get_smoothing_gain());
@@ -337,7 +333,6 @@ void Copter::land_nogps_run()
 		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
 		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
 #endif
-		cout << "@@@@@@@@@@@@@@ 2.2" << endl;
 #if LAND_REQUIRE_MIN_THROTTLE_TO_DISARM == ENABLED
         // disarm when the landing detector says we've landed and throttle is at minimum
         if (ap.land_complete && (ap.throttle_zero || failsafe.radio)) {
@@ -346,7 +341,6 @@ void Copter::land_nogps_run()
 #else
         // disarm when the landing detector says we've landed
         if (ap.land_complete==1) {
-			cout << "@@@@@@@@@@@@@@ 2.3" << endl;
 			// ------------------------  ²å×®µã ---------------------------------
 			start = clock();
 			this->supt->setCurProcessResult("init_disarm_motors", start, 1);
@@ -356,11 +350,9 @@ void Copter::land_nogps_run()
 			this->supt->setCurProcessResult("init_disarm_motors", end, 2);
 			this->supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
         }
-		cout << "@@@@@@@@@@@@@@ 2.4" << endl;
 #endif
-        return;
+       // return;
     }
-	cout << "@@@@@@@@@@@@@@ 3" << endl;
     // call attitude controller
 	// ------------------------  ²å×®µã ---------------------------------
 	start = clock();
