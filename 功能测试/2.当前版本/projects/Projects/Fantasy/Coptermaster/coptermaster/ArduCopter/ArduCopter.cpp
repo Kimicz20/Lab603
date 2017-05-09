@@ -213,6 +213,8 @@ void Copter::loop()
 	this->supt->setCurProcessResult("tick", start, 1);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	//FixÐÞ¸ÄV1.5
+	scheduler.supt = supt;
 	scheduler.tick();
 
 	end = clock();

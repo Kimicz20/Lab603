@@ -41,7 +41,19 @@ void AP_Scheduler::tick(void)
  */
 void AP_Scheduler::run(uint16_t time_available)
 { 
+	//FixÐÞ¸ÄV1.5
+	long start, end;
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	this->supt->setCurProcessResult("micros", start, 1);
+
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
 	uint32_t run_started_usec = hal.scheduler->micros();
+
+	end = clock();
+	this->supt->setCurProcessResult("micros", end, 2);
+	this->supt->setCurProcessResult("micros", (end - start), 3);
+
 	uint32_t now = run_started_usec;
 	for (uint8_t i = 0; i<_num_tasks; i++) {
 		uint16_t dt = _tick_counter - _last_run[i];

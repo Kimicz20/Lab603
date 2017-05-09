@@ -59,6 +59,17 @@ void Copter::update_land_detector()
 	end = clock();
 	supt->setCurProcessResult("armed", end, 2);
 	supt->setCurProcessResult("armed", (end - start), 3);
+
+	//FixÐÞ¸ÄV1.5
+	string str[] = {"2","set_land_complete","get_throttle"};
+	if (supt->getParamValueFormNamesWithKey(str,"has_armed") == 1){
+		has_armed = true;
+	}
+
+	ap.land_complete = false;
+	if (supt->getParamValueFormNamesWithKey(str, "ap.land_complete") == 1){
+		ap.land_complete = true;
+	}
 	if (has_armed == false) {
 		//if (!motors.armed()) {
 		// if disarmed, always landed. 
@@ -85,7 +96,21 @@ void Copter::update_land_detector()
 		end = clock();
 		supt->setCurProcessResult("get_throttle", end, 2);
 		supt->setCurProcessResult("get_throttle", (end - start), 3);
+
+		//FixÐÞ¸ÄV1.5
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("get_non_takeoffthrotle", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		float get_non_takeoffthrotle = get_non_takeoff_throttle();
+
+		end = clock();
+		supt->setCurProcessResult("get_non_takeoffthrotle", end, 2);
+		supt->setCurProcessResult("get_non_takeoffthrotle", (end - start), 3);
+
+		get_the_throttle = supt->getParamValueWithNameAndKey("set_land_complete","get_the_throttle");
+		get_non_takeoffthrotle = supt->getParamValueWithNameAndKey("set_land_complete", "get_non_takeoffthrotle");
+
 		if (get_the_throttle > get_non_takeoffthrotle) {
 			//if (motors.get_throttle() > get_non_takeoff_throttle()) {
 #endif

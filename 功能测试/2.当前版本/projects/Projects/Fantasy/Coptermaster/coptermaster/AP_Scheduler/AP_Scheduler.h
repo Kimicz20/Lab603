@@ -40,9 +40,16 @@
 #include "../AP_HAL/AP_HAL.h"
 #include "../AP_Vehicle/AP_Vehicle.h"
 
+//Fix–ﬁ∏ƒV1.5
+/*--------------- ∏®÷˙¿‡ -----------------*/
+#include "../SupportClass/SupportClass.h"
+
 class AP_Scheduler
 {
 public: 
+
+	/*--------------- ∏®÷˙¿‡ -----------------*/
+	SupportClass *supt;
 
     FUNCTOR_TYPEDEF(task_fn_t, void);
  	//typedef void(*task_fn_t)(void); 
