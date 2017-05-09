@@ -54,6 +54,7 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
   	assert(callbacks);
 	/* 被测程序预处理过程 */
 	long start, end;
+	
 	// 1.创建所需的对象
 	copter.supt = new SupportClass();
     
@@ -87,25 +88,7 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
 		copter.supt->setCurProcessResult("loop", (end - start), 3);
 
 		copter.supt->setCurTestCaseResult("OK");
-		/*
-		cout
-			<< (int)copter.channel_roll->control_in << endl
-			<< (int)copter.channel_yaw->control_in << endl
-			<< (int)copter.channel_pitch->control_in << endl 
-			<< (int)copter.channel_throttle->control_in << endl; 
-		
-		if (hal.scheduler->millis()>50000 || copter.supt->getCurrentIndex() > copter.supt->getTestCaseCount()) 
-			break;
-			*/
-		/*
-	 	int num = copter.supt->getCurrentTestCase()->getProcessNum();
-		for(int i = 1;i <= num ;i++){
-			long start = clock() * 1000;
-			copter.supt->setCurProcessResult(copter.supt->getCurrentTestCase()->getProcessNameWithId(i), start, 1);
-			long end = clock() * 1000;
-			copter.supt->setCurProcessResult(copter.supt->getCurrentTestCase()->getProcessNameWithId(i), end, 2);
-			copter.supt->setCurProcessResult(copter.supt->getCurrentTestCase()->getProcessNameWithId(i), (end - start), 3);
-		}*/
+
 		//4.测试结果存放在内存区中
 		copter.supt->putTestCasesInMem();
 	}

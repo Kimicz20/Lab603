@@ -22,8 +22,8 @@
 typedef list<string> StringList;
 typedef list<TestCase *> TestCaseList;
 
-#define TEXT_SZ 100*1024*1024
-
+#define TEXT_SZ 1000*1024*1024
+#define NOTFIND 1024
 struct shared_use_st {
   int currentIndex;   //当前测试用例ID
   int count;

@@ -43,11 +43,9 @@ void AP_Scheduler::run(uint16_t time_available)
 { 
 	uint32_t run_started_usec = hal.scheduler->micros();
 	uint32_t now = run_started_usec;
-	cout <<" run num_task:"<< (int)_num_tasks << endl;
 	for (uint8_t i = 0; i<_num_tasks; i++) {
 		uint16_t dt = _tick_counter - _last_run[i];
 		uint16_t interval_ticks = pgm_read_word(&_tasks[i].interval_ticks);
-		cout << "dt : " << dt << " interval_ticks:" << interval_ticks << " time_available:" << time_available << endl;
 		if (dt >= interval_ticks) {
 			// this task is due to run. Do we have enough time to run it?
 			_task_time_allowed = pgm_read_word(&_tasks[i].max_time_micros);

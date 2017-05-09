@@ -26,18 +26,6 @@ void Copter::rtl_run()
 {
 	long start, end;
     // check if we need to move to next state
-	if (supt->getParamValueWithNameAndKey("rtl_return_start", "rtl_state_complete") != -1){
-		rtl_state_complete = supt->getParamValueWithNameAndKey("rtl_return_start", "rtl_state_complete");
-	}
-	else if (supt->getParamValueWithNameAndKey("rtl_loiterathome_start", "rtl_state_complete") != -1){
-		rtl_state_complete = supt->getParamValueWithNameAndKey("rtl_loiterathome_start", "rtl_state_complete");
-	}
-	else if (supt->getParamValueWithNameAndKey("rtl_descent_start", "rtl_state_complete") != -1){
-		rtl_state_complete = supt->getParamValueWithNameAndKey("rtl_descent_start", "rtl_state_complete");
-	}
-	else if (supt->getParamValueWithNameAndKey("rtl_land_start", "rtl_state_complete") != -1){
-		rtl_state_complete = supt->getParamValueWithNameAndKey("rtl_land_start", "rtl_state_complete");
-	}
     if (rtl_state_complete) {
         switch (rtl_state) {
         case RTL_InitialClimb:

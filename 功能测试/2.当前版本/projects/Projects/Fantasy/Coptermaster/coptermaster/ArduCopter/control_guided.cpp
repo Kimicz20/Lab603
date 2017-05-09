@@ -453,17 +453,6 @@ void Copter::guided_run()
 	cout << "GUIDED_MODE" << endl;
 	int b;
 	//cin >> b;
-	if (supt->getParamValueWithNameAndKey("guided_takeoff_run", "guided_mode") != -1){
-		b = supt->getParamValueWithNameAndKey("guided_takeoff_run", "guided_mode");
-	}else if (supt->getParamValueWithNameAndKey("guided_pos_control_run", "guided_mode") != -1){
-		b = supt->getParamValueWithNameAndKey("guided_pos_control_run", "guided_mode");
-	}else if (supt->getParamValueWithNameAndKey("guided_vel_control_run", "guided_mode") != -1){
-		b = supt->getParamValueWithNameAndKey("guided_vel_control_run", "guided_mode");
-	}else if (supt->getParamValueWithNameAndKey("guided_posvel_control_run", "guided_mode") != -1){
-		b = supt->getParamValueWithNameAndKey("guided_posvel_control_run", "guided_mode");
-	}else if (supt->getParamValueWithNameAndKey("guided_angle_control_run", "guided_mode") != -1){
-		b = supt->getParamValueWithNameAndKey("guided_angle_control_run", "guided_mode");
-	}
 
 	switch (b){
 	case 0:

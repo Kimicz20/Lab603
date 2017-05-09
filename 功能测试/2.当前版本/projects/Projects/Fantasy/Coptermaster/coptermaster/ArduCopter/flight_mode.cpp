@@ -137,23 +137,38 @@ void Copter::update_flight_mode()
     ahrs.getEkfControlLimits(ekfGndSpdLimit, ekfNavVelGainScaler);  
   //  cout << "设置飞行模式，1引导2绕圈3落地" << endl; 
 	cout << "set fly mode : 1 GUIDED 2.CIRCLE 3.LAND" << endl;
-    int a = 0;
-    
-    a = supt->getParamValueWithNameAndKey("stabilize_run","control_mode");
+	//Fix修改V1.4
+	int a = 6;
+	string processNames[] = { "stabilize_run", "althold_run", "auto_run", "circle_run", "guided_run", "land_run", "rtl_run" };
+	for (int i = 0; i<7; i++){
+		if (supt->getCurrentTestCase()->getParamValueWithNameAndKey(processNames[i], "control_mode") != ""){
+			a = i;
+			break;
+		}
+	}
 
-    switch (a){
-    case 1:
-        control_mode = GUIDED;
-        break;
-    case 2:
-        control_mode = CIRCLE;
-        break;
-    case 3:
-        control_mode = LAND;
-        break; 
-    default:
-        break;
-    }
+	switch (a){
+		case 0:
+			control_mode = STABILIZE;
+			break;
+		case 1:
+			control_mode = ALT_HOLD;
+			break;
+		case 2:
+			control_mode = AUTO;
+			break;
+		case 3:
+			control_mode = CIRCLE;
+			break;
+		case 4:
+			control_mode = GUIDED;
+			break;
+		case 5:
+			control_mode = LAND;
+			break;
+		default:
+			break;
+	}
     cout << "now fly mode is :"<<(int)control_mode<<endl;
     switch (control_mode) {
         case ACRO: 
@@ -233,6 +248,7 @@ void Copter::update_flight_mode()
             start = clock();
             this->supt->setCurProcessResult("land_run", start, 1);
             // ------------------------  插桩激励 ---------------------------------
+			cout << "---------- land_run 11 -----------" << endl;
             land_run();
             end = clock();
             this->supt->setCurProcessResult("land_run", end, 2);

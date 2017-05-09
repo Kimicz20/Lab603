@@ -954,8 +954,14 @@ void Copter::init_disarm_motors()
 // motors_output - send output to motors library which will adjust and send to ESCs and servos
 void Copter::motors_output()
 {
-	cout << "---- motors_output begin ----" << endl;
+	std::cout << "---- motors_output begin ----" << endl;
     // check if we are performing the motor test
+	//FixÐÞ¸ÄV1.4
+	string str[] = { "2", "motor_test_output", "output" };
+	int r = supt->getParamValueFormNamesWithKey(str, "ap.motor_test");
+	if (r == 1){
+		ap.motor_test = true;
+	}
 	if (ap.motor_test == 1) {
 		// ------------------------  ²å×®µã ---------------------------------
 		long start = clock();
