@@ -637,7 +637,6 @@ void Copter::guided_pos_control_run()
 
 	//Fix修改V1.6
 	string str[] = {"2","set_throttle_out_unstabilized","get_pilot_desired_yaw_rate"};
-	//Fix修改V1.6
 	ap.auto_armed = supt->getParamValueFormNamesWithKey(str,"ap.auto_armed");
 	get_interlock = supt->getParamValueFormNamesWithKey(str, "get_interlock");
 	ap.land_complete = supt->getParamValueFormNamesWithKey(str, "ap.land_complete");
@@ -703,6 +702,11 @@ void Copter::guided_pos_control_run()
 	end = clock();
 	this->supt->setCurProcessResult("update_z_controller", end, 2);
 	this->supt->setCurProcessResult("update_z_controller", (end - start), 3);
+	
+	//Fix修改1.7
+	auto_yaw_mode = 0;
+	string tmp[] = {"2","angle_ef_roll_pitch_rate_ef_yaw","angle_ef_roll_pitch_yaw"};
+	auto_yaw_mode = supt->getParamValueFormNamesWithKey(tmp,"auto_yaw_mode");
 
     // call attitude controller
     if (auto_yaw_mode == AUTO_YAW_HOLD) {
@@ -774,6 +778,12 @@ void Copter::guided_vel_control_run()
 
     // process pilot's yaw input
     float target_yaw_rate = 0;
+
+	//Fix修改1.7
+	failsafe.radio = true;
+	if (supt->getParamValueWithNameAndKey("get_pilot_desired_yaw_rate", "failsafe.radio") == 0)
+		failsafe.radio = false;
+
 	if (failsafe.radio == 0) {
 	//if (!failsafe.radio) {
         // get pilot's desired yaw rate
@@ -826,6 +836,11 @@ void Copter::guided_vel_control_run()
         // call velocity controller which includes z axis controller
         pos_control.update_vel_controller_xyz(ekfNavVelGainScaler);
     }
+
+	//Fix修改1.7
+	auto_yaw_mode = 0;
+	string tmp[] = { "2", "angle_ef_roll_pitch_rate_ef_yaw", "angle_ef_roll_pitch_yaw" };
+	auto_yaw_mode = supt->getParamValueFormNamesWithKey(tmp, "auto_yaw_mode");
 
     // call attitude controller
     if (auto_yaw_mode == AUTO_YAW_HOLD) {
@@ -899,7 +914,7 @@ void Copter::guided_posvel_control_run()
 		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
 		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
 #endif
-        return;
+        //return;
     }
 
     // process pilot's yaw input
@@ -955,6 +970,11 @@ void Copter::guided_posvel_control_run()
 	this->supt->setCurProcessResult("update_z_controller", end, 2);
 	this->supt->setCurProcessResult("update_z_controller", (end - start), 3);
 
+	//Fix修改1.7
+	auto_yaw_mode = 0;
+	string tmp[] = { "2", "angle_ef_roll_pitch_rate_ef_yaw", "angle_ef_roll_pitch_yaw" };
+	auto_yaw_mode = supt->getParamValueFormNamesWithKey(tmp, "auto_yaw_mode");
+
     // call attitude controller
     if (auto_yaw_mode == AUTO_YAW_HOLD) {
         // roll & pitch from waypoint controller, yaw rate from pilot
@@ -994,6 +1014,12 @@ void Copter::guided_angle_control_run()
 	this->supt->setCurProcessResult("get_interlock", end, 2);
 	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
 
+	//Fix修改V1.7
+	string str[] = { "2", "set_throttle_out_unstabilized", "get_pilot_desired_yaw_rate" };
+	ap.auto_armed = supt->getParamValueFormNamesWithKey(str, "ap.auto_armed");
+	get_interlock = supt->getParamValueFormNamesWithKey(str, "get_interlock");
+	ap.land_complete = supt->getParamValueFormNamesWithKey(str, "ap.land_complete");
+
 	if (ap.auto_armed == 0 || get_interlock == false || ap.land_complete == 1) {
 	//if (!ap.auto_armed || !motors.get_interlock() || ap.land_complete) {
 #if FRAME_CONFIG == HELI_FRAME  // Helicopters always stabilize roll/pitch/yaw
@@ -1019,7 +1045,7 @@ void Copter::guided_angle_control_run()
 		end = clock();
 		this->supt->setCurProcessResult("relax_alt_hold_controllers", end, 2);
 		this->supt->setCurProcessResult("relax_alt_hold_controllers", (end - start), 3);
-        return;
+       // return;
     }
 
     // constrain desired lean angles

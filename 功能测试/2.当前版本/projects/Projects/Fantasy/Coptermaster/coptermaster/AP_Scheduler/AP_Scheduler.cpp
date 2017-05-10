@@ -62,6 +62,9 @@ void AP_Scheduler::run(uint16_t time_available)
 			// this task is due to run. Do we have enough time to run it?
 			_task_time_allowed = pgm_read_word(&_tasks[i].max_time_micros);
 			uint16_t interval_ticks_product_two = interval_ticks * 2;
+			
+			//FixÐÞ¸Ä1.7
+			supt->setCurProcessResult("output",0,3);
 			if (dt >= interval_ticks_product_two) {
 			//if (dt >= interval_ticks * 2) {
 				// we've slipped a whole run of this task!
@@ -89,9 +92,45 @@ void AP_Scheduler::run(uint16_t time_available)
 				_last_run[i] = _tick_counter;
 
 				// work out how long the event actually took
+
+				//FixÐÞ¸Ä1.7
+				// ------------------------  ²å×®µã ---------------------------------
+				start = clock();
+				this->supt->setCurProcessResult("micros", start, 1);
+
+				// ------------------------  ²å×®¼¤Àø ---------------------------------
 				now = hal.scheduler->micros();
+				end = clock();
+				this->supt->setCurProcessResult("micros", end, 2);
+				this->supt->setCurProcessResult("micros", (end - start), 3);
+
 				uint32_t time_taken = now - _task_time_started;
 
+				//FixÐÞ¸Ä1.7
+				int size = 21;
+				string str[] = {"read_aux_switches",
+								"ten_hz_logging_loop",
+								"rpm_update",
+								"full_rate_logging_loop",
+								"compass_accumulate",
+								"update_thr_average",
+								"throttle_loop",
+								"gcs_send_heartbeat",
+								"dataflash_periodic",
+								"landinggear_update",
+								"ekf_check",
+								"arm_motors_check",
+								"fifty_hz_logging_loop",
+								"read_receiver_rssi",
+								"update_mount",
+								"auto_trim",
+								"update_notify",
+								"run_nav_updates",
+								"lost_vehicle_check", 
+								"output",
+								"gcs_send_deferred" };
+				for (int i = 0; i < size;i++)
+					supt->setCurProcessResult(str[i], 0, 3);
 				if (time_taken > _task_time_allowed) {
 					// the event overran!
 					if (_debug > 2) {
