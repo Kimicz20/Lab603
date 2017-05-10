@@ -220,15 +220,15 @@ void Copter::init_rc_out()
 			supt->setCurProcessResult("delay", (end - start), 3);
 
 			// ------------------------  ²å×®µã ---------------------------------
-			//long start = clock();
+			start = clock();
 			//supt->setCurProcessResult("read_radio", start, 1);
 
 			// ------------------------  ²å×®¼¤Àø ---------------------------------
 			read_radio();
 
-			//long end = clock();
-			//supt->setCurProcessResult("read_radio", end, 2);
-			//supt->setCurProcessResult("read_radio", (end - start), 3);
+			end = clock();
+			supt->setCurProcessResult("read_radio", end, 2);
+			supt->setCurProcessResult("read_radio", (end - start), 3);
 		}  
 		// we want the input to be scaled correctly
 		channel_throttle->set_range_out(0, 1000);
@@ -290,41 +290,37 @@ void Copter::enable_motor_output()
 
 void Copter::read_radio()
 { 
+	long start, end;
+
 	//get values from barometer.init();
 	cout << "now in read_radio" << endl;
 	static uint32_t last_update_ms = 0;
 
 	// ------------------------  ²å×®µã ---------------------------------
-	long start = clock();
+	start = clock();
 	supt->setCurProcessResult("millis", start, 1);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
     uint32_t tnow_ms = millis(); 
 
-	long end = clock();
+	end = clock();
 	supt->setCurProcessResult("millis", end, 2);
 	supt->setCurProcessResult("millis", (end - start), 3);
 
-	bool new_input;
-	// std::cin >> new_input;
+	bool new_input = false;
 
-	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("millis", start, 1);
-	new_input = supt->getParamValueWithNameAndKey("set_pwm","has_new_input");
+	if (supt->getParamValueWithNameAndKey("set_pwm", "has_new_input") == 1){
+		new_input = true;
+	}
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
 	set_has_new_input(new_input);
-	
-	end = clock();
-	supt->setCurProcessResult("read_radio", end, 2);
-	supt->setCurProcessResult("read_radio", (end - start), 3);
 
 	if (has_new_input == 1) {
 		cout << "now please input roll_pwm  pitch_pwm throttle_pwm yaw_pwm " << endl;
         last_update_ms = tnow_ms;
         ap.new_radio_frame = true;
-        //RC_Channel::set_pwm_all();
+        RC_Channel::set_pwm_all();
 		int16_t roll_pwm;
 		int16_t pitch_pwm;
 		int16_t throttle_pwm;
@@ -418,9 +414,20 @@ void Copter::read_radio()
     }else{
         uint32_t elapsed = tnow_ms - last_update_ms;
         // turn on throttle failsafe if no update from the RC Radio for 500ms or 2000ms if we are using RC_OVERRIDE
-       /* if (((!failsafe.rc_override_active && (elapsed >= FS_RADIO_TIMEOUT_MS)) || (failsafe.rc_override_active && (elapsed >= FS_RADIO_RC_OVERRIDE_TIMEOUT_MS))) &&
-            (g.failsafe_throttle && (ap.rc_receiver_present||motors.armed()) && !failsafe.radio)) {*/
-            //Log_Write_Error(ERROR_SUBSYSTEM_RADIO, ERROR_CODE_RADIO_LATE_FRAME);
+
+		//FixÐÞ¸ÄV1.6
+		failsafe.rc_override_active == true;
+		failsafe.radio = true;
+
+		if (supt->getParamValueWithNameAndKey("armed", "failsafe.rc_override_active") == 0)
+			failsafe.rc_override_active = false;
+
+		if (supt->getParamValueWithNameAndKey("armed", "failsafe.radio") == 0)
+			failsafe.radio = false;
+
+		if (supt->getParamValueWithNameAndKey("armed", "elapsed") != NOTFIND)
+			elapsed = supt->getParamValueWithNameAndKey("armed", "elapsed");
+			
 		if (((failsafe.rc_override_active == false && (elapsed >= FS_RADIO_TIMEOUT_MS)) || (failsafe.rc_override_active == true && (elapsed >= FS_RADIO_RC_OVERRIDE_TIMEOUT_MS))) && failsafe.radio == false) {
 			// ------------------------  ²å×®µã ---------------------------------
 			start = clock();
@@ -452,7 +459,7 @@ void Copter::read_radio()
 			set_failsafe_radio(1);
 		}
 	} 
-
+	
 	cout << "----- read radio end -----" << endl;
 	return;
 }
@@ -496,9 +503,10 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 			supt->setCurProcessResult("armed", end, 2);
 			supt->setCurProcessResult("armed", (end - start), 3);
 			//FixÐÞ¸ÄV1.2
-			failsafe.radio = supt->getParamValueWithNameAndKey("set_failsafe_radio","failsafe.radio");
-			ap.rc_receiver_present = supt->getParamValueWithNameAndKey("set_failsafe_radio", "ap.rc_receiver_present");
-			has_armed = supt->getParamValueWithNameAndKey("set_failsafe_radio", "has_armed");
+			string str[] = {"2","set_failsafe_radio","set_pwm"};
+			failsafe.radio = supt->getParamValueFormNamesWithKey(str,"failsafe.radio");
+			ap.rc_receiver_present = supt->getParamValueFormNamesWithKey(str, "ap.rc_receiver_present");
+			has_armed = supt->getParamValueFormNamesWithKey(str, "has_armed");
 			if (failsafe.radio == true || (ap.rc_receiver_present == false && has_armed == false)) {
 
 				// ------------------------  ²å×®µã ---------------------------------

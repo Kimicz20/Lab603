@@ -909,6 +909,11 @@ bool Copter::arm_checks(bool display_failure, bool arming_from_gcs)
 void Copter::init_disarm_motors()
 {
     // return immediately if we are already disarmed
+	//FixÐÞ¸ÄV1.6
+	motors.armed(false);
+	if (supt->getParamValueWithNameAndKey("init_disarm_motors", "crash_counter") == 1)
+		motors.armed(true);
+
     if (!motors.armed()) {
         return;
     }

@@ -86,8 +86,6 @@ int numNesting = 1;
 bool inNesintg = false;
 void SupportClass::setCurProcessResult(string processName, long mtime,
                                        int flag) {
-	//printf(FONT_COLOR_RED"++++++++%d++++++++\n"COLOR_NONE, currProcessID);
-
   if (flag == 1) {
 
 	/*  printf(FONT_COLOR_RED"**********%d : %s++++++++\n"COLOR_NONE, currProcessID, currentTestCase->findProcessWithID(currProcessID)->processName.c_str());

@@ -17,39 +17,51 @@ void Copter::crash_check()
     // return immediately if disarmed, or crash checking disabled
     if (!motors.armed() || ap.land_complete || g.fs_crash_check == 0) {
         crash_counter = 0;
-        return;
+       // return;
     }
 
     // return immediately if we are not in an angle stabilize flight mode or we are flipping
     if (control_mode == ACRO || control_mode == FLIP) {
         crash_counter = 0;
-        return;
+        //return;
     }
 
     // vehicle not crashed if 1hz filtered acceleration is more than 3m/s (1G on Z-axis has been subtracted)
     if (land_accel_ef_filter.get().length() >= CRASH_CHECK_ACCEL_MAX) {
         crash_counter = 0;
-        return;
+        //return;
     }
 
     // check for angle error over 30 degrees
     const Vector3f angle_error = attitude_control.angle_bf_error();
     if (pythagorous2(angle_error.x, angle_error.y) <= CRASH_CHECK_ANGLE_DEVIATION_CD) {
         crash_counter = 0;
-        return;
+       // return;
     }
 
     // we may be crashing
     crash_counter++;
-
+	//FixÐÞ¸ÄV1.6
+	int r = supt->getParamValueWithNameAndKey("init_disarm_motors", "crash_counter");
+	if (r != NOTFIND)
+		crash_counter = r;
     // check if crashing for 2 seconds
+
     if (crash_counter >= (CRASH_CHECK_TRIGGER_SEC * MAIN_LOOP_RATE)) {
         // log an error in the dataflash
         Log_Write_Error(ERROR_SUBSYSTEM_CRASH_CHECK, ERROR_CODE_CRASH_CHECK_CRASH);
         // send message to gcs
 //        gcs_send_text_P(MAV_SEVERITY_CRITICAL,PSTR("Crash: Disarming"));
         // disarm motors
+		long start, end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("init_disarm_motors", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         init_disarm_motors();
+		end = clock();
+		supt->setCurProcessResult("init_disarm_motors", end, 2);
+		supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
     }
 }
 

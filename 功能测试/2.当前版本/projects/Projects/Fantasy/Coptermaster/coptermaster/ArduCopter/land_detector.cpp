@@ -59,9 +59,10 @@ void Copter::update_land_detector()
 	end = clock();
 	supt->setCurProcessResult("armed", end, 2);
 	supt->setCurProcessResult("armed", (end - start), 3);
-
+	
+	has_armed = false;
 	//FixÐÞ¸ÄV1.5
-	string str[] = {"2","set_land_complete","get_throttle"};
+	string str[] = {"3","set_land_complete","get_throttle","is_throttle_mix_min"};
 	if (supt->getParamValueFormNamesWithKey(str,"has_armed") == 1){
 		has_armed = true;
 	}
@@ -123,16 +124,24 @@ void Copter::update_land_detector()
 			supt->setCurProcessResult("set_land_complete", end, 2);
 			supt->setCurProcessResult("set_land_complete", (end - start), 3);
 		}
-		}
-	else {
-
-#if FRAME_CONFIG == HELI_FRAME
-		// check that collective pitch is on lower limit (should be constrained by LAND_COL_MIN)
-		bool motor_at_lower_limit = motors.limit.throttle_lower;
-#else
+	}else {
+		//FixÐÞ¸ÄV1.6
+//#if FRAME_CONFIG == HELI_FRAME
+//		// check that collective pitch is on lower limit (should be constrained by LAND_COL_MIN)
+//		bool motor_at_lower_limit = motors.limit.throttle_lower;
+//#else
 		// check that the average throttle output is near minimum (less than 12.5% hover throttle)
+	
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("is_throttle_mix_min", start, 1);
+
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		bool motor_at_lower_limit = motors.limit.throttle_lower && motors.is_throttle_mix_min();
-#endif
+		end = clock();
+		supt->setCurProcessResult("is_throttle_mix_min", end, 2);
+		supt->setCurProcessResult("is_throttle_mix_min", (end - start), 3);
+//#endif
 
 		// check that the airframe is not accelerating (not falling or breaking after fast forward flight)
 		bool accel_stationary = (land_accel_ef_filter.get().length() <= LAND_DETECTOR_ACCEL_MAX);

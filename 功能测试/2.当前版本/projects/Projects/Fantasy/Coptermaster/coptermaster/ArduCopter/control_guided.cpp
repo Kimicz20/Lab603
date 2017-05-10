@@ -451,93 +451,99 @@ void Copter::guided_run()
     // call the correct auto controller
 	long start, end;
 	cout << "GUIDED_MODE" << endl;
-	int b;
-	//cin >> b;
+	int b=5;
+	//FixÐÞ¸ÄV1.6
+	string processNames[] = { "guided_takeoff_run", "guided_pos_control_run", "guided_vel_control_run", "guided_posvel_control_run", "guided_angle_control_run"};
+	for (int i = 0; i<5; i++){
+		if (supt->getCurrentTestCase()->getParamValueWithNameAndKey(processNames[i], "guided_mode") != ""){
+			b = i;
+			break;
+		}
+	}
 
 	switch (b){
-	case 0:
-		guided_mode = Guided_TakeOff;
-		break;
-	case 1:
-		guided_mode = Guided_WP;
-		break;
-	case 2:
-		guided_mode = Guided_Velocity;
-		break;
-	case 3:
-		guided_mode = Guided_PosVel;
-		break;
-	case 4:
-		guided_mode = Guided_Angle;
-		break;
-	default:
-		break;
-
+		case 0:
+			guided_mode = Guided_TakeOff;
+			break;
+		case 1:
+			guided_mode = Guided_WP;
+			break;
+		case 2:
+			guided_mode = Guided_Velocity;
+			break;
+		case 3:
+			guided_mode = Guided_PosVel;
+			break;
+		case 4:
+			guided_mode = Guided_Angle;
+			break;
+		default:
+			break;
 	}
 
     switch (guided_mode) {
 
-    case Guided_TakeOff:
-        // run takeoff controller
+		case Guided_TakeOff:
+			// run takeoff controller
 
-		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("guided_takeoff_run", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
-		guided_takeoff_run();
-		end = clock();
-		this->supt->setCurProcessResult("guided_takeoff_run", end, 2);
-		this->supt->setCurProcessResult("guided_takeoff_run", (end - start), 3);
+			// ------------------------  ²å×®µã ---------------------------------
+			start = clock();
+			this->supt->setCurProcessResult("guided_takeoff_run", start, 1);
+			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			guided_takeoff_run();
+			end = clock();
+			this->supt->setCurProcessResult("guided_takeoff_run", end, 2);
+			this->supt->setCurProcessResult("guided_takeoff_run", (end - start), 3);
 		
-        break;
+			break;
 
-    case Guided_WP:
-		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("guided_pos_control_run", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
-        // run position controller
-        guided_pos_control_run();
-		end = clock();
-		this->supt->setCurProcessResult("guided_pos_control_run", end, 2);
-		this->supt->setCurProcessResult("guided_pos_control_run", (end - start), 3);
-        break;
+		case Guided_WP:
+			// ------------------------  ²å×®µã ---------------------------------
+			start = clock();
+			this->supt->setCurProcessResult("guided_pos_control_run", start, 1);
+			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			// run position controller
+			guided_pos_control_run();
+			end = clock();
+			this->supt->setCurProcessResult("guided_pos_control_run", end, 2);
+			this->supt->setCurProcessResult("guided_pos_control_run", (end - start), 3);
+			break;
 
-    case Guided_Velocity:
-		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("guided_vel_control_run", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
-        // run velocity controller
-        guided_vel_control_run();
-		end = clock();
-		this->supt->setCurProcessResult("guided_vel_control_run", end, 2);
-		this->supt->setCurProcessResult("guided_vel_control_run", (end - start), 3);
-        break;
+		case Guided_Velocity:
+			// ------------------------  ²å×®µã ---------------------------------
+			start = clock();
+			this->supt->setCurProcessResult("guided_vel_control_run", start, 1);
+			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			// run velocity controller
+			guided_vel_control_run();
+			end = clock();
+			this->supt->setCurProcessResult("guided_vel_control_run", end, 2);
+			this->supt->setCurProcessResult("guided_vel_control_run", (end - start), 3);
+			break;
 
-    case Guided_PosVel:
-		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("guided_posvel_control_run", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
-        // run position-velocity controller
-        guided_posvel_control_run();
-		end = clock();
-		this->supt->setCurProcessResult("guided_posvel_control_run", end, 2);
-		this->supt->setCurProcessResult("guided_posvel_control_run", (end - start), 3);
-        break;
+		case Guided_PosVel:
+			// ------------------------  ²å×®µã ---------------------------------
+			start = clock();
+			this->supt->setCurProcessResult("guided_posvel_control_run", start, 1);
+			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			// run position-velocity controller
+			guided_posvel_control_run();
+			end = clock();
+			this->supt->setCurProcessResult("guided_posvel_control_run", end, 2);
+			this->supt->setCurProcessResult("guided_posvel_control_run", (end - start), 3);
+			break;
 
-    case Guided_Angle:
-		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("guided_angle_control_run", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
-        // run angle controller
-        guided_angle_control_run();
-		end = clock();
-		this->supt->setCurProcessResult("guided_angle_control_run", end, 2);
-		this->supt->setCurProcessResult("guided_angle_control_run", (end - start), 3);
-        break;
+		case Guided_Angle:
+			// ------------------------  ²å×®µã ---------------------------------
+			start = clock();
+			this->supt->setCurProcessResult("guided_angle_control_run", start, 1);
+			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			// run angle controller
+			guided_angle_control_run();
+			end = clock();
+			this->supt->setCurProcessResult("guided_angle_control_run", end, 2);
+			this->supt->setCurProcessResult("guided_angle_control_run", (end - start), 3);
+			break;
     }
  }
 
@@ -628,6 +634,14 @@ void Copter::guided_pos_control_run()
 	end = clock();
 	this->supt->setCurProcessResult("get_interlock", end, 2);
 	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+
+	//FixÐÞ¸ÄV1.6
+	string str[] = {"2","set_throttle_out_unstabilized","get_pilot_desired_yaw_rate"};
+	//FixÐÞ¸ÄV1.6
+	ap.auto_armed = supt->getParamValueFormNamesWithKey(str,"ap.auto_armed");
+	get_interlock = supt->getParamValueFormNamesWithKey(str, "get_interlock");
+	ap.land_complete = supt->getParamValueFormNamesWithKey(str, "ap.land_complete");
+
 	if (ap.auto_armed==0 || get_interlock==false || ap.land_complete==1) {
    // if (!ap.auto_armed || !motors.get_interlock() || ap.land_complete) {
 #if FRAME_CONFIG == HELI_FRAME  // Helicopters always stabilize roll/pitch/yaw
@@ -649,6 +663,12 @@ void Copter::guided_pos_control_run()
 
     // process pilot's yaw input
     float target_yaw_rate = 0;
+
+	//FixÐÞ¸ÄV1.6
+	failsafe.radio = true;
+	if (supt->getParamValueWithNameAndKey("get_pilot_desired_yaw_rate","failsafe.radio") == 0){
+		failsafe.radio = false;
+	}
 	if (failsafe.radio == 0) {
 	//if (!failsafe.radio) {
 		// ------------------------  ²å×®µã ---------------------------------
