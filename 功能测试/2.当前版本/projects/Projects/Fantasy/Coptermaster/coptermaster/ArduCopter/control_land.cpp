@@ -91,6 +91,22 @@ void Copter::land_gps_run()
 	end = clock();
 	this->supt->setCurProcessResult("get_interlock", end, 2);
 	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+
+	//FixÐÞ¸ÄV1.9
+	string str[] = { "4","loiter_soften_for_landing", "set_throttle_out_unstabilized", "init_loiter_target" ,"init_disarm_motors"};
+	
+	ap.auto_armed = true;
+	if (supt->getParamValueFormNamesWithKey(str, "ap.auto_armed") == 0)
+		ap.auto_armed = false;
+	
+	ap.land_complete = false;
+	if (supt->getParamValueFormNamesWithKey(str, "ap.land_complete") == 1)
+		ap.land_complete = true;
+	
+	has_interlock = true;
+	if (supt->getParamValueFormNamesWithKey(str, "has_interlock") == 0)
+		ap.auto_armed = false;
+
 	if(ap.auto_armed==0 || ap.land_complete==1 || has_interlock==false) {
 	//if(!ap.auto_armed || ap.land_complete || !motors.get_interlock()) {
 #if FRAME_CONFIG == HELI_FRAME  // Helicopters always stabilize roll/pitch/yaw
@@ -114,12 +130,12 @@ void Copter::land_gps_run()
 		this->supt->setCurProcessResult("init_loiter_target", end, 2);
 		this->supt->setCurProcessResult("init_loiter_target", (end - start), 3);
 
-#if LAND_REQUIRE_MIN_THROTTLE_TO_DISARM == ENABLED
-        // disarm when the landing detector says we've landed and throttle is at minimum
-        if (ap.land_complete && (ap.throttle_zero || failsafe.radio)) {
-            init_disarm_motors();
-        }
-#else
+//#if LAND_REQUIRE_MIN_THROTTLE_TO_DISARM == ENABLED
+//        // disarm when the landing detector says we've landed and throttle is at minimum
+//        if (ap.land_complete && (ap.throttle_zero || failsafe.radio)) {
+//            init_disarm_motors();
+//        }
+//#else
         // disarm when the landing detector says we've landed
         if (ap.land_complete==1) {
 			start = clock();
@@ -130,12 +146,18 @@ void Copter::land_gps_run()
 			this->supt->setCurProcessResult("init_disarm_motors", end, 2);
 			this->supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
         }
-#endif
+//#endif
         return;
     }
 
     // relax loiter target if we might be landed
     //if (ap.land_complete_maybe) {
+
+	//FixÐÞ¸ÄV1.9
+	ap.land_complete_maybe = false;
+	if (supt->getParamValueWithNameAndKey("loiter_soften_for_landing", "ap.land_complete_maybe") == 1)
+		ap.land_complete_maybe = true;
+
 	if (ap.land_complete_maybe == 1) {
 		start = clock();
 		this->supt->setCurProcessResult("loiter_soften_for_landing", start, 1);
@@ -147,9 +169,18 @@ void Copter::land_gps_run()
     }
 
     // process pilot inputs
-   /* if (!failsafe.radio) {
-        if (g.land_repositioning) {*/
+
+	//FixÐÞ¸ÄV1.9
+	failsafe.radio = false;
+	if (supt->getParamValueWithNameAndKey("get_pilot_desired_yaw_rate", "failsafe.radio") == 1)
+		failsafe.radio = true;
 	if (failsafe.radio == 0) {
+
+		//FixÐÞ¸ÄV1.9
+		g.land_repositioning = false;
+		if (supt->getParamValueWithNameAndKey("update_simple_mode", "g.land_repositioning") == 1)
+			g.land_repositioning = true;
+
 		if (g.land_repositioning == 1) {
             // apply SIMPLE mode transform to pilot inputs
 			start = clock();
@@ -209,7 +240,26 @@ void Copter::land_gps_run()
 	start = clock();
 	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", start, 1);
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	
+	//FixÐÞ¸ÄV1.9
+	start = clock();
+	this->supt->setCurProcessResult("get_roll", start, 1);
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
+
+	start = clock();
+	this->supt->setCurProcessResult("get_pitch", start, 1);
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
     attitude_control.angle_ef_roll_pitch_rate_ef_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), target_yaw_rate);
+
+	end = clock();
+	this->supt->setCurProcessResult("get_pitch", end, 2);
+	this->supt->setCurProcessResult("get_pitch", (end - start), 3);
+
+	end = clock();
+	this->supt->setCurProcessResult("get_roll", end, 2);
+	this->supt->setCurProcessResult("get_roll", (end - start), 3);
+
+
 	end = clock();
 	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", end, 2);
 	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", (end - start), 3);

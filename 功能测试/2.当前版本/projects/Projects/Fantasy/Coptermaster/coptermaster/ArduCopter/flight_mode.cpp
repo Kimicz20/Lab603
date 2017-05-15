@@ -146,6 +146,10 @@ void Copter::update_flight_mode()
 			break;
 		}
 	}
+	
+	if (a == 6){
+		a = supt->getParamValueWithNameAndKey("guided_angle_control_run","control_mode");
+	}
 
 	switch (a){
 		case 0:
