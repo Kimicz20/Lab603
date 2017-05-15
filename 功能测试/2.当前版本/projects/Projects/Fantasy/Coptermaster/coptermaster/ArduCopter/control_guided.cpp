@@ -450,7 +450,7 @@ void Copter::guided_run()
 {
     // call the correct auto controller
 	long start, end;
-	cout << "GUIDED_MODE" << endl;
+	
 	int b=5;
 	//Fix修改V1.6
 	string processNames[] = { "guided_takeoff_run", "guided_pos_control_run", "guided_vel_control_run", "guided_posvel_control_run", "guided_angle_control_run"};
@@ -480,7 +480,7 @@ void Copter::guided_run()
 		default:
 			break;
 	}
-
+	cout << "GUIDED_MODE:" << b << endl;
     switch (guided_mode) {
 
 		case Guided_TakeOff:
@@ -552,9 +552,24 @@ void Copter::guided_run()
 void Copter::guided_takeoff_run()
 {
 	long start, end;
-	cout << "当前进入guided_takeoff_run方法" << endl;
+	cout << "guided_takeoff_run begin" << endl;
     // if not auto armed or motors not enabled set throttle to zero and exit immediately
+	//Fix修改1.8
+	start = clock();
+	this->supt->setCurProcessResult("get_interlock", start, 1);
+
+	// ------------------------  插桩激励 ---------------------------------
 	bool get_interlock = motors.get_interlock();
+	
+	end = clock();
+	this->supt->setCurProcessResult("get_interlock", end, 2);
+	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+
+	//Fix修改V1.8
+	ap.auto_armed = supt->getParamValueWithNameAndKey("update_wpnav", "ap.auto_armed");
+	get_interlock = supt->getParamValueWithNameAndKey("update_wpnav", "get_interlock");
+
+
 	if (ap.auto_armed==0 || get_interlock==false) {
     //if (!ap.auto_armed || !motors.get_interlock()) {
 #if FRAME_CONFIG == HELI_FRAME  // Helicopters always stabilize roll/pitch/yaw
@@ -577,6 +592,12 @@ void Copter::guided_takeoff_run()
 
     // process pilot's yaw input
     float target_yaw_rate = 0;
+
+	//Fix修改V1.8
+	failsafe.radio = true;
+	if (supt->getParamValueWithNameAndKey("get_pilot_desired_yaw_rate", "failsafe.radio") == 0){
+		failsafe.radio = false;
+	}
 	if (failsafe.radio == 0) {
  //   if (!failsafe.radio) {
         // get pilot's desired yaw rate
@@ -636,10 +657,9 @@ void Copter::guided_pos_control_run()
 	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
 
 	//Fix修改V1.6
-	string str[] = {"2","set_throttle_out_unstabilized","get_pilot_desired_yaw_rate"};
-	ap.auto_armed = supt->getParamValueFormNamesWithKey(str,"ap.auto_armed");
-	get_interlock = supt->getParamValueFormNamesWithKey(str, "get_interlock");
-	ap.land_complete = supt->getParamValueFormNamesWithKey(str, "ap.land_complete");
+	ap.auto_armed = supt->getParamValueWithNameAndKey("update_wpnav","ap.auto_armed");
+	get_interlock = supt->getParamValueWithNameAndKey("update_wpnav", "get_interlock");
+	ap.land_complete = supt->getParamValueWithNameAndKey("update_wpnav", "ap.land_complete");
 
 	if (ap.auto_armed==0 || get_interlock==false || ap.land_complete==1) {
    // if (!ap.auto_armed || !motors.get_interlock() || ap.land_complete) {
@@ -747,6 +767,12 @@ void Copter::guided_vel_control_run()
 	this->supt->setCurProcessResult("get_interlock", end, 2);
 	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
 
+	//Fix修改V1.8
+	string str[] = { "3", "init_vel_controller_xyz", "get_pilot_desired_yaw_rate","millis"};
+	ap.auto_armed = supt->getParamValueFormNamesWithKey(str, "ap.auto_armed");
+	get_interlock = supt->getParamValueFormNamesWithKey(str, "get_interlock");
+	ap.land_complete = supt->getParamValueFormNamesWithKey(str, "ap.land_complete");
+
 	if (ap.auto_armed == 0 || get_interlock == false || ap.land_complete == 1) {
 	// if (!ap.auto_armed || !motors.get_interlock() || ap.land_complete) {
         // initialise velocity controller
@@ -812,6 +838,13 @@ void Copter::guided_vel_control_run()
 
    // if (tnow - vel_update_time_ms > GUIDED_POSVEL_TIMEOUT_MS && !pos_control.get_desired_velocity().is_zero()) {
 	bool is_zero = pos_control.get_desired_velocity().is_zero();
+
+	//Fix修改1.8
+	if (supt->getParamValueWithNameAndKey("set_desired_velocity", "is_zero") != NOTFIND)
+		is_zero = supt->getParamValueWithNameAndKey("set_desired_velocity", "is_zero");
+	tnow = supt->getParamValueWithNameAndKey("set_desired_velocity", "is_zero");
+	vel_update_time_ms = supt->getParamValueWithNameAndKey("vel_update_time_ms", "is_zero");
+
 	if (tnow - vel_update_time_ms > GUIDED_POSVEL_TIMEOUT_MS && is_zero == false) {
 		// ------------------------  插桩点 ---------------------------------
 		start = clock();
@@ -880,6 +913,13 @@ void Copter::guided_posvel_control_run()
 	end = clock();
 	this->supt->setCurProcessResult("get_interlock", end, 2);
 	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+
+	//Fix修改V1.8
+	string str[] = { "2", "set_pos_target", "get_pilot_desired_yaw_rate" };
+	ap.auto_armed = supt->getParamValueFormNamesWithKey(str, "ap.auto_armed");
+	get_interlock = supt->getParamValueFormNamesWithKey(str, "get_interlock");
+	ap.land_complete = supt->getParamValueFormNamesWithKey(str, "ap.land_complete");
+
 	if (ap.auto_armed == 0 || get_interlock == false || ap.land_complete == 1) {
 	//if (!ap.auto_armed || !motors.get_interlock() || ap.land_complete) {
         // set target position and velocity to current position and velocity
@@ -914,14 +954,18 @@ void Copter::guided_posvel_control_run()
 		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
 		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
 #endif
-        //return;
+        return;
     }
 
     // process pilot's yaw input
     float target_yaw_rate = 0;
+
+	//Fix修改1.8
+	failsafe.radio = true;
+	if (supt->getParamValueWithNameAndKey("get_pilot_desired_yaw_rate", "failsafe.radio") == 0)
+		failsafe.radio = false;
+
 	if (failsafe.radio == 0) {
-    //if (!failsafe.radio) {
-        // get pilot's desired yaw rate
 		// ------------------------  插桩点 ---------------------------------
 		start = clock();
 		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", start, 1);

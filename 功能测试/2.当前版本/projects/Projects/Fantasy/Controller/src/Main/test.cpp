@@ -21,16 +21,16 @@ int main() {
 		  cin >> file_name;
 		  break;
 	  case 2:
-		  // 1.创建连接Socket
+		   //1.创建连接Socket
 		  serverSocket = new ServerSocket(POST);
-		  // 1.1文件接收
+		   //1.1文件接收
 		  file_name = serverSocket->serverReceive();
 		  break;
 	  default:
 		  continue;
 	  }
 
-	  // 1.测试用例放入共享内存中
+	   //1.测试用例放入共享内存中
 	  if (supt->putTestCasesInMem(file_name)){
 		  //2.创建子程序
 		  int ERRORNUM = 0, a[supt->getTestCaseCount()];
