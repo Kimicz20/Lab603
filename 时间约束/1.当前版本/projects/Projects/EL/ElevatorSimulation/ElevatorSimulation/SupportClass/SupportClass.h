@@ -9,7 +9,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <ctime>
+#include <time.h>
 #include <fcntl.h>
 #include <iostream>
 #include <list>
@@ -17,12 +17,13 @@
 #include <sstream>
 #include <sys/shm.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 typedef list<string> StringList;
 typedef list<TestCase *> TestCaseList;
 
-#define TEXT_SZ 5*1024*1024
+#define TEXT_SZ 10*1024*1024
 
 struct shared_use_st {
   int currentIndex;   //当前测试用例ID
@@ -37,6 +38,7 @@ private:
   StringList testExecPath; //插桩路径保存
   int currentIndex;        //当前测试用例序号
 public:
+	struct timeval preProcessTime;
   SupportClass();
 
   /* 获取当前测试用例  */
@@ -54,14 +56,14 @@ public:
   /* 在当前 测试用例 中根据激励名称以及参数名 获取参数值 */
   int getParamValueWithNameAndKey(string processName, string key);
   /* 记录当前激励 执行情况 */
-  void setCurProcessResult(string processName, long mtime, int flag);
+  void setCurProcessResult(string processName, double mtime);
 
   /* 路径 */
   void showTestExecPath();
   void cleanTestExecPath();
 
   /* 类型转换 */
-  string ltos(long l);
+  string d2s(double l);
   /* 字符串 按某 字符 分割成list数组 */
   list<string> stringSplit(string s, const char *str);
   /* 信号处理以及设置定时器 */

@@ -21,7 +21,7 @@
 #include <fstream>
 typedef list<TestCase *> TestCaseList;
 
-#define TEXT_SZ 100*1024*1024
+#define TEXT_SZ 10*1024*1024
 //如果size为1至4096，则实际申请到的共享内存大小为4K(一页)；4097到8192，则实际申请到的共享内存大小为8K(两页)，依此类推。
 
 struct shared_use_st

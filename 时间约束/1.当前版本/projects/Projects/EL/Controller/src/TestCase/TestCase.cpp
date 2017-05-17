@@ -31,7 +31,7 @@ string TestCase::showTestCase(){
     }else{
         str += this->execStatus;
     }
-    str +="]\n-->resultStatus:[";
+    str +="]\n-->resultStatus:[ timeLimit:";
     if(this->resultStatus == ""){
         str +="NULL";
     }else{
@@ -47,4 +47,9 @@ void TestCase::setProcessList(string processName,string processParameter,string 
     LinkList s = this->processList->createProcessNode(processName,processParameter,processStatus);
     //2.添加激励节点在激励链表中
     this->processList->ListInsert(s);
+}
+
+/* 设置时间约束*/
+void TestCase::setTimeLimt(string timeLimit){
+	this->resultStatus = timeLimit;
 }

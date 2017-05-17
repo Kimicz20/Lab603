@@ -15,22 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\building.cpp">
+    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\building.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\door.cpp">
+    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\door.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\elevator.cpp">
+    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\elevator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation.cpp">
+    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\ElevatorSimulation.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\people.cpp">
+    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\people.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\timer.cpp">
+    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\timer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\SupportClass\SupportClass.cpp">
@@ -44,28 +44,28 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\building.h">
+    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\building.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\circularqueue.h">
+    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\circularqueue.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\common.h">
+    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\common.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\door.h">
+    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\door.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\elevator.h">
+    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\elevator.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\people.h">
+    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\people.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\timeinterface.h">
+    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\timeinterface.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ElevatorSimulation\timer.h">
+    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\timer.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\SupportClass\SupportClass.h">

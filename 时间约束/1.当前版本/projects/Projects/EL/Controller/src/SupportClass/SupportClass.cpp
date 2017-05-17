@@ -84,7 +84,7 @@ bool SupportClass::ReadXmlFile(string szFileName) { //读取Xml文件，并遍�
 	if (result == 3){
 		cout << "XML文件 " << name << " 未找到" << endl;
 		return false;
-	}
+	}//end if
 
     // 3.获得根元素
     XMLElement *scene = doc.RootElement();
@@ -99,7 +99,8 @@ bool SupportClass::ReadXmlFile(string szFileName) { //读取Xml文件，并遍�
         // 5.1读取测试用例 ID编号
         int testCaseID = this->index;
         tCase = new TestCase(testCaseID);
-        // 5.2读取激励函数 以及 参数，格式 激励名称_参数表
+        
+		// 5.2读取激励函数 以及 参数，格式 激励名称_参数表
         XMLElement *process = testcase->FirstChildElement("process");
         while (process) {
           // 5.3读取激励函数 以及 参数
@@ -107,17 +108,24 @@ bool SupportClass::ReadXmlFile(string szFileName) { //读取Xml文件，并遍�
               process->FirstChildElement("operation")->GetText());
           string processParameter(
               process->FirstChildElement("input")->GetText());
+		  string processStatus(
+			  process->FirstChildElement("time")->GetText());
           // 5.4创建激励实体类
-          tCase->setProcessList(processName, processParameter, "");
-          process = process->NextSiblingElement();
-        }
-        // 5.5向测试用例表中添加测试用例
+		  tCase->setProcessList(processName, processParameter, processStatus);
+		  process = process->NextSiblingElement("process");
+        }// end while
+		//5.5读取测试用例的时间约束
+		XMLElement *timeLimit = testcase->FirstChildElement("limit");
+		string tmp(timeLimit->FirstChildElement("operation")->GetText());
+		tCase->setTimeLimt(tmp);
+		
+		// 5.6向测试用例表中添加测试用例
         this->testCaseList.push_back(tCase);
         testcase = testcase->NextSiblingElement();
         if (testcase)
           this->index++;
-      }
-    }
+      }//end while
+    }//end if
   } catch (string &e) {
     return false;
   }
@@ -152,13 +160,11 @@ TestCase *SupportClass::getTestCaseAtIndex(int ID) {
 bool SupportClass::createMem() {
 
   // 1.创建共享内存
-  shmid = shmget((key_t)1111, sizeof(struct shared_use_st), 0666 | IPC_CREAT);
+  shmid = shmget((key_t)2222, sizeof(struct shared_use_st), 0666 | IPC_CREAT);
   if (shmid == -1) {
     cout << "创建共享内存失败!" << endl;
     //exit(EXIT_FAILURE);
 	return false;
-  } else {
-    cout << "创建共享内存成功，大小为" << sizeof(struct shared_use_st) << endl;
   }
 
   // 2.将共享内存连接到当前进程的地址空间
@@ -167,8 +173,6 @@ bool SupportClass::createMem() {
     cout << "共享内存连接到当前进程失败!" << endl;
     //exit(EXIT_FAILURE);
 	return false;
-  } else {
-    cout << "共享内存连接到当前进程成功!" << endl;
   }
 
   // 3.设置共享内存
@@ -184,7 +188,6 @@ bool SupportClass::putTestCasesInMem(string file_name) {
 	  if (this->createMem()){
 		  shared->currentIndex = 1;
 		  // 2.保存在共享内存中
-		 /* std::cout << "所有的测试用例：\n" << this->showTestCaseList()<< std::endl;*/
 		  strncpy(shared->text, this->showTestCaseList().c_str(),
 			  this->showTestCaseList().size());
 		  shared->count = this->getTestCaseCount();

@@ -35,5 +35,7 @@ class TestCase
         /* 设置激励链表 */
         void setProcessList(string processName,string processParameter,string processStatus);
 
+		/* 设置时间约束*/
+		void setTimeLimt(string timeLimit);
 };
 #endif

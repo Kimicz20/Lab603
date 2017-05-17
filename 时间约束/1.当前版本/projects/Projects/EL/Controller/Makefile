@@ -49,7 +49,7 @@ exec:
 	@./$(BIN_TARGET)
 # 运行子程序
 execp:
-	@make -C ../Coptermaster exec
+	@make -C ../ElevatorSimulation exec
 
 # 清理 文件
 clean:

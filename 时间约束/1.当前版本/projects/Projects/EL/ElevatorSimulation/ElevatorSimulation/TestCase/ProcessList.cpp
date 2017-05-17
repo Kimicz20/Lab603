@@ -43,7 +43,7 @@ LinkList ProcessList::createProcessNode(string processName,
   LinkList p = new Process{processID,        FALSE,         processName,
                            processParameter, processStatus, NULL};
   if (!p) {
-    cout << "创建激励节点失败";
+    cout << "创建激励节点失败"<<endl;
   }
   return p;
 }
@@ -97,7 +97,7 @@ string ProcessList::findValueWithProcessNameAndKey(string processName,
 Status ProcessList::setProcessStatus(string processName, string status) {
   LinkList p = this->findProcessWithName(processName);
   if (p) {
-    p->processStatus = status;
+	  p->processStatus = p->processStatus + "="+status;
     return OK;
   }
   return ERROR;

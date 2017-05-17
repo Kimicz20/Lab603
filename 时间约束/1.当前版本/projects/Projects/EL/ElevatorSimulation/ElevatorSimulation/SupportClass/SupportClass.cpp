@@ -35,8 +35,7 @@ void SupportClass::setCurrentIndex() {
 void SupportClass::setCurTestCaseResult(string exeSituation) {
   // 1. 设置当前测试用例执行状态
   if (exeSituation == "OK") {
-    exeSituation =
-        this->ltos(atoi(currentTestCase->getFirstProcessTime().c_str()));
+    exeSituation = currentTestCase->getFirstProcessTime().c_str();
   }
   currentTestCase->setCurrenetTestCaseExecStatus(exeSituation);
   // 2. 设置当前测试用例结果状态
@@ -64,25 +63,13 @@ int SupportClass::getParamValueWithNameAndKey(string processName, string key) {
 *	2、结束时间
 *	3、执行状态
 */
-void SupportClass::setCurProcessResult(string processName, long mtime,
-                                       int flag) {
-  /* 插桩路径记录 */
-  string str = "";
-  if (flag == 1) {
-    //激励前插桩
-    str = processName + "[ begin time :" + this->ltos(mtime) + "]";
-    this->testExecPath.push_back(str);
-  } else if (flag == 2) {
-    //激励后插桩
-    str = processName + "[ end time :" + this->ltos(mtime) + "]";
-    this->testExecPath.push_back(str);
-  } else {
-    /* 设置当前激励的执行状态 */
-    currentTestCase->setcurrentProcessExecStatus(processName);
+void SupportClass::setCurProcessResult(string processName, double mtime) {
+
     /* 根据激励名称以及对应状态 修改 */
     currentTestCase->setProcessStatusWithNameAndStatus(processName,
-                                                       this->ltos(mtime));
-  }
+		this->d2s(mtime));
+	/* 设置当前激励的执行状态 */
+	currentTestCase->setcurrentProcessExecStatus(processName);
 }
 
 /*	路径操作 */
@@ -99,7 +86,7 @@ void SupportClass::showTestExecPath() {
 void SupportClass::cleanTestExecPath() { this->testExecPath.clear(); }
 
 /*	类型转换 */
-string SupportClass::ltos(long l) {
+string SupportClass::d2s(double l) {
   ostringstream os;
   os << l;
   string result;
@@ -153,13 +140,11 @@ void SupportClass::createMem() {
   int shmid; //共享内存标识符
 
   // 1.创建共享内存
-  shmid = shmget((key_t)1234, sizeof(struct shared_use_st), 0666 | IPC_CREAT);
+  shmid = shmget((key_t)2222, sizeof(struct shared_use_st), 0666 | IPC_CREAT);
 
   if (shmid == -1) {
     cout << "打开共享内存失败!" << endl;
     exit(EXIT_FAILURE);
-  } else {
-    cout << "打开共享内存成功，大小为" << sizeof(struct shared_use_st) << endl;
   }
 
   // 2.将共享内存连接到当前进程的地址空间
@@ -167,13 +152,11 @@ void SupportClass::createMem() {
   if (shm == (void *)-1) {
     cout << "共享内存连接到当前进程失败!" << endl;
     exit(EXIT_FAILURE);
-  } else {
-    cout << "共享内存连接到当前进程成功!" << endl;
   }
   // 3.设置共享内存
   shared = (struct shared_use_st *)shm;
   // 4.统计所有用例的数目
-  cout << "测试用例数目：" << shared->count << endl;
+  cout << "ELS 测试用例数目：" << shared->count << endl;
 }
 
 /* 将 测试用例实体集 放入 共享内存中 */
