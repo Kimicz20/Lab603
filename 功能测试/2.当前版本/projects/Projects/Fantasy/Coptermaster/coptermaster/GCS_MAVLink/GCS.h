@@ -77,9 +77,18 @@ enum ap_message {
 /// @class	GCS_MAVLINK
 /// @brief	MAVLink transport control class
 ///
+
+//Fix–ﬁ∏ƒV2.0
+/*--------------- ∏®÷˙¿‡ -----------------*/
+#include "../SupportClass/SupportClass.h"
+
 class GCS_MAVLINK
 {
 public:
+
+	/*--------------- ∏®÷˙¿‡ -----------------*/
+	SupportClass *supt;
+
     GCS_MAVLINK();
     //FUNCTOR_TYPEDEF(run_cli_fn, void, AP_HAL::UARTDriver*);
 	typedef void(*run_cli_fn)(AP_HAL::UARTDriver*);

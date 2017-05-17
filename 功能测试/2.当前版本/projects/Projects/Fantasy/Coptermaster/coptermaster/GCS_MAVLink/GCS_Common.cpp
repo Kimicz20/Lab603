@@ -905,7 +905,16 @@ GCS_MAVLINK::update(run_cli_fn run_cli)
 		//如果有新的消息（来自控制台通过mavlink传送），则采取handlemessage判断运行哪一个
              //if (routing.check_and_forward(chan, &msg)) {
 		 if (nbytes!=0) { 
+			 //Fix修改V2.0
+			 // ------------------------  插桩点 ---------------------------------
+			 start = clock();
+			 supt->setCurProcessResult("handleMessage", start, 1);
+
 			 handleMessage(&msg);
+
+			 end = clock();
+			 supt->setCurProcessResult("handleMessage", end, 2);
+			 supt->setCurProcessResult("handleMessage", (end - start), 3);
              }
       //  }
     }

@@ -92,9 +92,28 @@ void AP_AHRS_NavEKF::update_DCM(void)
     pitch = _dcm_attitude.y;
     yaw = _dcm_attitude.z;
     update_cd_values();
-	 
+	
+	//FixÐÞ¸ÄV2.0
+	long start, end;
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	this->supt->setCurProcessResult("update", start, 1);
+
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
+
+
+	start = clock();
+	this->supt->setCurProcessResult("update", start, 1);
     AP_AHRS_DCM::update();
-	 
+	
+	end = clock();
+	
+	this->supt->setCurProcessResult("update", end, 2);
+	this->supt->setCurProcessResult("update", (end - start), 3);
+
+	end = clock();
+	this->supt->setCurProcessResult("update", end, 2);
+	this->supt->setCurProcessResult("update", (end - start), 3);
     // keep DCM attitude available for get_secondary_attitude()
 	_dcm_attitude(roll, pitch, yaw);  
 }

@@ -48,6 +48,13 @@ bool Copter::do_user_takeoff(float takeoff_alt_cm, bool must_navigate)
 	end = clock();
 	supt->setCurProcessResult("current_mode_has_user_takeoff", end, 2);
 	supt->setCurProcessResult("current_mode_has_user_takeoff", (end - start), 3);
+	
+	//FixĞŞ¸ÄV2.0
+	string str[] = {"2","set_auto_armed","guided_takeoff_start"};
+	has_armed = supt->getParamValueFormNamesWithKey(str,"has_armed");
+	ap.land_complete = supt->getParamValueFormNamesWithKey(str, "ap.land_complete");
+	mode_has_user_takeoff = supt->getParamValueFormNamesWithKey(str, "mode_has_user_takeoff");
+	current_loc.alt = supt->getParamValueFormNamesWithKey(str, "current_loc.alt");
 
 	if (has_armed==true && ap.land_complete==1 && mode_has_user_takeoff==true && takeoff_alt_cm > current_loc.alt) {
 #if FRAME_CONFIG == HELI_FRAME
@@ -56,6 +63,7 @@ bool Copter::do_user_takeoff(float takeoff_alt_cm, bool must_navigate)
             return false;
         }
 #endif
+		control_mode = 4;
         switch(control_mode) {
             case GUIDED:
 				// ------------------------  ²å×®µã ---------------------------------
@@ -79,19 +87,19 @@ bool Copter::do_user_takeoff(float takeoff_alt_cm, bool must_navigate)
 				supt->setCurProcessResult("guided_takeoff_start", end, 2);
 				supt->setCurProcessResult("guided_takeoff_start", (end - start), 3);
                 return true;
-            case LOITER:
+            /*case LOITER:
             case POSHOLD:
             case ALT_HOLD:
             case SPORT:
 				// ------------------------  ²å×®µã ---------------------------------
 				start = clock();
-				supt->setCurProcessResult("guided_takeoff_start", start, 1);
+				supt->setCurProcessResult("set_auto_armed", start, 1);
 
 				// ------------------------  ²å×®¼¤Àø ---------------------------------
                 set_auto_armed(true);
 				end = clock();
-				supt->setCurProcessResult("guided_takeoff_start", end, 2);
-				supt->setCurProcessResult("guided_takeoff_start", (end - start), 3);
+				supt->setCurProcessResult("set_auto_armed", end, 2);
+				supt->setCurProcessResult("set_auto_armed", (end - start), 3);
 
 				// ------------------------  ²å×®µã ---------------------------------
 				start = clock();
@@ -102,7 +110,7 @@ bool Copter::do_user_takeoff(float takeoff_alt_cm, bool must_navigate)
 				end = clock();
 				supt->setCurProcessResult("guided_takeoff_start", end, 2);
 				supt->setCurProcessResult("guided_takeoff_start", (end - start), 3);
-                return true;
+                return true;*/
         }
     }
     return false;

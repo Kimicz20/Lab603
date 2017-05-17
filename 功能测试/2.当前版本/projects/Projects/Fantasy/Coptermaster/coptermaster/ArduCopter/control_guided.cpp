@@ -334,6 +334,8 @@ void Copter::guided_set_destination(const Vector3f& destination)
 {
 	long start, end;
     // ensure we are in position control mode
+	guided_mode = (GuidedMode) Copter::supt->getParamValueWithNameAndKey("set_wp_destination", "guided_mode");
+	
     if (guided_mode != Guided_WP) {
 		// ------------------------  ²å×®µã ---------------------------------
 		start = clock();

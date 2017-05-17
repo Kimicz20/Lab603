@@ -14,8 +14,18 @@ void Copter::gcs_check_input(void)
 {
 	cout << "----- gcs_check_input begin -----" << endl;
 	long start, end;
-	for (uint8_t i = 0; i<num_gcs; i++) {
-		gcs[i].initialised = 1;//设置为1来进入
+
+	//Fix修改V2.0
+	// ------------------------  插桩点 ---------------------------------
+	start = clock();
+	supt->setCurProcessResult("gcs_check_input", start, 1);
+
+	// ------------------------  插桩激励 ---------------------------------
+
+	for (uint8_t i = 0; i<1; i++) {
+		gcs[i].initialised = false;
+		if (supt->getParamValueWithNameAndKey("handleMessage", "gcs[I].initialised") == 1)
+			gcs[i].initialised = true;
 		if (gcs[i].initialised == true) {
 		//if (1){
 //#if CLI_ENABLED == ENABLED
@@ -27,6 +37,8 @@ void Copter::gcs_check_input(void)
 			supt->setCurProcessResult("update", start, 1);
 
 			// ------------------------  插桩激励 ---------------------------------
+
+			gcs[i].supt = supt;
 			gcs[i].update(NULL);
 
 			end = clock();
@@ -36,6 +48,10 @@ void Copter::gcs_check_input(void)
 //#endif
 		}
 	}
+	end = clock();
+	supt->setCurProcessResult("gcs_check_input", end, 2);
+	supt->setCurProcessResult("gcs_check_input", (end - start), 3);
+
 	cout << "----- gcs_check_input end -----" << endl;
 }
 
@@ -79,39 +95,13 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 	//int a = 76; 
 	//mavlink_message_t a, *msg;
 	//msg = &a;
-	cout << MAVLINK_MSG_ID_COMMAND_LONG << endl
-		<< MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED << endl
-		<< MAVLINK_MSG_ID_SET_POSITION_TARGET_GLOBAL_INT << endl;
 	int choose = 0;
 	
-	cout << "输入已选择进入的方法（可选值76 84 86）" << endl;
-
-	if (Copter::supt->getParamValueWithNameAndKey("do_user_takeoff","msg.msgid") != -1){
-		
-		choose = Copter::supt->getParamValueWithNameAndKey("do_user_takeoff", "msg.msgid");
-
-	}else if (Copter::supt->getParamValueWithNameAndKey("guided_set_destination_posvel", "msg.msgid") != -1){
-
-		choose = Copter::supt->getParamValueWithNameAndKey("guided_set_destination_posvel", "msg.msgid");
-
-	}
-	else if (Copter::supt->getParamValueWithNameAndKey("guided_set_velocity", "msg.msgid") != -1){
-
-		choose = Copter::supt->getParamValueWithNameAndKey("guided_set_velocity", "msg.msgid");
-
-	}
-	else if (Copter::supt->getParamValueWithNameAndKey("guided_set_destination", "msg.msgid") != -1){
-
-		choose = Copter::supt->getParamValueWithNameAndKey("guided_set_destination", "msg.msgid");
-
-	}
-	else if (Copter::supt->getParamValueWithNameAndKey("mode_has_manual_throttle", "msg.msgid") != -1){
-
-		choose = Copter::supt->getParamValueWithNameAndKey("mode_has_manual_throttle", "msg.msgid");
-
-	}
-
-
+	
+	//Fix修改V2.0
+	string str[] = { "5","do_user_takeoff", "guided_set_destination_posvel", "guided_set_velocity", "guided_set_destination", "mode_has_manual_throttle" };
+	choose = supt->getParamValueFormNamesWithKey(str,"msg.msgid");
+	cout << "choose mode:"<<choose << endl;
 	if (choose == 76){
 		msg->msgid = MAVLINK_MSG_ID_COMMAND_LONG;
 	}
@@ -127,48 +117,50 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 	
 	switch (msg->msgid) {//模型仅有76 84 86 故修改以与其对应
 		//Pre-Flight calibration requests
-	case MAVLINK_MSG_ID_COMMAND_LONG:       // MAV ID: 76
-	{
-		cout << "in MAVLINK_MSG_ID_COMMAND_LONG";
-		// decode packet
-		mavlink_command_long_t packet;
-		mavlink_msg_command_long_decode(msg, &packet);
+		case MAVLINK_MSG_ID_COMMAND_LONG:       // MAV ID: 76
+		{
+			cout << "in MAVLINK_MSG_ID_COMMAND_LONG"<<endl;
+			// decode packet
+			mavlink_command_long_t packet;
+			mavlink_msg_command_long_decode(msg, &packet);
+			packet.command = supt->getParamValueWithNameAndKey("do_user_takeoff","packet.command");
+			cout << "command :" << (int)packet.command << endl;
+			switch (packet.command) {
+				//修改以对应模型
+				/*case MAV_CMD_START_RX_PAIR:
+					result = handle_rc_bind(packet);
+					break;*/
 
-		switch (packet.command) {
-			//修改以对应模型
-			/*case MAV_CMD_START_RX_PAIR:
-				result = handle_rc_bind(packet);
-				break;*/
+				case MAV_CMD_NAV_TAKEOFF: {//22
+					// param3 : horizontal navigation by pilot acceptable
+					// param4 : yaw angle   (not supported)
+					// param5 : latitude    (not supported)
+					// param6 : longitude   (not supported)
+					// param7 : altitude [metres]
 
-		case MAV_CMD_NAV_TAKEOFF: {//22
-			// param3 : horizontal navigation by pilot acceptable
-			// param4 : yaw angle   (not supported)
-			// param5 : latitude    (not supported)
-			// param6 : longitude   (not supported)
-			// param7 : altitude [metres]
+					float takeoff_alt = packet.param7 * 100;      // Convert m to cm
+					// ------------------------  插桩点 ---------------------------------
+					start = clock();
+					Copter::supt->setCurProcessResult("do_user_takeoff", start, 1);
 
-			float takeoff_alt = packet.param7 * 100;      // Convert m to cm
-			// ------------------------  插桩点 ---------------------------------
-			start = clock();
-			Copter::supt->setCurProcessResult("do_user_takeoff", start, 1);
-
-			// ------------------------  插桩激励 ---------------------------------
-			if (copter.do_user_takeoff(takeoff_alt, is_zero(packet.param3))) {
-				result = MAV_RESULT_ACCEPTED;
+					// ------------------------  插桩激励 ---------------------------------
+					if (copter.do_user_takeoff(takeoff_alt, is_zero(packet.param3))) {
+						result = MAV_RESULT_ACCEPTED;
+					}
+					else {
+						result = MAV_RESULT_FAILED;
+					}
+					end = clock();
+					Copter::supt->setCurProcessResult("do_user_takeoff", end, 2);
+					Copter::supt->setCurProcessResult("do_user_takeoff", (end - start), 3);
+					break;
+				}
 			}
-			else {
-				result = MAV_RESULT_FAILED;
-			}
-			end = clock();
-			Copter::supt->setCurProcessResult("do_user_takeoff", end, 2);
-			Copter::supt->setCurProcessResult("do_user_takeoff", (end - start), 3);
 			break;
 		}
-		}
-	}
 		case MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED:     // MAV ID: 84
 		{
-			cout << "in MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED";
+			cout << "in MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED"<<endl;
 			// decode packet
 			mavlink_set_position_target_local_ned_t packet;
 			mavlink_msg_set_position_target_local_ned_decode(msg, &packet);
@@ -254,6 +246,7 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 				Copter::supt->setCurProcessResult("guided_set_velocity", (end - start), 3);
 			}
 			else if (!pos_ignore && vel_ignore && acc_ignore) {
+				//Fix修改V2.0
 				// ------------------------  插桩点 ---------------------------------
 				start = clock();
 				Copter::supt->setCurProcessResult("guided_set_destination", start, 1);
@@ -273,7 +266,7 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 
 		case MAVLINK_MSG_ID_SET_POSITION_TARGET_GLOBAL_INT:    // MAV ID: 86
 		{
-			cout << "in MAVLINK_MSG_ID_SET_POSITION_TARGET_GLOBAL_INT";
+			cout << "in MAVLINK_MSG_ID_SET_POSITION_TARGET_GLOBAL_INT"<<endl;
 			// decode packet
 			mavlink_set_position_target_global_int_t packet;
 			mavlink_msg_set_position_target_global_int_decode(msg, &packet);
@@ -353,7 +346,10 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 				}
 				pos_ned = copter.pv_location_to_vector(loc);
 			}
-
+			string tmp[] = {"2","guided_set_destination_posvel","guided_set_velocity"};
+			pos_ignore = supt->getParamValueFormNamesWithKey(tmp,"pos_ignore");
+			vel_ignore = supt->getParamValueFormNamesWithKey(tmp, "vel_ignore");
+			acc_ignore = supt->getParamValueFormNamesWithKey(tmp, "acc_ignore");
 			if (!pos_ignore && !vel_ignore && acc_ignore) {
 
 				// ------------------------  插桩点 ---------------------------------
@@ -378,15 +374,58 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 				Copter::supt->setCurProcessResult("guided_set_velocity", (end - start), 3);
 			}
 			else if (!pos_ignore && vel_ignore && acc_ignore) {
-				/*if (!copter.guided_set_destination(pos_ned)) {
-					result = MAV_RESULT_FAILED;
-					}*/
+				// ------------------------  插桩点 ---------------------------------
+				start = clock();
+				Copter::supt->setCurProcessResult("guided_set_destination", start, 1);
+
+				// ------------------------  插桩激励 ---------------------------------
+				copter.guided_set_destination(pos_ned);
+				
+				end = clock();
+				Copter::supt->setCurProcessResult("guided_set_destination", end, 2);
+				Copter::supt->setCurProcessResult("guided_set_destination", (end - start), 3);
 			}
 			else {
 				result = MAV_RESULT_FAILED;
 			}
 			break;
 		}
+		//Fix修改V2.0
+		case 400:    // MAV ID: 400
+		{
+			// ------------------------  插桩点 ---------------------------------
+			start = clock();
+			Copter::supt->setCurProcessResult("mode_has_manual_throttle", start, 1);
+
+			// ------------------------  插桩激励 ---------------------------------
+			end = clock();
+			Copter::supt->setCurProcessResult("mode_has_manual_throttle", end, 2);
+			Copter::supt->setCurProcessResult("mode_has_manual_throttle", (end - start), 3);
+			bool is_equal_1 = false;
+			if (supt->getParamValueWithNameAndKey("init_disarm_motors", "is_equal_1") == 1)
+				is_equal_1 = true;
+			if (is_equal_1){
+				// ------------------------  插桩点 ---------------------------------
+				start = clock();
+				Copter::supt->setCurProcessResult("init_disarm_motors", start, 1);
+
+				// ------------------------  插桩激励 ---------------------------------
+				end = clock();
+				Copter::supt->setCurProcessResult("init_disarm_motors", end, 2);
+				Copter::supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
+			}
+			else{
+				// ------------------------  插桩点 ---------------------------------
+				start = clock();
+				Copter::supt->setCurProcessResult("init_arm_motors", start, 1);
+
+				// ------------------------  插桩激励 ---------------------------------
+				end = clock();
+				Copter::supt->setCurProcessResult("init_arm_motors", end, 2);
+				Copter::supt->setCurProcessResult("init_arm_motors", (end - start), 3);
+			}
+		}
+
 		}
 		cout << "----- handleMessage end -----" << endl;
 	} 

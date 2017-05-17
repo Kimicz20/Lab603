@@ -31,7 +31,6 @@ void AP_AHRS_DCM::update(void)
     if (_last_startup_ms == 0) {
         _last_startup_ms = hal.scheduler->millis();
     }
-	
     // tell the IMU to grab some data
     _ins.update();//更新加速度和陀螺仪的数据
 	 
