@@ -40,12 +40,10 @@ bool Copter::land_init(bool ignore_checks)
 // should be called at 100hz or more
 void Copter::land_run()
 {
-	cout << "---------- land_run begin -----------" << endl;
 	long start, end;
 	//FixÐÞ¸ÄV1.4
 	string str[] = { "2", "land_gps_run", "land_nogps_run" };
 	int r = supt->getParamValueFormNamesWithKey(str, "land_with_gps");
-	cout << "land_with_gps:" << r << endl;
 	land_with_gps = false;
 	if (r == 1)
 		land_with_gps = true;
@@ -70,7 +68,6 @@ void Copter::land_run()
 		this->supt->setCurProcessResult("land_nogps_run", (end - start), 3);
 
     }
-	cout << "---------- land_run end -----------" << endl;
 }
 
 // land_run - runs the land controller
@@ -306,15 +303,12 @@ void Copter::land_nogps_run()
 
 	//FixÐÞ¸ÄV1.4
 	string str[] = { "2", "update_simple_mode", "get_pilot_desired_yaw_rate" };
-	cout << "failsafe.radio:" << endl;
 	int r = supt->getParamValueFormNamesWithKey(str, "failsafe.radio");
-	cout << "failsafe.radio:" << r << endl;
 	if (r == 1)
 		failsafe.radio = true;
 	else
 		failsafe.radio = false;
 	r = supt->getParamValueFormNamesWithKey(str, "g.land_repositioning");
-	cout << "g.land_repositioning:" << r << endl;
 	if (r == 1)
 		g.land_repositioning = true;
 	else
@@ -442,7 +436,6 @@ void Copter::land_nogps_run()
 	end = clock();
 	this->supt->setCurProcessResult("update_z_controller", end, 2);
 	this->supt->setCurProcessResult("update_z_controller", (end - start), 3);
-	cout << "@@@@@@@@@@@@@@ 4" << endl;
 }
 
 // get_land_descent_speed - high level landing logic

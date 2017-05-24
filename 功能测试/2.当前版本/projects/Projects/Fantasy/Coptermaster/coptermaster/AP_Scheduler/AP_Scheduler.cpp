@@ -34,7 +34,11 @@ void AP_Scheduler::tick(void)
     _tick_counter++;
 	 
 }
-
+//FixÐÞ¸Ä2.1
+int AP_Scheduler::getTick()
+{
+	return (int)_tick_counter;
+}
 /*
   run one tick
   this will run as many scheduler tasks as we can in the specified time
@@ -56,6 +60,13 @@ void AP_Scheduler::run(uint16_t time_available)
 
 	uint32_t now = run_started_usec;
 	for (uint8_t i = 0; i<_num_tasks; i++) {
+		/*cout << "##################" << endl
+			<< "\ttime_available :" << time_available << endl
+			<< "\t_num_tasks :" << (int)_num_tasks << endl
+			<< "\tname:" << _tasks[i].name << endl
+			<< "\tinterval_ticks:" << pgm_read_word(&_tasks[i].interval_ticks) << endl
+			<< "\tmax_time_micros:" << pgm_read_word(&_tasks[i].max_time_micros) << endl
+			<< "##################" << endl;*/
 		uint16_t dt = _tick_counter - _last_run[i];
 		uint16_t interval_ticks = pgm_read_word(&_tasks[i].interval_ticks);
 		if (dt >= interval_ticks) {
@@ -84,7 +95,19 @@ void AP_Scheduler::run(uint16_t time_available)
 				task_fn_t func;
 				pgm_read_block(&_tasks[i].function, &func, sizeof(func));
 				current_task = i;
+				string name = _tasks[i].name;
+				//FixÐÞ¸Ä2.1
+				// ------------------------  ²å×®µã ---------------------------------
+				start = clock();
+				this->supt->setCurProcessResult(name, start, 1);
+
+				// ------------------------  ²å×®¼¤Àø ---------------------------------
 				func();
+
+				end = clock();
+				this->supt->setCurProcessResult(name, end, 2);
+				this->supt->setCurProcessResult(name, (end - start), 3);
+
 				current_task = -1;
 
 				// record the tick counter when we ran. This drives
@@ -145,6 +168,8 @@ void AP_Scheduler::run(uint16_t time_available)
 					goto update_spare_ticks;
 				}
 				time_available -= time_taken;
+				/*cout << "time_taken:" << time_taken << endl
+					<< "\ttime_available :" << time_available << endl;*/
 			}
 		}
 	}

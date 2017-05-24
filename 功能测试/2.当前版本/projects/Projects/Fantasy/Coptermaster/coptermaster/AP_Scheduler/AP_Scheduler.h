@@ -70,7 +70,9 @@ public:
 
     // call when one tick has passed
     void tick(void);
-
+	
+	//FixÐÞ¸Ä2.1
+	int getTick();
     // run the tasks. Call this once per 'tick'.
     // time_available is the amount of time available to run
     // tasks in microseconds

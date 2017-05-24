@@ -242,7 +242,17 @@ void Copter::guided_posvel_control_start()
 	Copter::supt->setCurProcessResult("set_speed_xy", start, 1);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
+
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	Copter::supt->setCurProcessResult("get_speed_xy", start, 1);
+
     pos_control.set_speed_xy(wp_nav.get_speed_xy());
+
+	end = clock();
+	Copter::supt->setCurProcessResult("get_speed_xy", end, 2);
+	Copter::supt->setCurProcessResult("get_speed_xy", (end - start), 3);
+
 	end = clock();
 	Copter::supt->setCurProcessResult("set_speed_xy", end, 2);
 	Copter::supt->setCurProcessResult("set_speed_xy", (end - start), 3);
@@ -251,14 +261,30 @@ void Copter::guided_posvel_control_start()
 	start = clock();
 	Copter::supt->setCurProcessResult("set_accel_xy", start, 1);
 
+	start = clock();
+	Copter::supt->setCurProcessResult("get_wp_acceleration", start, 1);
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
-    pos_control.set_accel_xy(wp_nav.get_wp_acceleration());
+	pos_control.set_accel_xy(wp_nav.get_wp_acceleration());
+
+	end = clock();
+	Copter::supt->setCurProcessResult("get_wp_acceleration", end, 2);
+	Copter::supt->setCurProcessResult("get_wp_acceleration", (end - start), 3);
+
 	end = clock();
 	Copter::supt->setCurProcessResult("set_accel_xy", end, 2);
 	Copter::supt->setCurProcessResult("set_accel_xy", (end - start), 3);
 
     const Vector3f& curr_pos = inertial_nav.get_position();
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	Copter::supt->setCurProcessResult("get_velocity", start, 1);
+
     const Vector3f& curr_vel = inertial_nav.get_velocity();
+
+	end = clock();
+	Copter::supt->setCurProcessResult("get_velocity", end, 2);
+	Copter::supt->setCurProcessResult("get_velocity", (end - start), 3);
+	Copter::supt->setCurProcessResult("get_velocity", (end - start), 3);
 
     // set target position and velocity to current position and velocity
 	// ------------------------  ²å×®µã ---------------------------------
@@ -283,6 +309,11 @@ void Copter::guided_posvel_control_start()
 
     // set vertical speed and acceleration
     pos_control.set_speed_z(wp_nav.get_speed_down(), wp_nav.get_speed_up());
+
+	Copter::supt->setCurProcessResult("get_speed_down", (end - start), 3);
+	Copter::supt->setCurProcessResult("get_speed_up", (end - start), 3);
+	Copter::supt->setCurProcessResult("set_speed_z", (end - start), 3);
+
 	// ------------------------  ²å×®µã ---------------------------------
 	start = clock();
 	Copter::supt->setCurProcessResult("set_accel_z", start, 1);
@@ -290,6 +321,7 @@ void Copter::guided_posvel_control_start()
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
     pos_control.set_accel_z(wp_nav.get_accel_z());
 	end = clock();
+	Copter::supt->setCurProcessResult("get_accel_z", (end - start), 3);
 	Copter::supt->setCurProcessResult("set_accel_z", end, 2);
 	Copter::supt->setCurProcessResult("set_accel_z", (end - start), 3);
 
@@ -376,7 +408,7 @@ void Copter::guided_set_velocity(const Vector3f& velocity)
     }
 
     vel_update_time_ms = millis();
-
+	Copter::supt->setCurProcessResult("millis", (end - start), 3);
     // set position controller velocity target
 	// ------------------------  ²å×®µã ---------------------------------
 	start = clock();
@@ -393,6 +425,7 @@ void Copter::guided_set_velocity(const Vector3f& velocity)
 void Copter::guided_set_destination_posvel(const Vector3f& destination, const Vector3f& velocity) {
     // check we are in velocity control mode
 	long start, end;
+	guided_mode = (GuidedMode)supt->getParamValueWithNameAndKey("guided_posvel_control_start","guided_modes");
     if (guided_mode != Guided_PosVel) {
 		// ------------------------  ²å×®µã ---------------------------------
 		start = clock();
@@ -482,7 +515,6 @@ void Copter::guided_run()
 		default:
 			break;
 	}
-	cout << "GUIDED_MODE:" << b << endl;
     switch (guided_mode) {
 
 		case Guided_TakeOff:
@@ -554,7 +586,6 @@ void Copter::guided_run()
 void Copter::guided_takeoff_run()
 {
 	long start, end;
-	cout << "guided_takeoff_run begin" << endl;
     // if not auto armed or motors not enabled set throttle to zero and exit immediately
 	//FixÐÞ¸Ä1.8
 	start = clock();
@@ -772,9 +803,16 @@ void Copter::guided_vel_control_run()
 	//FixÐÞ¸ÄV1.8
 	string str[] = { "3", "init_vel_controller_xyz", "get_pilot_desired_yaw_rate","millis"};
 	ap.auto_armed = supt->getParamValueFormNamesWithKey(str, "ap.auto_armed");
-	get_interlock = supt->getParamValueFormNamesWithKey(str, "get_interlock");
+	
+	get_interlock = false;
+	if (supt->getParamValueFormNamesWithKey(str, "get_interlock") == 1)
+		get_interlock = true;
+
 	ap.land_complete = supt->getParamValueFormNamesWithKey(str, "ap.land_complete");
 
+	//cout << "ap.auto_armed:" << supt->getParamValueFormNamesWithKey(str, "ap.auto_armed") << endl
+	//	<< "get_interlock:" << supt->getParamValueFormNamesWithKey(str, "get_interlock") << endl
+	//	<< "ap.land_complete:" << supt->getParamValueFormNamesWithKey(str, "ap.land_complete") << endl;
 	if (ap.auto_armed == 0 || get_interlock == false || ap.land_complete == 1) {
 	// if (!ap.auto_armed || !motors.get_interlock() || ap.land_complete) {
         // initialise velocity controller
@@ -873,12 +911,15 @@ void Copter::guided_vel_control_run()
     }
 
 	//FixÐÞ¸Ä1.7
-	auto_yaw_mode = 0;
+	auto_yaw_mode = AUTO_YAW_LOOK_AT_NEXT_WP;
 	string tmp[] = { "2", "angle_ef_roll_pitch_rate_ef_yaw", "angle_ef_roll_pitch_yaw" };
-	auto_yaw_mode = supt->getParamValueFormNamesWithKey(tmp, "auto_yaw_mode");
+	if(supt->getParamValueFormNamesWithKey(tmp, "auto_yaw_mode") == 0)
+		auto_yaw_mode = AUTO_YAW_HOLD;
 
+	cout << "auto_yaw_mode:" << (int)auto_yaw_mode << endl;
     // call attitude controller
     if (auto_yaw_mode == AUTO_YAW_HOLD) {
+		cout << "Hre" << endl;
         // roll & pitch from waypoint controller, yaw rate from pilot
 		// ------------------------  ²å×®µã ---------------------------------
 		start = clock();

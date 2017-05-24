@@ -20,15 +20,15 @@ scheduler table for fast CPUs - all regular tasks apart from the fast_loop()
 should be listed here, along with how often they should be called
 (in 2.5ms units) and the maximum time they are expected to take (in
 microseconds)
-1    = 400hz
-2    = 200hz
-4    = 100hz
-8    = 50hz
-20   = 20hz
-40   = 10hz
-133  = 3hz
-400  = 1hz
-4000 = 0.1hz
+1    = 400hz 0.0025
+2    = 200hz 0.005
+4    = 100hz 0.01
+8    = 50hz  0.02
+20   = 20hz  0.05
+40   = 10hz	 0.1
+133  = 3hz	 0.33
+400  = 1hz	 1
+4000 = 0.1hz 10
 */
 //
 //const AP_Scheduler::Task Copter::task = { FUNCTOR_BIND(&copter, &Copter::rc_loop, void), AP_SCHEDULER_NAME_INITIALIZER(rc_loop)  4, 130 };  //SCHED_TASK(rc_loop, 4, 130)£»
@@ -101,7 +101,6 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
 
 void Copter::setup()
 {
-	cout << "---- set up begin ----" << endl;
 	long start, end;
 	cliSerial = hal.console;
 
@@ -128,7 +127,6 @@ void Copter::setup()
 	// setup initial performance counters
 	perf_info_reset();
 	fast_loopTimer = hal.scheduler->micros();
-	cout << "---- set up end ----" << endl;
 }
 
 /*
@@ -136,6 +134,7 @@ if the compass is enabled then try to accumulate a reading
 */
 void Copter::compass_accumulate(void)
 {
+	supt->Cout("compass_accumulate");
 	long start, end;
 	if (g.compass_enabled) {
 		// ------------------------  ²å×®µã ---------------------------------
@@ -154,6 +153,7 @@ try to accumulate a baro reading
 */
 void Copter::barometer_accumulate(void)
 {
+	supt->Cout("barometer_accumulate");
 	barometer.accumulate();
 }
 
@@ -174,7 +174,6 @@ void Copter::perf_update(void)
 
 void Copter::loop()
 {
-	cout << "---- loop begin ----" << endl;
 	long end, start;
 	// wait for an INS sample
 	//ins.wait_for_sample(); 
@@ -233,7 +232,6 @@ void Copter::loop()
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
 	uint32_t time_available = (timer + MAIN_LOOP_MICROS) - micros();
-
 	end = clock();
 	this->supt->setCurProcessResult("micros", end, 2);
 	this->supt->setCurProcessResult("micros", (end - start), 3);
@@ -249,14 +247,12 @@ void Copter::loop()
 	this->supt->setCurProcessResult("run", (end - start), 3);
 
 	//while (1);
-	cout << "---- loop end ----" << endl;
 }
 
 
 // Main loop - 400hz
 void Copter::fast_loop()
 {
-	cout << "---- fast_loop begin ----" << endl;
 	long start, end;
 	// IMU DCM Algorithm
 	// ------------------------  ²å×®µã ---------------------------------
@@ -335,13 +331,13 @@ void Copter::fast_loop()
 	/* if (should_log(MASK_LOG_ANY)) {
 	Log_Sensor_Health();
 	}*/
-	cout << "---- fast_loop end ----" << endl;
 }
 
 // rc_loops - reads user input from transmitter/receiver
 // called at 100hz
 void Copter::rc_loop()
 {
+	supt->Cout("rc_loop");
 	// Read radio and 3-position switch on radio
 	// ------------------------  ²å×®µã ---------------------------------
 	long start, end;
@@ -405,6 +401,8 @@ void Copter::throttle_loop()
 // should be called at 10hz
 void Copter::update_batt_compass(void)
 {
+	//FixÐÞ¸Ä2.1
+	supt->Cout("update_batt_compass");
 	// read battery before compass because it may be used for motor interference compensation
 	long start, end;
 	// ------------------------  ²å×®µã ---------------------------------
@@ -415,10 +413,33 @@ void Copter::update_batt_compass(void)
 	end = clock();
 	supt->setCurProcessResult("read_battery", end, 2);
 	supt->setCurProcessResult("read_battery", (end - start), 3);
+	
+	g.compass_enabled = false;
+	if (supt->getParamValueWithNameAndKey("read", "g.compass_enabled") == 1)
+		g.compass_enabled = true;
+	
 	if (g.compass_enabled) {
 		// update compass with throttle value - used for compassmot
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("get_throttle", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+		
 		compass.set_throttle(motors.get_throttle() / 1000.0f);
+
+		end = clock();
+		supt->setCurProcessResult("get_throttle", end, 2);
+		supt->setCurProcessResult("get_throttle", (end - start), 3);
+		//FixÐÞ¸Ä2.1
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("read", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		compass.read();
+		end = clock();
+		supt->setCurProcessResult("read", end, 2);
+		supt->setCurProcessResult("read", (end - start), 3);
+
 		// log compass information
 		if (should_log(MASK_LOG_COMPASS)) {
 			//DataFlash.Log_Write_Compass(compass);
@@ -512,6 +533,8 @@ void Copter::dataflash_periodic(void)
 // three_hz_loop - 3.3hz loop
 void Copter::three_hz_loop()
 {
+	supt->Cout("three_hz_loop");
+
 	// check if we've lost contact with the ground station
 	long start, end;
 	// ------------------------  ²å×®µã ---------------------------------
@@ -561,6 +584,7 @@ void Copter::three_hz_loop()
 // one_hz_loop - runs at 1Hz
 void Copter::one_hz_loop()
 {
+	supt->Cout("one_hz_loop");
 	/*if (should_log(MASK_LOG_ANY)) {
 	Log_Write_Data(DATA_AP_STATE, ap.value);
 	}*/
@@ -652,6 +676,8 @@ void Copter::one_hz_loop()
 // called at 50hz
 void Copter::update_GPS(void)
 {
+	supt->Cout("update_GPS");
+
 	static uint32_t last_gps_reading[GPS_MAX_INSTANCES];   // time of last gps message
 	bool gps_updated = false;
 	long start, end;
@@ -660,6 +686,8 @@ void Copter::update_GPS(void)
 	this->supt->setCurProcessResult("update", start, 1);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	//FixÐÞ¸Ä2.1
+	gps.supt = supt;
 	gps.update();
 	end = clock();
 	this->supt->setCurProcessResult("update", end, 2);
@@ -759,7 +787,6 @@ void Copter::update_super_simple_bearing(bool force_update)
 
 void Copter::read_AHRS(void)
 {
-	cout << "---- read_AHRS begin ----" << endl;
 	// Perform IMU calculations and get attitude info
 	long start, end;
 	//-----------------------------------------------
@@ -785,13 +812,12 @@ void Copter::read_AHRS(void)
 	end = clock();
 	this->supt->setCurProcessResult("update", end, 2);
 	this->supt->setCurProcessResult("update", (end - start), 3);
-	cout << "---- read_AHRS end ----" << endl;
 }
 
 // read baro and sonar altitude at 10hz
 void Copter::update_altitude()
 {
-	cout << "------ update_altitude begin -----" << endl;
+	supt->Cout("update_altitude");
 	// read in baro altitude
 	long start, end;
 	// ------------------------  ²å×®µã ---------------------------------
@@ -812,6 +838,5 @@ void Copter::update_altitude()
 	/*if (should_log(MASK_LOG_CTUN)) {
 	Log_Write_Control_Tuning();
 	}*/
-	cout << "------ update_altitude end -----" << endl;
 }
 AP_HAL_MAIN_CALLBACKS(&copter);

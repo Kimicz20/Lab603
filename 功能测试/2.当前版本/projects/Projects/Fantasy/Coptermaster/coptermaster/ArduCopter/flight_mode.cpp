@@ -131,12 +131,10 @@ bool Copter::set_mode(uint8_t mode)
 // called at 100hz or more
 void Copter::update_flight_mode()
 {
-    cout << "---- update_flight_mode begin ----" << endl;
     long start, end;
     // Update EKF speed limit - used to limit speed when we are using optical flow
     ahrs.getEkfControlLimits(ekfGndSpdLimit, ekfNavVelGainScaler);  
   //  cout << "设置飞行模式，1引导2绕圈3落地" << endl; 
-	cout << "set fly mode : 1 GUIDED 2.CIRCLE 3.LAND" << endl;
 	//Fix修改V1.4
 	int a = 6;
 	string processNames[] = { "stabilize_run", "althold_run", "auto_run", "circle_run", "guided_run", "land_run", "rtl_run" };
@@ -173,7 +171,6 @@ void Copter::update_flight_mode()
 		default:
 			break;
 	}
-    cout << "now fly mode is :"<<(int)control_mode<<endl;
     switch (control_mode) {
         case ACRO: 
             #if FRAME_CONFIG == HELI_FRAME
@@ -252,7 +249,6 @@ void Copter::update_flight_mode()
             start = clock();
             this->supt->setCurProcessResult("land_run", start, 1);
             // ------------------------  插桩激励 ---------------------------------
-			cout << "---------- land_run 11 -----------" << endl;
             land_run();
             end = clock();
             this->supt->setCurProcessResult("land_run", end, 2);
@@ -298,7 +294,6 @@ void Copter::update_flight_mode()
             brake_run();
             break;
     }
-    cout << "---- update_flight_mode end ----" << endl;
 }
 
 // exit_mode - high level call to organise cleanup as a flight mode is exited

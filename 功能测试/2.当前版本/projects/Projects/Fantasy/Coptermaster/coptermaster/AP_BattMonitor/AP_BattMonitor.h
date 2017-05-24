@@ -22,6 +22,11 @@ class AP_BattMonitor_SMBus;
 class AP_BattMonitor_SMBus_I2C;
 class AP_BattMonitor_SMBus_PX4;
 
+
+//FixÐÞ¸Ä2.1
+/*--------------- ¸¨ÖúÀà -----------------*/
+#include "../SupportClass/SupportClass.h"
+
 class AP_BattMonitor
 {
     friend class AP_BattMonitor_Backend;
@@ -31,6 +36,8 @@ class AP_BattMonitor
     friend class AP_BattMonitor_SMBus_PX4;
 
 public:
+	/*--------------- ¸¨ÖúÀà -----------------*/
+	SupportClass *supt;
 
     /// Constructor
     AP_BattMonitor();
@@ -72,18 +79,69 @@ public:
 
     /// has_current - returns true if battery monitor instance provides current info
     bool has_current(uint8_t instance) const;
-    bool has_current() const { return has_current(AP_BATT_PRIMARY_INSTANCE); }
+
+	//FixÐÞ¸Ä2.1
+    bool has_current() const { 
+		long start, end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("has_current", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
+		bool b = has_current(AP_BATT_PRIMARY_INSTANCE);
+		if (supt->getParamValueWithNameAndKey("current_amps", "has_current") == 1)
+			b = true;
+		else
+			b = false;
+		end = clock();
+		supt->setCurProcessResult("has_current", end, 2);
+		supt->setCurProcessResult("has_current", (end - start), 3);
+
+		return b; 
+	}
 
     /// voltage - returns battery voltage in millivolts
     float voltage(uint8_t instance) const;
-    float voltage() const { return voltage(AP_BATT_PRIMARY_INSTANCE); }
+
+	//FixÐÞ¸Ä2.1
+    float voltage() const { 
+		long start, end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("current_amps", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
+		float b = voltage(AP_BATT_PRIMARY_INSTANCE);
+
+		end = clock();
+		supt->setCurProcessResult("current_amps", end, 2);
+		supt->setCurProcessResult("current_amps", (end - start), 3);
+
+		return b;
+	}
 
     // voltage2 - returns the voltage of the second battery (helper function to send 2nd voltage to GCS)
     float voltage2() const;
 
     /// current_amps - returns the instantaneous current draw in amperes
     float current_amps(uint8_t instance) const;
-    float current_amps() const { return current_amps(AP_BATT_PRIMARY_INSTANCE); }
+
+	//FixÐÞ¸Ä2.1
+    float current_amps() const { 
+		long start, end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("current_amps", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
+		float b = current_amps(AP_BATT_PRIMARY_INSTANCE);
+
+		end = clock();
+		supt->setCurProcessResult("current_amps", end, 2);
+		supt->setCurProcessResult("current_amps", (end - start), 3);
+
+		return b; 
+	}
 
     /// current_total_mah - returns total current drawn since start-up in amp-hours
     float current_total_mah(uint8_t instance) const;
@@ -95,10 +153,42 @@ public:
 
     /// exhausted - returns true if the battery's voltage remains below the low_voltage for 10 seconds or remaining capacity falls below min_capacity
     bool exhausted(uint8_t instance, float low_voltage, float min_capacity_mah);
-    bool exhausted(float low_voltage, float min_capacity_mah) { return exhausted(AP_BATT_PRIMARY_INSTANCE, low_voltage, min_capacity_mah); }
 
+	//FixÐÞ¸Ä2.1
+    bool exhausted(float low_voltage, float min_capacity_mah) { 
+		long start, end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("exhausted", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
+		bool b = exhausted(AP_BATT_PRIMARY_INSTANCE, low_voltage, min_capacity_mah);
+		if (supt->getParamValueWithNameAndKey("failsafe_battery_event", "has_exhausted") == 1)
+			b = true;
+		end = clock();
+		supt->setCurProcessResult("exhausted", end, 2);
+		supt->setCurProcessResult("exhausted", (end - start), 3);
+
+		return b;
+	}
+
+	//FixÐÞ¸Ä2.1
     /// get_type - returns battery monitor type
-    enum BattMonitor_Type get_type() { return get_type(AP_BATT_PRIMARY_INSTANCE); }
+    enum BattMonitor_Type get_type() { 
+		long start, end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("get_type", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
+		enum BattMonitor_Type b = get_type(AP_BATT_PRIMARY_INSTANCE);
+
+		end = clock();
+		supt->setCurProcessResult("get_type", end, 2);
+		supt->setCurProcessResult("get_type", (end - start), 3);
+
+		return b;
+	}
     enum BattMonitor_Type get_type(uint8_t instance) { return (enum BattMonitor_Type)_monitoring[instance].get(); }
 
     /// set_monitoring - sets the monitor type (used for example sketch only)

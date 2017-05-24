@@ -108,7 +108,31 @@ void Copter::failsafe_battery_event(void)
     }
 
     // failsafe check
+	//FixÐÞ¸Ä2.1
+	long start, end;
+
+	battery.supt = supt;
+
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	supt->setCurProcessResult("armed", start, 1);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
 	bool has_armed = motors.armed();
+	
+	if (supt->getParamValueWithNameAndKey("init_disarm_motors", "has_armed") == 1)
+		has_armed = true;
+
+	end = clock();
+	supt->setCurProcessResult("armed", end, 2);
+	supt->setCurProcessResult("armed", (end - start), 3);
+
+	g.failsafe_battery_enabled = false;
+	if (supt->getParamValueWithNameAndKey("init_disarm_motors", "g.failsafe_battery_enabled") == 1)
+		g.failsafe_battery_enabled = true;
+	
+	control_mode = supt->getParamValueWithNameAndKey("init_disarm_motors", "control_mode");
+
 	if (g.failsafe_battery_enabled != FS_BATT_DISABLED && has_armed == true){
     //if (g.failsafe_battery_enabled != FS_BATT_DISABLED && motors.armed()) {
         switch(control_mode) {
@@ -159,8 +183,16 @@ void Copter::failsafe_battery_event(void)
     }
 
     // set the low battery flag
-    //set_failsafe_battery(true);
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	supt->setCurProcessResult("set_failsafe_battery", start, 1);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
+    
+	set_failsafe_battery(true);
 
+	end = clock();
+	supt->setCurProcessResult("set_failsafe_battery", end, 2);
+	supt->setCurProcessResult("set_failsafe_battery", (end - start), 3);
     // warn the ground station and log to dataflash
     //gcs_send_text_P(MAV_SEVERITY_CRITICAL,PSTR("Low Battery!"));
     //Log_Write_Error(ERROR_SUBSYSTEM_FAILSAFE_BATT, ERROR_CODE_FAILSAFE_OCCURRED);

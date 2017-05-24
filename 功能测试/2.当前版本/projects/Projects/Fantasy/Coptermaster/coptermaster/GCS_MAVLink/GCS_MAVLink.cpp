@@ -12,9 +12,8 @@ bool initialised(void) {
 */
 void Copter::gcs_check_input(void)
 {
-	cout << "----- gcs_check_input begin -----" << endl;
 	long start, end;
-
+	supt->Cout("gcs_check_input");
 	//FixÐÞ¸ÄV2.0
 	// ------------------------  ²å×®µã ---------------------------------
 	start = clock();
@@ -52,22 +51,49 @@ void Copter::gcs_check_input(void)
 	supt->setCurProcessResult("gcs_check_input", end, 2);
 	supt->setCurProcessResult("gcs_check_input", (end - start), 3);
 
-	cout << "----- gcs_check_input end -----" << endl;
 }
 
 void Copter::gcs_data_stream_send(void)
 {
-	cout << "-----------------------------------gcs_data_stream_send-----------------------------" << endl;
-	for (uint8_t i = 0; i<num_gcs; i++) {
+	supt->Cout("gcs_data_stream_send");
+	//FixÐÞ¸Ä2.1
+
+	long start, end;
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	
+	supt->setCurProcessResult("gcs_data_stream_send", start, 1);
+
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gcs[0].data_stream_send();
+
+	end = clock();
+	supt->setCurProcessResult("gcs_data_stream_send", end, 2);
+	supt->setCurProcessResult("gcs_data_stream_send", (end - start), 3);
+	
+	/*for (uint8_t i = 0; i<1; i++) {
+
 		if (gcs[i].initialised) {
 			gcs[i].data_stream_send();
 		}
-	}
+	}*/
 }
 
 void GCS_MAVLINK::data_stream_send(void)
 {
+	//FixÐÞ¸Ä2.1
+	long start, end;
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+
+	supt->setCurProcessResult("send_location", start, 1);
+
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
 	send_message(MSG_EXTENDED_STATUS1);
+
+	end = clock();
+	supt->setCurProcessResult("send_location", end, 2);
+	supt->setCurProcessResult("send_location", (end - start), 3);
 }
 uint16_t comm_get_available(mavlink_channel_t)
 {
@@ -86,10 +112,12 @@ void Copter::gcs_send_deferred(void)
 	//GCS_MAVLINK::service_statustext();
 }
 
+//FixÐÞ¸ÄV2.0
+#define MAV_CMD_COMPONENT_CZ_ARM_DISARM 40
+
 //void GCS_MAVLINK_Copter::handleMessage(mavlink_message_t* msg)
 void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 {
-	cout << "----- handleMessage begin -----" << endl;
 	uint8_t result = MAV_RESULT_FAILED;         // assume failure.  Each messages id is responsible for return ACK or NAK if required
 	long start, end;
 	//int a = 76; 
@@ -101,7 +129,6 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 	//FixÐÞ¸ÄV2.0
 	string str[] = { "5","do_user_takeoff", "guided_set_destination_posvel", "guided_set_velocity", "guided_set_destination", "mode_has_manual_throttle" };
 	choose = supt->getParamValueFormNamesWithKey(str,"msg.msgid");
-	cout << "choose mode:"<<choose << endl;
 	if (choose == 76){
 		msg->msgid = MAVLINK_MSG_ID_COMMAND_LONG;
 	}
@@ -111,15 +138,16 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 	else if (choose == 86){
 		msg->msgid = MAVLINK_MSG_ID_SET_POSITION_TARGET_GLOBAL_INT;
 	}
+	else if (choose == 400){
+		msg->msgid = MAV_CMD_COMPONENT_CZ_ARM_DISARM;
+	}
 	else{
 		cout << "wrong number" << endl;
 	}
-	
-	switch (msg->msgid) {//Ä£ÐÍ½öÓÐ76 84 86 ¹ÊÐÞ¸ÄÒÔÓëÆä¶ÔÓ¦
+	switch (msg->msgid) {
 		//Pre-Flight calibration requests
 		case MAVLINK_MSG_ID_COMMAND_LONG:       // MAV ID: 76
 		{
-			cout << "in MAVLINK_MSG_ID_COMMAND_LONG"<<endl;
 			// decode packet
 			mavlink_command_long_t packet;
 			mavlink_msg_command_long_decode(msg, &packet);
@@ -160,13 +188,12 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 		}
 		case MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED:     // MAV ID: 84
 		{
-			cout << "in MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED"<<endl;
 			// decode packet
 			mavlink_set_position_target_local_ned_t packet;
 			mavlink_msg_set_position_target_local_ned_decode(msg, &packet);
 
 			// exit if vehicle is not in Guided mode or Auto-Guided mode
-			if ((copter.control_mode != GUIDED) && !(copter.control_mode == AUTO && copter.auto_mode == Auto_NavGuided)) {
+			/*if ((copter.control_mode != GUIDED) && !(copter.control_mode == AUTO && copter.auto_mode == Auto_NavGuided)) {
 				break;
 			}
 
@@ -176,7 +203,7 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 				packet.coordinate_frame != MAV_FRAME_BODY_NED &&
 				packet.coordinate_frame != MAV_FRAME_BODY_OFFSET_NED) {
 				break;
-			}
+			}*/
 
 			bool pos_ignore = packet.type_mask & MAVLINK_SET_POS_TYPE_MASK_POS_IGNORE;
 			bool vel_ignore = packet.type_mask & MAVLINK_SET_POS_TYPE_MASK_VEL_IGNORE;
@@ -221,6 +248,11 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 					copter.rotate_body_frame_to_NE(vel_vector.x, vel_vector.y);
 				}
 			}
+			//FixÐÞ¸ÄV2.0
+			string tmp[] = { "3", "guided_set_destination_posvel", "guided_set_velocity", "guided_set_destination" };
+			pos_ignore = supt->getParamValueFormNamesWithKey(tmp, "pos_ignore");
+			vel_ignore = supt->getParamValueFormNamesWithKey(tmp, "vel_ignore");
+			acc_ignore = supt->getParamValueFormNamesWithKey(tmp, "acc_ignore");
 
 			// send request
 			if (!pos_ignore && !vel_ignore && acc_ignore) { 
@@ -266,13 +298,12 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 
 		case MAVLINK_MSG_ID_SET_POSITION_TARGET_GLOBAL_INT:    // MAV ID: 86
 		{
-			cout << "in MAVLINK_MSG_ID_SET_POSITION_TARGET_GLOBAL_INT"<<endl;
 			// decode packet
 			mavlink_set_position_target_global_int_t packet;
 			mavlink_msg_set_position_target_global_int_decode(msg, &packet);
 
 			// exit if vehicle is not in Guided mode or Auto-Guided mode
-			if ((copter.control_mode != GUIDED) && !(copter.control_mode == AUTO && copter.auto_mode == Auto_NavGuided)) {
+			/*if ((copter.control_mode != GUIDED) && !(copter.control_mode == AUTO && copter.auto_mode == Auto_NavGuided)) {
 				break;
 			}
 
@@ -282,7 +313,7 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 				packet.coordinate_frame != MAV_FRAME_GLOBAL_RELATIVE_ALT_INT &&
 				packet.coordinate_frame != MAV_FRAME_GLOBAL_TERRAIN_ALT_INT) {
 				break;
-			}
+			}*/
 
 			// for mavlink SET_POSITION_TARGET messages
 			#define MAVLINK_SET_POS_TYPE_MASK_POS_IGNORE      ((1<<0) | (1<<1) | (1<<2))
@@ -305,7 +336,6 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 			*/
 
 			Vector3f pos_ned;
-
 			/*bool check_latlng(int32_t lat, int32_t lng)
 			{
 			return check_latlng(lat) && check_latlng(lng);
@@ -346,7 +376,8 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 				}
 				pos_ned = copter.pv_location_to_vector(loc);
 			}
-			string tmp[] = {"2","guided_set_destination_posvel","guided_set_velocity"};
+			//FixÐÞ¸ÄV2.0
+			string tmp[] = {"3","guided_set_destination_posvel","guided_set_velocity","guided_set_destination"};
 			pos_ignore = supt->getParamValueFormNamesWithKey(tmp,"pos_ignore");
 			vel_ignore = supt->getParamValueFormNamesWithKey(tmp, "vel_ignore");
 			acc_ignore = supt->getParamValueFormNamesWithKey(tmp, "acc_ignore");
@@ -391,42 +422,41 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 			break;
 		}
 		//FixÐÞ¸ÄV2.0
-		case 400:    // MAV ID: 400
+		case MAV_CMD_COMPONENT_CZ_ARM_DISARM:    // MAV ID: 400
 		{
 			// ------------------------  ²å×®µã ---------------------------------
 			start = clock();
-			Copter::supt->setCurProcessResult("mode_has_manual_throttle", start, 1);
+			supt->setCurProcessResult("mode_has_manual_throttle", start, 1);
 
 			// ------------------------  ²å×®¼¤Àø ---------------------------------
 			end = clock();
-			Copter::supt->setCurProcessResult("mode_has_manual_throttle", end, 2);
-			Copter::supt->setCurProcessResult("mode_has_manual_throttle", (end - start), 3);
+			supt->setCurProcessResult("mode_has_manual_throttle", end, 2);
+			supt->setCurProcessResult("mode_has_manual_throttle", (end - start), 3);
 			bool is_equal_1 = false;
 			if (supt->getParamValueWithNameAndKey("init_disarm_motors", "is_equal_1") == 1)
 				is_equal_1 = true;
 			if (is_equal_1){
 				// ------------------------  ²å×®µã ---------------------------------
 				start = clock();
-				Copter::supt->setCurProcessResult("init_disarm_motors", start, 1);
+				supt->setCurProcessResult("init_disarm_motors", start, 1);
 
 				// ------------------------  ²å×®¼¤Àø ---------------------------------
 				end = clock();
-				Copter::supt->setCurProcessResult("init_disarm_motors", end, 2);
-				Copter::supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
+				supt->setCurProcessResult("init_disarm_motors", end, 2);
+				supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
 			}
 			else{
 				// ------------------------  ²å×®µã ---------------------------------
 				start = clock();
-				Copter::supt->setCurProcessResult("init_arm_motors", start, 1);
+				supt->setCurProcessResult("init_arm_motors", start, 1);
 
 				// ------------------------  ²å×®¼¤Àø ---------------------------------
 				end = clock();
-				Copter::supt->setCurProcessResult("init_arm_motors", end, 2);
-				Copter::supt->setCurProcessResult("init_arm_motors", (end - start), 3);
+				supt->setCurProcessResult("init_arm_motors", end, 2);
+				supt->setCurProcessResult("init_arm_motors", (end - start), 3);
 			}
+			break;
 		}
-
-		}
-		cout << "----- handleMessage end -----" << endl;
-	} 
+	}
+} 
  

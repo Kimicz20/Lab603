@@ -86,6 +86,7 @@ bool Copter::do_user_takeoff(float takeoff_alt_cm, bool must_navigate)
 				end = clock();
 				supt->setCurProcessResult("guided_takeoff_start", end, 2);
 				supt->setCurProcessResult("guided_takeoff_start", (end - start), 3);
+				supt->setCurProcessResult("takeoff_timer_start", (end - start), 3);
                 return true;
             /*case LOITER:
             case POSHOLD:

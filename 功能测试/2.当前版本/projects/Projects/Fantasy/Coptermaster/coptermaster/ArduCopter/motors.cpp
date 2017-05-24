@@ -13,7 +13,7 @@ static uint8_t auto_disarming_counter;
 // called at 10hz
 void Copter::arm_motors_check()
 {  
-	cout <<"----- arm_motors_check begin -----" << endl;
+	supt->Cout("arm_motors_check");
     static int16_t arming_counter;
 	long start, end;
     // ensure throttle is down
@@ -42,6 +42,14 @@ void Copter::arm_motors_check()
 		end = clock();
 		this->supt->setCurProcessResult("armed", end, 2);
 		this->supt->setCurProcessResult("armed", (end - start), 3);
+
+		//FixÐÞ¸Ä2.1
+		arming_counter = supt->getParamValueWithNameAndKey("init_arm_motors","arming_counter");
+		
+		if (supt->getParamValueWithNameAndKey("init_arm_motors", "is_armed") == 1)
+			is_armed = true;
+		else
+			is_armed = false;
 
 		if (arming_counter == ARM_DELAY &&is_armed == false) {
 		//if (arming_counter == ARM_DELAY && !motors.armed()) {
@@ -103,8 +111,6 @@ void Copter::arm_motors_check()
     }else{
         arming_counter = 0;
     }
-	 
-	cout << "----- arm_motors_check end -----" << endl;
 }
 
 // auto_disarm_check - disarms the copter if it has been sitting on the ground in manual mode with throttle low for at least 15 seconds
@@ -959,7 +965,6 @@ void Copter::init_disarm_motors()
 // motors_output - send output to motors library which will adjust and send to ESCs and servos
 void Copter::motors_output()
 {
-	std::cout << "---- motors_output begin ----" << endl;
     // check if we are performing the motor test
 	//FixÐÞ¸ÄV1.4
 	string str[] = { "2", "motor_test_output", "output" };
@@ -1014,7 +1019,6 @@ void Copter::motors_output()
 		this->supt->setCurProcessResult("output", end, 2);
 		this->supt->setCurProcessResult("output", (end - start), 3);
     }
-	cout << "---- motors_output end ----" << endl;
 }
 
 // check for pilot stick input to trigger lost vehicle alarm

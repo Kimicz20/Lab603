@@ -140,31 +140,79 @@ void Copter::update_optical_flow(void)
 // called at 10hz
 void Copter::read_battery(void)
 {
+	//FixÐÞ¸Ä2.1
+	long start, end;
+
+	battery.supt = supt;
+
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	supt->setCurProcessResult("read", start, 1);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     battery.read();
 
+	end = clock();
+	supt->setCurProcessResult("read", end, 2);
+	supt->setCurProcessResult("read", (end - start), 3);
     // update compass with current value
     if (battery.has_current()) {
         compass.set_current(battery.current_amps());
     }
-
     // update motors with voltage and current
     if (battery.get_type() != AP_BattMonitor::BattMonitor_TYPE_NONE) {
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("set_voltage", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
         motors.set_voltage(battery.voltage());
+		
+		end = clock();
+		supt->setCurProcessResult("set_voltage", end, 2);
+		supt->setCurProcessResult("set_voltage", (end - start), 3);
+
     }
     if (battery.has_current()) {
-        motors.set_current(battery.current_amps());
-    }
 
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("set_current", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
+        motors.set_current(battery.current_amps());
+
+		end = clock();
+		supt->setCurProcessResult("set_current", end, 2);
+		supt->setCurProcessResult("set_current", (end - start), 3);
+    }
     // check for low voltage or current if the low voltage check hasn't already been triggered
     // we only check when we're not powered by USB to avoid false alarms during bench tests
+	ap.usb_connected = false;
+	if (supt->getParamValueWithNameAndKey("failsafe_battery_event", "ap.usb_connected") == 1)
+		ap.usb_connected = true;
+
+	failsafe.battery = false;
+	if (supt->getParamValueWithNameAndKey("failsafe_battery_event", "failsafe.battery") == 1)
+		failsafe.battery = true;
+
     if (!ap.usb_connected && !failsafe.battery && battery.exhausted(g.fs_batt_voltage, g.fs_batt_mah)) {
-        failsafe_battery_event();
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("failsafe_battery_event", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+       
+		failsafe_battery_event();
+
+		end = clock();
+		supt->setCurProcessResult("failsafe_battery_event", end, 2);
+		supt->setCurProcessResult("failsafe_battery_event", (end - start), 3);
+
     }
 
     // log battery info to the dataflash
-    if (should_log(MASK_LOG_CURRENT)) {
+    /*if (should_log(MASK_LOG_CURRENT)) {
         Log_Write_Current();
-    }
+    }*/
 }
 
 // read the receiver RSSI as an 8 bit number for MAVLink

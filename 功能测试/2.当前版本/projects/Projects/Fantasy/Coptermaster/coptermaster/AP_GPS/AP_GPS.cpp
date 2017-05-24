@@ -399,8 +399,20 @@ AP_GPS::update_instance(uint8_t instance)
 void
 AP_GPS::update(void)
 {
+	//FixÐÞ¸Ä2.1
     for (uint8_t i=0; i<GPS_MAX_INSTANCES; i++) {
+		long start, end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("update_instance", start, 1);
+
+		// ------------------------  ²å×®¼¤Àø ---------------------------------
+
         update_instance(i);
+
+		end = clock();
+		supt->setCurProcessResult("update_instance", end, 2);
+		supt->setCurProcessResult("update_instance", (end - start), 3);
     }
 
 #if GPS_MAX_INSTANCES > 1

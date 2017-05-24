@@ -54,7 +54,7 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
   	assert(callbacks);
 	/* 被测程序预处理过程 */
 	long start, end;
-	
+	clock_t begin;
 	// 1.创建所需的对象
 	copter.supt = new SupportClass();
     
@@ -82,7 +82,17 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
 	 	
 		start = clock();
 		copter.supt->setCurProcessResult("loop", start, 1);
-		copter.loop();
+		
+		begin = clock();
+
+		//Fix修改2.1
+		//loop每 2.5ms更新一次
+		while (true){
+			copter.loop();
+			if (copter.scheduler.getTick() == 400)
+				break;
+		}
+		
 		end = clock();
 		copter.supt->setCurProcessResult("loop", end, 2);
 		copter.supt->setCurProcessResult("loop", (end - start), 3);

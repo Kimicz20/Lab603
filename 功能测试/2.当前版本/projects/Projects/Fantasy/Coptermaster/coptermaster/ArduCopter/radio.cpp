@@ -293,7 +293,6 @@ void Copter::read_radio()
 	long start, end;
 
 	//get values from barometer.init();
-	cout << "now in read_radio" << endl;
 	static uint32_t last_update_ms = 0;
 
 	// ------------------------  ²å×®µã ---------------------------------
@@ -317,7 +316,6 @@ void Copter::read_radio()
 	set_has_new_input(new_input);
 
 	if (has_new_input == 1) {
-		cout << "now please input roll_pwm  pitch_pwm throttle_pwm yaw_pwm " << endl;
         last_update_ms = tnow_ms;
         ap.new_radio_frame = true;
         RC_Channel::set_pwm_all();
@@ -459,8 +457,6 @@ void Copter::read_radio()
 			set_failsafe_radio(1);
 		}
 	} 
-	
-	cout << "----- read radio end -----" << endl;
 	return;
 }
 

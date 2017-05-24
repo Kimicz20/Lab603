@@ -813,6 +813,18 @@ GCS_MAVLINK::handle_gps_inject(const mavlink_message_t *msg, AP_GPS &gps)
 // send a message using mavlink, handling message queueing
 void GCS_MAVLINK::send_message(enum ap_message id)
 {
+
+	//FixÐÞ¸Ä2.1
+	long start, end;
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+
+	supt->setCurProcessResult("capacity_remaining_pct", start, 1);
+
+	end = clock();
+	supt->setCurProcessResult("capacity_remaining_pct", end, 2);
+	supt->setCurProcessResult("capacity_remaining_pct", (end - start), 3);
+
     //uint8_t i, nextid;
 
     //// see if we can send the deferred messages, if any

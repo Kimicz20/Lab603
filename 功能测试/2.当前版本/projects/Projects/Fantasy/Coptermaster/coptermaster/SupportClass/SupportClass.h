@@ -80,6 +80,8 @@ public:
   /* 分离 共享内存 */
   void pullMem();
 
+  /*log 功能*/
+  void Cout(string out);
 };
 
 

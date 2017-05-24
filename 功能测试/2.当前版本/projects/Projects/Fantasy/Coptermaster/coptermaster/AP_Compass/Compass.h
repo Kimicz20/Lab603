@@ -53,10 +53,17 @@
 #define AP_COMPASS_MAX_XY_ANG_DIFF radians(30.0f)
 #define AP_COMPASS_MAX_XY_LENGTH_DIFF 100.0f
 
+//FixĞŞ¸Ä2.1
+/*--------------- ¸¨ÖúÀà -----------------*/
+#include "../SupportClass/SupportClass.h"
+
 class Compass
 {
 friend class AP_Compass_Backend;
 public:
+	/*--------------- ¸¨ÖúÀà -----------------*/
+	SupportClass *supt;
+
     /// Constructor
     ///
     Compass();
@@ -258,17 +265,36 @@ public:
     /// Set the throttle as a percentage from 0.0 to 1.0
     /// @param thr_pct              throttle expressed as a percentage from 0 to 1.0
     void set_throttle(float thr_pct) {
+		long start, end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("set_throttle", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
         if (_motor_comp_type == AP_COMPASS_MOT_COMP_THROTTLE) {
             _thr_or_curr = thr_pct;
         }
+		end = clock();
+		supt->setCurProcessResult("set_throttle", end, 2);
+		supt->setCurProcessResult("set_throttle", (end - start), 3);
     }
 
     /// Set the current used by system in amps
     /// @param amps                 current flowing to the motors expressed in amps
     void set_current(float amps) {
+		long start,end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("set_current", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
         if (_motor_comp_type == AP_COMPASS_MOT_COMP_CURRENT) {
             _thr_or_curr = amps;
         }
+
+		end = clock();
+		supt->setCurProcessResult("set_current", end, 2);
+		supt->setCurProcessResult("set_current", (end - start), 3);
     }
 
     /// Returns True if the compasses have been configured (i.e. offsets saved)

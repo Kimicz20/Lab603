@@ -108,7 +108,6 @@ void TestCase::setCurrenetTestCaseExecStatus(string execStatus){
     }else{
 		execStatus = "3";
     }
-	cout << execStatus << endl;
 	this->execStatus = execStatus;
 }
 /* 设置结果状态 */
@@ -123,7 +122,6 @@ void TestCase::setCurrenetTestCaseResultStatus(string exeSituation){
     }else{
         exeSituation = "3";
     }
-	cout << exeSituation << endl;
     this->resultStatus = exeSituation;
 }
 

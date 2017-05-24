@@ -66,7 +66,6 @@ void Copter::update_land_detector()
 	if (supt->getParamValueFormNamesWithKey(str,"has_armed") == 1){
 		has_armed = true;
 	}
-
 	ap.land_complete = false;
 	if (supt->getParamValueFormNamesWithKey(str, "ap.land_complete") == 1){
 		ap.land_complete = true;
@@ -83,7 +82,7 @@ void Copter::update_land_detector()
 		supt->setCurProcessResult("set_land_complete", end, 2);
 		supt->setCurProcessResult("set_land_complete", (end - start), 3);
 }
-	else if (ap.land_complete) {
+	else if (ap.land_complete == true) {
 #if FRAME_CONFIG == HELI_FRAME
 		// if rotor speed and collective pitch are high then clear landing flag
 		if (motors.get_throttle() > get_non_takeoff_throttle() && motors.rotor_runup_complete()) {

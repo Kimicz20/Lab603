@@ -81,6 +81,11 @@ bool preIsNotOK(int index){
 		return false;
 	return !currentTestCase->isExecOKWithIndex(index);
 }
+
+void SupportClass::Cout(string out){
+	cout << "--- " << out << " ---" << endl;
+}
+
 int currProcessID = 1;
 int numNesting = 1;
 bool inNesintg = false;

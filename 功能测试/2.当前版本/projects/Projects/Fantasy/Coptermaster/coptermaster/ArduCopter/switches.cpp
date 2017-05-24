@@ -21,8 +21,20 @@ static union {
 void Copter::read_control_switch()
 {
 	long start, end;
+	//FixÐÞ¸Ä2.1
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	this->supt->setCurProcessResult("millis", start, 1);
+
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
+
     uint32_t tnow_ms = millis(); 
-    // calculate position of flight mode switch
+
+	end = clock();
+	this->supt->setCurProcessResult("millis", end, 2);
+	this->supt->setCurProcessResult("millis", (end - start), 3);
+
+	// calculate position of flight mode switch
     int8_t switch_position;
     if      (g.rc_5.radio_in < 1231) switch_position = 0;
     else if (g.rc_5.radio_in < 1361) switch_position = 1;
@@ -41,7 +53,15 @@ void Copter::read_control_switch()
     bool sufficient_time_elapsed = tnow_ms - control_switch_state.last_edge_time_ms > CONTROL_SWITCH_DEBOUNCE_TIME_MS;
     bool failsafe_disengaged = !failsafe.radio && failsafe.radio_counter == 0;
 
-    if (control_switch_changed && sufficient_time_elapsed && failsafe_disengaged) {
+	//FixÐÞ¸Ä2.1
+	if (supt->getParamValueWithNameAndKey("set_mode", "control_switch_changed") == 1)
+		control_switch_changed = true;
+	if (supt->getParamValueWithNameAndKey("set_mode", "sufficient_time_elapsed") == 1)
+		sufficient_time_elapsed = true;
+	if (supt->getParamValueWithNameAndKey("set_mode", "failsafe_disengaged") == 1)
+		failsafe_disengaged = true;
+
+	if (control_switch_changed && sufficient_time_elapsed && failsafe_disengaged) {
         // set flight mode and simple mode setting
 		// ------------------------  ²å×®µã ---------------------------------
 		start = clock();
