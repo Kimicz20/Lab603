@@ -16,12 +16,44 @@ void Copter::init_barometer(bool full_calibration)
 // return barometric altitude in centimeters
 void Copter::read_barometer(void)
 {
+	// FixĞŞ¸Ä2.2
+	long start, end;
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	this->supt->setCurProcessResult("update", start, 1);
+
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
     barometer.update();
-    if (should_log(MASK_LOG_IMU)) {
+
+	end = clock();
+	this->supt->setCurProcessResult("update", end, 2);
+	this->supt->setCurProcessResult("update", (end - start), 3);
+
+ /*   if (should_log(MASK_LOG_IMU)) {
         Log_Write_Baro();
-    }
+    }*/
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	this->supt->setCurProcessResult("get_altitude", start, 1);
+
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
     baro_alt = barometer.get_altitude() * 100.0f;
+
+	end = clock();
+	this->supt->setCurProcessResult("get_altitude", end, 2);
+	this->supt->setCurProcessResult("get_altitude", (end - start), 3);
+
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	this->supt->setCurProcessResult("get_climb_rate", start, 1);
+
+	// ------------------------  ²å×®¼¤Àø ---------------------------------
+
     baro_climbrate = barometer.get_climb_rate() * 100.0f;
+
+	end = clock();
+	this->supt->setCurProcessResult("get_climb_rate", end, 2);
+	this->supt->setCurProcessResult("get_climb_rate", (end - start), 3);
 
     motors.set_air_density_ratio(barometer.get_air_density_ratio());
 }
@@ -145,45 +177,20 @@ void Copter::read_battery(void)
 
 	battery.supt = supt;
 
-	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("read", start, 1);
-	// ------------------------  ²å×®¼¤Àø --------------------------------- 
+	motors.supt = supt;
+
     battery.read();
 
-	end = clock();
-	supt->setCurProcessResult("read", end, 2);
-	supt->setCurProcessResult("read", (end - start), 3);
     // update compass with current value
     if (battery.has_current()) {
         compass.set_current(battery.current_amps());
     }
     // update motors with voltage and current
     if (battery.get_type() != AP_BattMonitor::BattMonitor_TYPE_NONE) {
-		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_voltage", start, 1);
-		// ------------------------  ²å×®¼¤Àø --------------------------------- 
-
         motors.set_voltage(battery.voltage());
-		
-		end = clock();
-		supt->setCurProcessResult("set_voltage", end, 2);
-		supt->setCurProcessResult("set_voltage", (end - start), 3);
-
     }
     if (battery.has_current()) {
-
-		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_current", start, 1);
-		// ------------------------  ²å×®¼¤Àø --------------------------------- 
-
         motors.set_current(battery.current_amps());
-
-		end = clock();
-		supt->setCurProcessResult("set_current", end, 2);
-		supt->setCurProcessResult("set_current", (end - start), 3);
     }
     // check for low voltage or current if the low voltage check hasn't already been triggered
     // we only check when we're not powered by USB to avoid false alarms during bench tests
@@ -195,18 +202,8 @@ void Copter::read_battery(void)
 	if (supt->getParamValueWithNameAndKey("failsafe_battery_event", "failsafe.battery") == 1)
 		failsafe.battery = true;
 
-    if (!ap.usb_connected && !failsafe.battery && battery.exhausted(g.fs_batt_voltage, g.fs_batt_mah)) {
-		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("failsafe_battery_event", start, 1);
-		// ------------------------  ²å×®¼¤Àø --------------------------------- 
-       
+    if (!ap.usb_connected && !failsafe.battery && battery.exhausted(g.fs_batt_voltage, g.fs_batt_mah)) { 
 		failsafe_battery_event();
-
-		end = clock();
-		supt->setCurProcessResult("failsafe_battery_event", end, 2);
-		supt->setCurProcessResult("failsafe_battery_event", (end - start), 3);
-
     }
 
     // log battery info to the dataflash

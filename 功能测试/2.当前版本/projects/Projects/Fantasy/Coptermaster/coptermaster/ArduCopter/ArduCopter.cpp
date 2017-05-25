@@ -136,7 +136,9 @@ void Copter::compass_accumulate(void)
 {
 	supt->Cout("compass_accumulate");
 	long start, end;
-	if (g.compass_enabled) {
+	//ÐÞ¸ÄFix2.2
+	int a = supt->getParamValueWithNameAndKey("accumulate","g.compass_enabled");
+	if (a == 1) {
 		// ------------------------  ²å×®µã ---------------------------------
 		start = clock();
 		supt->setCurProcessResult("accumulate", start, 1);
@@ -589,6 +591,7 @@ void Copter::one_hz_loop()
 	Log_Write_Data(DATA_AP_STATE, ap.value);
 	}*/
 
+	//FixÐÞ¸Ä2.2
 	// perform pre-arm checks & display failures every 30 seconds
 	static uint8_t pre_arm_display_counter = 15;
 	pre_arm_display_counter++;
@@ -624,20 +627,67 @@ void Copter::one_hz_loop()
 	end = clock();
 	supt->setCurProcessResult("auto_disarm_check", end, 2);
 	supt->setCurProcessResult("auto_disarm_check", (end - start), 3);
+
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	supt->setCurProcessResult("armed", start, 1);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	bool isarmed = motors.armed();
+	end = clock();
+	supt->setCurProcessResult("armed", end, 2);
+	supt->setCurProcessResult("armed", (end - start), 3);
+	
+	if (supt->getParamValueWithNameAndKey("set_orientation", "isarmed") == 1)
+		isarmed = true;
 	if (isarmed == false) {
 		//if (!motors.armed()) {
 		// make it possible to change ahrs orientation at runtime during initial config
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("set_orientation", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
 		ahrs.set_orientation();
+
+		end = clock();
+		supt->setCurProcessResult("set_orientation", end, 2);
+		supt->setCurProcessResult("set_orientation", (end - start), 3);
+
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("set_frame_orientation", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 		// check the user hasn't updated the frame orientation
 		motors.set_frame_orientation(g.frame_orientation);
 
+		end = clock();
+		supt->setCurProcessResult("set_frame_orientation", end, 2);
+		supt->setCurProcessResult("set_frame_orientation", (end - start), 3);
+
 #if FRAME_CONFIG != HELI_FRAME
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("set_throttle_range", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
 		// set all throttle channel settings
 		motors.set_throttle_range(g.throttle_min, channel_throttle->radio_min, channel_throttle->radio_max);
+
+		end = clock();
+		supt->setCurProcessResult("set_throttle_range", end, 2);
+		supt->setCurProcessResult("set_throttle_range", (end - start), 3);
+
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("set_hover_throttle", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		// set hover throttle
 		motors.set_hover_throttle(g.throttle_mid);
+
+		end = clock();
+		supt->setCurProcessResult("set_hover_throttle", end, 2);
+		supt->setCurProcessResult("set_hover_throttle", (end - start), 3);
 #endif
 	}
 

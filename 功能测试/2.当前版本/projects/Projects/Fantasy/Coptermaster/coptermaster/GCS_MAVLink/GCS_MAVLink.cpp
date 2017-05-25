@@ -114,7 +114,7 @@ void Copter::gcs_send_deferred(void)
 
 //Fix修改V2.0
 #define MAV_CMD_COMPONENT_CZ_ARM_DISARM 40
-
+#define MAV_CMD_COMPONENT_CZ 11
 //void GCS_MAVLINK_Copter::handleMessage(mavlink_message_t* msg)
 void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 {
@@ -127,7 +127,7 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 	
 	
 	//Fix修改V2.0
-	string str[] = { "5","do_user_takeoff", "guided_set_destination_posvel", "guided_set_velocity", "guided_set_destination", "mode_has_manual_throttle" };
+	string str[] = { "6","handle_set_mode","do_user_takeoff", "guided_set_destination_posvel", "guided_set_velocity", "guided_set_destination", "mode_has_manual_throttle" };
 	choose = supt->getParamValueFormNamesWithKey(str,"msg.msgid");
 	if (choose == 76){
 		msg->msgid = MAVLINK_MSG_ID_COMMAND_LONG;
@@ -141,9 +141,10 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 	else if (choose == 400){
 		msg->msgid = MAV_CMD_COMPONENT_CZ_ARM_DISARM;
 	}
-	else{
-		cout << "wrong number" << endl;
+	else if (choose == 11){
+		msg->msgid = MAV_CMD_COMPONENT_CZ;
 	}
+
 	switch (msg->msgid) {
 		//Pre-Flight calibration requests
 		case MAVLINK_MSG_ID_COMMAND_LONG:       // MAV ID: 76
@@ -152,7 +153,6 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 			mavlink_command_long_t packet;
 			mavlink_msg_command_long_decode(msg, &packet);
 			packet.command = supt->getParamValueWithNameAndKey("do_user_takeoff","packet.command");
-			cout << "command :" << (int)packet.command << endl;
 			switch (packet.command) {
 				//修改以对应模型
 				/*case MAV_CMD_START_RX_PAIR:
@@ -457,6 +457,22 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 			}
 			break;
 		}
+		//Fix修改V2.2
+		case MAV_CMD_COMPONENT_CZ:    // MAV ID: 11
+		{
+			// ------------------------  插桩点 ---------------------------------
+			start = clock();
+			supt->setCurProcessResult("handle_set_mode", start, 1);
+
+			// ------------------------  插桩激励 ---------------------------------
+			end = clock();
+			supt->setCurProcessResult("handle_set_mode", end, 2);
+			supt->setCurProcessResult("handle_set_mode", (end - start), 3);
+			
+			supt->setCurProcessResult("set_mode", (end - start), 3);
+			break;
+		}
+
 	}
 } 
  

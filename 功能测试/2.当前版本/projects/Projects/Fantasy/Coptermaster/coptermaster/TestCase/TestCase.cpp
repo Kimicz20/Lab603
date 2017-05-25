@@ -78,6 +78,14 @@ void TestCase::setProcessList(string processName,string processParameter,string 
 LinkList TestCase::findProcessWithName(string processName){
     return this->processList->findProcessWithName(processName);
 }
+
+/* 判断激励是否存在 */
+bool TestCase::isProcessExit(string processName){
+	if (processList->findProcessWithName(processName) == NULL)
+		return false;
+	return true;
+}
+
 /* 根据激励ID 获取激励节点 */
 LinkList TestCase::findProcessWithID(int ID){
     return this->processList->findProcessWithID(ID);

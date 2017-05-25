@@ -130,7 +130,7 @@ void AP_Scheduler::run(uint16_t time_available)
 				uint32_t time_taken = now - _task_time_started;
 
 				//FixÐÞ¸Ä1.7
-				int size = 21;
+				int size = 27;
 				string str[] = {"read_aux_switches",
 								"ten_hz_logging_loop",
 								"rpm_update",
@@ -151,7 +151,14 @@ void AP_Scheduler::run(uint16_t time_available)
 								"run_nav_updates",
 								"lost_vehicle_check", 
 								"output",
-								"gcs_send_deferred" };
+								"gcs_send_deferred",
+								"perf_update",
+								"compass_cal_update",
+								"angle_ef_roll_pitch_rate_ef_yaw",
+								"init_arm_motors",
+								"set_failsafe_radio",
+								"init_disarm_motors"
+						};
 				for (int i = 0; i < size;i++)
 					supt->setCurProcessResult(str[i], 0, 3);
 				if (time_taken > _task_time_allowed) {

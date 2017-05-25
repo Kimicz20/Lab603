@@ -23,7 +23,8 @@ void Copter::arm_motors_check()
     }
 
     int16_t tmp = channel_yaw->control_in; 
-    
+	//FixĞŞ¸Ä2.2
+	//tmp = supt->getParamValueWithNameAndKey("init_arm_motors", "tmp");
 	// full right
     if (tmp > 4000) {
 
@@ -44,13 +45,13 @@ void Copter::arm_motors_check()
 		this->supt->setCurProcessResult("armed", (end - start), 3);
 
 		//FixĞŞ¸Ä2.1
-		arming_counter = supt->getParamValueWithNameAndKey("init_arm_motors","arming_counter");
+		if (supt->getParamValueWithNameAndKey("init_arm_motors", "arming_counter") == 20)
+			arming_counter = ARM_DELAY;
 		
 		if (supt->getParamValueWithNameAndKey("init_arm_motors", "is_armed") == 1)
 			is_armed = true;
 		else
 			is_armed = false;
-
 		if (arming_counter == ARM_DELAY &&is_armed == false) {
 		//if (arming_counter == ARM_DELAY && !motors.armed()) {
             // reset arming counter if arming fail
@@ -66,7 +67,6 @@ void Copter::arm_motors_check()
 			this->supt->setCurProcessResult("init_arm_motors", end, 2);
 			this->supt->setCurProcessResult("init_arm_motors", (end - start), 3);
         }
-
         // arm the motors and configure for flight
         if (arming_counter == AUTO_TRIM_DELAY && motors.armed() && control_mode == STABILIZE) {
             auto_trim_counter = 250;
@@ -94,6 +94,15 @@ void Copter::arm_motors_check()
 		this->supt->setCurProcessResult("armed", end, 2);
 		this->supt->setCurProcessResult("armed", (end - start), 3);
 
+		//FixĞŞ¸Ä2.2
+		if (supt->getParamValueWithNameAndKey("init_arm_motors", "arming_counter") == 20)
+			arming_counter = ARM_DELAY;
+
+		if (supt->getParamValueWithNameAndKey("init_arm_motors", "is_armed") == 1)
+			is_armed = true;
+		else
+			is_armed = false;
+
 		// disarm the motors
 		if (arming_counter == DISARM_DELAY && is_armed == true) {
 		//if (arming_counter == DISARM_DELAY && motors.armed()) {
@@ -106,7 +115,6 @@ void Copter::arm_motors_check()
 			this->supt->setCurProcessResult("init_disarm_motors", end, 2);
 			this->supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
         }
-
     // Yaw is centered so reset arming counter
     }else{
         arming_counter = 0;

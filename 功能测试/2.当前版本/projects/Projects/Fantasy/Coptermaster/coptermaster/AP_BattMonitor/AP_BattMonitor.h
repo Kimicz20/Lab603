@@ -108,14 +108,14 @@ public:
 		long start, end;
 		// ------------------------  ²å×®µã ---------------------------------
 		start = clock();
-		supt->setCurProcessResult("current_amps", start, 1);
+		supt->setCurProcessResult("voltage", start, 1);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 		float b = voltage(AP_BATT_PRIMARY_INSTANCE);
 
 		end = clock();
-		supt->setCurProcessResult("current_amps", end, 2);
-		supt->setCurProcessResult("current_amps", (end - start), 3);
+		supt->setCurProcessResult("voltage", end, 2);
+		supt->setCurProcessResult("voltage", (end - start), 3);
 
 		return b;
 	}
@@ -180,9 +180,13 @@ public:
 		start = clock();
 		supt->setCurProcessResult("get_type", start, 1);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
-
+		
 		enum BattMonitor_Type b = get_type(AP_BATT_PRIMARY_INSTANCE);
-
+		//FixÐÞ¸Ä2.2
+		if (supt->getParamValueWithNameAndKey("voltage", "battmonitortype") == NOTFIND)
+			b = BattMonitor_TYPE_NONE;
+		else
+			b = BattMonitor_TYPE_ANALOG_VOLTAGE_ONLY;
 		end = clock();
 		supt->setCurProcessResult("get_type", end, 2);
 		supt->setCurProcessResult("get_type", (end - start), 3);

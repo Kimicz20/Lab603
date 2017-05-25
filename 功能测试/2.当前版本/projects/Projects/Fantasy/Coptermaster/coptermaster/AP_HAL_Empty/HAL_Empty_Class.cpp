@@ -89,7 +89,7 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
 		//loop每 2.5ms更新一次
 		while (true){
 			copter.loop();
-			if (copter.scheduler.getTick() == 400)
+			if (copter.scheduler.getTick() == 401)
 				break;
 		}
 		

@@ -48,7 +48,8 @@ void SupportClass::setCurTestCaseResult(string exeSituation) {
 
 /* 在当前 测试用例 中根据激励名称以及参数名 获取参数值 */
 int SupportClass::getParamValueWithNameAndKey(string processName, string key) {
-	if (currentTestCase->findProcessWithName(processName)==NULL){
+	//没有查找到激励时 直接返回
+	if (currentTestCase->isProcessExit(processName) == false){
 		return NOTFIND;
 	}
   string value = currentTestCase->getParamValueWithNameAndKey(processName, key);
@@ -83,7 +84,7 @@ bool preIsNotOK(int index){
 }
 
 void SupportClass::Cout(string out){
-	cout << "--- " << out << " ---" << endl;
+	//cout << "--- " << out << " ---" << endl;
 }
 
 int currProcessID = 1;
@@ -200,7 +201,7 @@ void SupportClass::createMem() {
     cout << "打开共享内存失败!" << endl;
     exit(EXIT_FAILURE);
   } else {
-    cout << "打开共享内存成功，大小为" << sizeof(struct shared_use_st) << endl;
+    //cout << "打开共享内存成功，大小为" << sizeof(struct shared_use_st) << endl;
   }
 
   // 2.将共享内存连接到当前进程的地址空间
@@ -209,7 +210,7 @@ void SupportClass::createMem() {
     cout << "共享内存连接到当前进程失败!" << endl;
     exit(EXIT_FAILURE);
   } else {
-    cout << "共享内存连接到当前进程成功!" << endl;
+    //cout << "共享内存连接到当前进程成功!" << endl;
   }
   // 3.设置共享内存
   shared = (struct shared_use_st *)shm;

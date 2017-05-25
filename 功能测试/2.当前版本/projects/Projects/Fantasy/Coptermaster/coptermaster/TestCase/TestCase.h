@@ -54,8 +54,10 @@ class TestCase
 
         /* 根据激励ID 获取激励节点 */
         LinkList findProcessWithID(int ID);
-
-        /* 设置当前测试用例的执行状态*/
+		
+		bool isProcessExit(string processName);
+        
+			/* 设置当前测试用例的执行状态*/
         void setCurrenetTestCaseExecStatus(string execStatus);
 
         /* 设置结果状态 */

@@ -101,6 +101,7 @@ string findValue(string str,string key){
 /* 查找对应参数 的 数值 */
 string ProcessList::findValueWithProcessNameAndKey(string processName,
                                                    string key) {
+	
   LinkList p = this->findProcessWithName(processName);
 	/*LinkList p = this->processList->next;
 	while (p) {
@@ -123,25 +124,6 @@ string ProcessList::findValueWithProcessNameAndKey(string processName,
 			  return t;
 		  }
 	  }
-	 /* while (true){
-		  string s=tmp;
-		  int pos = tmp.find(",");
-		  //1.如果没有","
-		  if (pos != tmp.npos){
-			  s = tmp.substr(0, pos);
-		  }
-		  // 组合条件 || 取第一个
-		  if (s.find("||") != s.npos){
-			  s = s.substr(0, s.find("|"));
-		  }
-		  int pos2 = s.find("=");
-		  if (s.substr(0, pos2) == key)
-			  return s.substr(pos2 + 1, s.size());
-		  //最后一个 或者只有一个
-		  if (pos == tmp.npos)
-			  break;
-		  tmp = tmp.substr(pos + 1, tmp.size());
-	  }*/
   }	
   return "";
 }

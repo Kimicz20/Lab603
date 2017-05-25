@@ -802,17 +802,17 @@ void Copter::guided_vel_control_run()
 
 	//FixÐÞ¸ÄV1.8
 	string str[] = { "3", "init_vel_controller_xyz", "get_pilot_desired_yaw_rate","millis"};
-	ap.auto_armed = supt->getParamValueFormNamesWithKey(str, "ap.auto_armed");
+	ap.auto_armed = '0'+supt->getParamValueFormNamesWithKey(str, "ap.auto_armed");
 	
 	get_interlock = false;
 	if (supt->getParamValueFormNamesWithKey(str, "get_interlock") == 1)
 		get_interlock = true;
 
-	ap.land_complete = supt->getParamValueFormNamesWithKey(str, "ap.land_complete");
+	ap.land_complete = '0' + supt->getParamValueFormNamesWithKey(str, "ap.land_complete");
 
-	//cout << "ap.auto_armed:" << supt->getParamValueFormNamesWithKey(str, "ap.auto_armed") << endl
-	//	<< "get_interlock:" << supt->getParamValueFormNamesWithKey(str, "get_interlock") << endl
-	//	<< "ap.land_complete:" << supt->getParamValueFormNamesWithKey(str, "ap.land_complete") << endl;
+	/*cout << "ap.auto_armed:" << (int)ap.auto_armed << endl
+		<< "get_interlock:" << (int)get_interlock << endl
+		<< "ap.land_complete:" << (int)ap.land_complete << endl;*/
 	if (ap.auto_armed == 0 || get_interlock == false || ap.land_complete == 1) {
 	// if (!ap.auto_armed || !motors.get_interlock() || ap.land_complete) {
         // initialise velocity controller

@@ -184,8 +184,16 @@ AP_BattMonitor::init()
 void
 AP_BattMonitor::read()
 {
+	long start, end;
+	// ------------------------  ²å×®µã ---------------------------------
+	start = clock();
+	supt->setCurProcessResult("read", start, 1);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     // exit immediately if no monitors setup
     if (_num_instances == 0) {
+		end = clock();
+		supt->setCurProcessResult("read", end, 2);
+		supt->setCurProcessResult("read", (end - start), 3);
         return;
     }
 
@@ -194,6 +202,10 @@ AP_BattMonitor::read()
             drivers[i]->read();
         }
     }
+
+	end = clock();
+	supt->setCurProcessResult("read", end, 2);
+	supt->setCurProcessResult("read", (end - start), 3);
 }
 
 // healthy - returns true if monitor is functioning

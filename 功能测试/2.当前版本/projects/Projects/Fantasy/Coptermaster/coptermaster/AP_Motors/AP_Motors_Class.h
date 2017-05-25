@@ -37,9 +37,15 @@
 // motor update rate
 #define AP_MOTORS_SPEED_DEFAULT     490 // default output rate to the motors
 
+//FixÐÞ¸Ä2.2
+/*--------------- ¸¨ÖúÀà -----------------*/
+#include "../SupportClass/SupportClass.h"
+
 /// @class      AP_Motors
 class AP_Motors {
 public:
+	/*--------------- ¸¨ÖúÀà -----------------*/
+	SupportClass *supt;
 
     // Constructor
     AP_Motors(uint16_t loop_rate, uint16_t speed_hz = AP_MOTORS_SPEED_DEFAULT);
@@ -79,10 +85,33 @@ public:
     // voltage, current and air pressure compensation or limiting features - multicopters only
     //
     // set_voltage - set voltage to be used for output scaling
-    void                set_voltage(float volts){ _batt_voltage = volts; }
+    void                set_voltage(float volts){ 
+		//FixÐÞ¸Ä2.2
+		long start, end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("set_voltage", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+		_batt_voltage = volts; 
+
+		end = clock();
+		supt->setCurProcessResult("set_voltage", end, 2);
+		supt->setCurProcessResult("set_voltage", (end - start), 3);
+	}
 
     // set_current - set current to be used for output scaling
-    void                set_current(float current){ _batt_current = current; }
+    void                set_current(float current){ 
+		//FixÐÞ¸Ä2.2
+		long start, end;
+		// ------------------------  ²å×®µã ---------------------------------
+		start = clock();
+		supt->setCurProcessResult("set_current", start, 1);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
+		_batt_current = current; 
+		end = clock();
+		supt->setCurProcessResult("set_current", end, 2);
+		supt->setCurProcessResult("set_current", (end - start), 3);
+	}
 
     // set_density_ratio - sets air density as a proportion of sea level density
     void                set_air_density_ratio(float ratio) { _air_density_ratio = ratio; }

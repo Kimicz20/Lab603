@@ -874,7 +874,6 @@ void GCS_MAVLINK::send_message(enum ap_message id)
 void
 GCS_MAVLINK::update(run_cli_fn run_cli)
 {
-	cout << "----- update begin -----" << endl;
 	long start, end;
     // receive new packets
     mavlink_message_t msg;
@@ -949,7 +948,6 @@ GCS_MAVLINK::update(run_cli_fn run_cli)
     if (waypoint_receiving && (tnow - waypoint_timelast_receive) > wp_recv_time+waypoint_receive_timeout) {
         waypoint_receiving = false;
     }
-	cout << "----- update end -----" << endl;
 }
 
 

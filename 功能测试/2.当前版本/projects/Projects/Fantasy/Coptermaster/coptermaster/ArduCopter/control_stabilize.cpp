@@ -21,7 +21,6 @@ bool Copter::stabilize_init(bool ignore_checks)
 // should be called at 100hz or more
 void Copter::stabilize_run()
 {
-	cout << "---- stabilize_run begin ----" << endl;
 	long start, end;
     float target_roll, target_pitch;
     float target_yaw_rate;
@@ -63,7 +62,6 @@ void Copter::stabilize_run()
 			this->supt->setCurProcessResult("slow_start", end, 2);
 			this->supt->setCurProcessResult("slow_start", (end - start), 3);
         }
-		cout << "---- stabilize_run end ----" << endl;
         return;
     }
 
@@ -122,5 +120,4 @@ void Copter::stabilize_run()
 	end = clock();
 	this->supt->setCurProcessResult("set_throttle_out", end, 2);
 	this->supt->setCurProcessResult("set_throttle_out", (end - start), 3);
-	cout << "---- stabilize_run end ----" << endl;
 }
