@@ -18,7 +18,24 @@ int main() {
 	  switch (modelChoice){
 	  case 1:
 		  cout << "测试文件名称：" << endl;
-		  cin >> file_name;
+		  int num;
+		  cin >> num;
+		  switch (num){
+			  case 1:
+				  file_name = "testcase/1L.xml";
+					  break;
+			  case 2:
+				  file_name = "testcase/1Z.xml";
+					  break;
+			  case 3:
+				  file_name = "testcase/2L.xml";
+					  break;
+			  case 4:
+				  file_name = "testcase/2Z.xml";
+					  break;
+			  default:
+				  continue;
+		  }
 		  break;
 	  case 2:
 		   //1.创建连接Socket

@@ -759,7 +759,8 @@ void Copter::guided_pos_control_run()
 	//FixÐÞ¸Ä1.7
 	auto_yaw_mode = 0;
 	string tmp[] = {"2","angle_ef_roll_pitch_rate_ef_yaw","angle_ef_roll_pitch_yaw"};
-	auto_yaw_mode = supt->getParamValueFormNamesWithKey(tmp,"auto_yaw_mode");
+	if (supt->getParamValueFormNamesWithKey(tmp, "auto_yaw_mode") == 0)
+		auto_yaw_mode = AUTO_YAW_HOLD;
 
     // call attitude controller
     if (auto_yaw_mode == AUTO_YAW_HOLD) {
@@ -915,11 +916,8 @@ void Copter::guided_vel_control_run()
 	string tmp[] = { "2", "angle_ef_roll_pitch_rate_ef_yaw", "angle_ef_roll_pitch_yaw" };
 	if(supt->getParamValueFormNamesWithKey(tmp, "auto_yaw_mode") == 0)
 		auto_yaw_mode = AUTO_YAW_HOLD;
-
-	cout << "auto_yaw_mode:" << (int)auto_yaw_mode << endl;
     // call attitude controller
     if (auto_yaw_mode == AUTO_YAW_HOLD) {
-		cout << "Hre" << endl;
         // roll & pitch from waypoint controller, yaw rate from pilot
 		// ------------------------  ²å×®µã ---------------------------------
 		start = clock();
