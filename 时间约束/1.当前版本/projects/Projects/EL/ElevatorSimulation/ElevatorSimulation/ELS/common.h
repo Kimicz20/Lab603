@@ -3,9 +3,10 @@
 
 #include<iostream>
 
+
 #define TIMEUNIT 100		//时间单位，目前是100ms，1s=1000ms  
 #define FLOORSNUMBER 5		//楼层数
-#define MAXPEOPLENUMBER 100 //每个楼层产生的最大人员数量
+#define MAXPEOPLENUMBER 1000 //最大人员数量
 
 struct EventNode
 {
@@ -40,6 +41,14 @@ enum
 
 	trival,				//无效事件，什么也不用做。
 };
+
+enum PeopleState
+{
+	waiting,
+	leaving,
+};
+
+
 
 #endif // COMMON_H_
 

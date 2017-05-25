@@ -2,9 +2,9 @@
 #define TIMER_H_
 
 #include"building.h"
-#include"../SupportClass/SupportClass.h"
 #include<stdlib.h>
 #include <unistd.h>
+#include"../SupportClass/SupportClass.h"
 
 class Timer : public ITimer {
 
@@ -25,7 +25,6 @@ private:
 	
 
 public:
-
 	SupportClass *supt;
 
 	Timer(int timeLen);

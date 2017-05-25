@@ -6,7 +6,7 @@ EventNode * e9 = nullptr;
 Timer::Timer(int timeLen)
 {
 	this->building = new Building(this);
-	this->eventList = new EventNode[timeLen];
+	this->eventList = new EventNode[timeLen+1000];
 	this->elevator = this->building->getElevator();
 	this->timeIndex = 0;
 	this->timeLen = timeLen;
@@ -14,27 +14,37 @@ Timer::Timer(int timeLen)
 
 void Timer::init()
 {
-	createRandomSequence();
 	this->addEventList(peopleevent1,0);
 	this->addEventList(elevatorevent1,0);
+
+	building->supt = supt;
+	elevator->supt = supt;
 }
 
-void Timer::run()
+void Timer:: run()
 {
+	//起始时间初始化
+	supt->timeHandle("run", INIT);
 	do
 	{
 		executeEvent();
-		//drawState();			//绘出状态数值  方法体为空。
+		drawState();			//绘出状态数值  方法体为空。
 		this->timeIndex++;
-		usleep(100000);//linux 下sleep按秒来计时 usleep 用微妙计时
-		//cout << "timeIndex:" << this->timeIndex << endl;
+		usleep(100000);			//linux 下sleep按秒来计时 usleep 用微妙计时
+		if (this->timeIndex % 10 == 0)
+		{
+			std::cout << "now sec" << this->timeIndex / 10 << endl;
+		}
+		/*if (this->timeIndex==this->timeLen)
+		{
+			std::getchar();
+		}*/
 	} while (this->timeIndex <= this->timeLen);
+	//起始时间初始化
 }
 
 void Timer::executeEvent()
 {	
-	struct timeval start, end;
-	int interval, pinterval;
 	if (this->eventList[timeIndex].eventID != -1)
 	{
 		EventNode * event = &eventList[timeIndex];
@@ -42,98 +52,58 @@ void Timer::executeEvent()
 		{
 			switch (event->eventID) {
 				case peopleevent1:
-					std::cout << "newPeople: " ;
-					gettimeofday(&start, NULL);
-					pinterval = 1000000 * (start.tv_sec - supt->preProcessTime.tv_sec) + (start.tv_usec - supt->preProcessTime.tv_usec);
-
-					this->building->newPeople();
-					gettimeofday(&end, NULL);
-					supt->preProcessTime = end;
-					interval = 1000000 * (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec);
-					printf("pinterval = %f ,interval = %f\n ", pinterval / 1000.0 ,interval / 1000.0);
-					
+					supt->timeHandle("peopleComing",START);
+					this->building->peopleComing();
+					supt->timeHandle("peopleComing", END,"run");
 					break;
-				case peopleevent2:
-					std::cout << "deletePeople" << std::endl;
-					
-					gettimeofday(&start, NULL);
-					pinterval = 1000000 * (start.tv_sec - supt->preProcessTime.tv_sec) + (start.tv_usec - supt->preProcessTime.tv_usec);
-
-					this->building->deletePeople();
-					gettimeofday(&end, NULL);
-					supt->preProcessTime = end;
-					interval = 1000000 * (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec);
-					printf("pinterval = %f ,interval = %f\n ", pinterval / 1000.0, interval / 1000.0);
-
-					break;
-				case peopleevent3:
-					std::cout << "peopleOutIn" << std::endl;
-					this->building->peopleOutIn();
-					break;
-				case elevatorevent1:
-					std::cout << "response" << std::endl;
-				
-					gettimeofday(&start, NULL);
-					pinterval = 1000000 * (start.tv_sec - supt->preProcessTime.tv_sec) + (start.tv_usec - supt->preProcessTime.tv_usec);
-
-					this->elevator->response();
-					gettimeofday(&end, NULL);
-					supt->preProcessTime = end;
-					interval = 1000000 * (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec);
-					printf("pinterval = %f ,interval = %f\n ", pinterval / 1000.0, interval / 1000.0);
-					break;
-				case elevatorevent2:
-					std::cout << "openDoor" << std::endl;
-					this->elevator->openDoor();
-					break;
-				case elevatorevent3:
-					std::cout << "closeDoor" << std::endl;
-					gettimeofday(&start, NULL);
-					this->elevator->closeDoor();
-					gettimeofday(&end, NULL);
-					break;
-				case elevatorevent4:
-					std::cout << "prepareMove" << std::endl;
-
-					gettimeofday(&start, NULL);
-					pinterval = 1000000 * (start.tv_sec - supt->preProcessTime.tv_sec) + (start.tv_usec - supt->preProcessTime.tv_usec);
-
-					this->elevator->prepareMove();
-
-					gettimeofday(&end, NULL);
-					supt->preProcessTime = end;
-					interval = 1000000 * (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec);
-					printf("pinterval = %f ,interval = %f\n", pinterval / 1000.0, interval / 1000.0);
-
-					break;
-				case elevatorevent5:
-					std::cout << "updateState" << std::endl;
-					this->elevator->updateState();
-					break;
-				case elevatorevent6:
-					std::cout << "makeE9" << std::endl;
-					this->elevator->makeE9();
-					break;
-				case elevatorevent7:
-					std::cout << "goUpstairs" << std::endl;
-					this->elevator->goUpstairs();
-					break;
-				case elevatorevent8:
-					std::cout << "goDownstairs" << std::endl;
-					this->elevator->goDownstairs();
-					break;
-				case trival:
+				//case peopleevent2:
+				//	this->building->deletePeople();
+				//	break;
+				//case peopleevent3:
+				//	supt->timeHandle("peopleOutIn", START);
+				//	this->building->peopleOutIn();
+				//	supt->timeHandle("peopleOutIn", END,"open");
+				//	break;
+				//case elevatorevent1:
+				//	supt->timeHandle("response", START);
+				//	this->elevator->response();
+				//	supt->timeHandle("response", END,"peopleComing");
+				//	break;
+				//case elevatorevent2:
+				//	this->elevator->openDoor();
+				//	break;
+				//case elevatorevent3:
+				//	this->elevator->closeDoor();
+				//	break;
+				//case elevatorevent4:
+				//	supt->timeHandle("prepareMove", START);
+				//	this->elevator->prepareMove();
+				//	supt->timeHandle("prepareMove", END,"close");
+				//	break;
+				//case elevatorevent5:
+				//	this->elevator->updateState();
+				//	break;
+				//case elevatorevent6:
+				//	this->elevator->makeE9();
+				//	break;
+				//case elevatorevent7:
+				//	this->elevator->goUpstairs();
+				//	break;
+				//case elevatorevent8:
+				//	this->elevator->goDownstairs();
+				//	break;
+				//case trival:
 					break;
 			}
 			//即将执行该时刻的下一个事件。
 			event = event->next;
-		} while (event != &eventList[timeIndex]);		
+		} while (event != &eventList[timeIndex]);
 	}
 }
 
 void Timer::drawState()
 {
-	std::cout << "el state" << std::endl;
+	//std::cout << "此处可以绘出电梯状态" << std::endl;
 }
 
 void Timer::cancelE9()

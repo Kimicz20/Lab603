@@ -6,6 +6,7 @@
 #include"common.h"
 #include"timeinterface.h"
 #include"door.h"
+#include"../SupportClass/SupportClass.h"
 
 using std::stack;
 
@@ -54,6 +55,7 @@ private:
 	Door door;
 
 public:
+	SupportClass *supt;
 
 	Elevator(ITimer *);
 

@@ -22,13 +22,6 @@ Elevator::~Elevator() {
 	//析构电梯栈内部人员对象
 	for (int i = 0; i < FLOORSNUMBER; i++)
 	{
-		while (!this->elevatorContainer[i]->empty())
-		{
-			//删除电梯内部人员对象时，指向人员对象的指针作废
-			delete this->elevatorContainer[i]->top();
-			//删除作废指针
-			this->elevatorContainer[i]->pop();
-		}
 		//析构电梯栈数据结构
 		delete this->elevatorContainer[i];
 	}
@@ -78,7 +71,9 @@ void Elevator::openDoor()
 {
 	this->D1 = 1;
 	this->D2 = 1;
+	supt->timeHandle("open", START);
 	door.open();			//开门活动
+	supt->timeHandle("open", END, "controller");
 	this->timer->addEventList(elevatorevent6, 300);
 	this->timer->addEventList(elevatorevent3, 76);
 	this->timer->addEventList(peopleevent3, 20);	
@@ -93,7 +88,9 @@ void Elevator::closeDoor()
 	else
 	{
 		this->D3 = 0;
+		supt->timeHandle("close", START);
 		door.close();
+		supt->timeHandle("close", END, "thisFloorPeopleIn");
 		this->timer->addEventList(elevatorevent4,20);
 	}
 }
@@ -241,7 +238,9 @@ void Elevator::response()
 	//活动E1表示在一层停候，等价于this->State==idle && this->Floor==1
 	if (this->State==idle && this->Floor==1)
 	{
+		supt->timeHandle("controller", START);
 		controller();
+		supt->timeHandle("controller", END,"peopleComing");
 	}
 }
 
@@ -256,8 +255,7 @@ bool Elevator::thisFloorOut()
 
 void Elevator::thisFloorPeopleOut()
 {
-	//从电梯里面出来人员对象，销毁掉所占堆空间对象。
-	delete this->elevatorContainer[this->Floor]->top();
+	this->elevatorContainer[this->Floor]->top()->setCurrentState(leaving);
 	this->elevatorContainer[this->Floor]->pop();
 	this->timer->addEventList(peopleevent3,25);
 }

@@ -11,23 +11,39 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EL\Controller\src\Main\test.cpp" />
+    <ClCompile Include="EL\Controller\src\Socket\ServerSocket.cpp" />
+    <ClCompile Include="EL\Controller\src\Socket\Socket.cpp" />
+    <ClCompile Include="EL\Controller\src\SupportClass\SupportClass.cpp" />
+    <ClCompile Include="EL\Controller\src\TestCase\ProcessList.cpp" />
+    <ClCompile Include="EL\Controller\src\TestCase\TestCase.cpp" />
+    <ClCompile Include="EL\Controller\src\TinyXML2\tinyxml2.cpp" />
     <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\building.cpp" />
     <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\door.cpp" />
     <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\elevator.cpp" />
     <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\ElevatorSimulation.cpp" />
     <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\people.cpp" />
+    <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\peoplefactory.cpp" />
     <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\timer.cpp" />
     <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\SupportClass\SupportClass.cpp" />
     <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\TestCase\ProcessList.cpp" />
     <ClCompile Include="EL\ElevatorSimulation\ElevatorSimulation\TestCase\TestCase.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EL\Controller\include\ProcessList.h" />
+    <ClInclude Include="EL\Controller\include\ServerSocket.h" />
+    <ClInclude Include="EL\Controller\include\Socket.h" />
+    <ClInclude Include="EL\Controller\include\SocketException.h" />
+    <ClInclude Include="EL\Controller\include\SupportClass.h" />
+    <ClInclude Include="EL\Controller\include\TestCase.h" />
+    <ClInclude Include="EL\Controller\include\tinyxml2.h" />
     <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\building.h" />
     <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\circularqueue.h" />
     <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\common.h" />
     <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\door.h" />
     <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\elevator.h" />
     <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\people.h" />
+    <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\peoplefactory.h" />
     <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\timeinterface.h" />
     <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\ELS\timer.h" />
     <ClInclude Include="EL\ElevatorSimulation\ElevatorSimulation\SupportClass\SupportClass.h" />
@@ -68,10 +84,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

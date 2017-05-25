@@ -1,0 +1,142 @@
+﻿生成启动时间为 2017/5/25 14:12:31。
+     1>项目“E:\项目\虚拟仿真平台进度\Lab603\时间约束\1.当前版本\projects\Projects\Projects.vcxproj”在节点 2 上(Build 个目标)。
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(942,5): warning MSB8027: Two or more files with the name of SupportClass.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are EL\Controller\src\SupportClass\SupportClass.cpp, EL\ElevatorSimulation\ElevatorSimulation\SupportClass\SupportClass.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(942,5): warning MSB8027: Two or more files with the name of ProcessList.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are EL\Controller\src\TestCase\ProcessList.cpp, EL\ElevatorSimulation\ElevatorSimulation\TestCase\ProcessList.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(942,5): warning MSB8027: Two or more files with the name of TestCase.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are EL\Controller\src\TestCase\TestCase.cpp, EL\ElevatorSimulation\ElevatorSimulation\TestCase\TestCase.cpp.
+     1>ClCompile:
+         D:\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /FR"Debug\\" /Gd /TP /analyze- /errorReport:prompt EL\Controller\src\Main\test.cpp EL\Controller\src\Socket\ServerSocket.cpp EL\Controller\src\Socket\Socket.cpp EL\Controller\src\SupportClass\SupportClass.cpp EL\Controller\src\TestCase\ProcessList.cpp EL\Controller\src\TestCase\TestCase.cpp EL\Controller\src\TinyXML2\tinyxml2.cpp EL\ElevatorSimulation\ElevatorSimulation\ELS\building.cpp EL\ElevatorSimulation\ElevatorSimulation\ELS\door.cpp EL\ElevatorSimulation\ElevatorSimulation\ELS\elevator.cpp EL\ElevatorSimulation\ElevatorSimulation\ELS\ElevatorSimulation.cpp EL\ElevatorSimulation\ElevatorSimulation\ELS\people.cpp EL\ElevatorSimulation\ElevatorSimulation\ELS\peoplefactory.cpp EL\ElevatorSimulation\ElevatorSimulation\ELS\timer.cpp EL\ElevatorSimulation\ElevatorSimulation\SupportClass\SupportClass.cpp EL\ElevatorSimulation\ElevatorSimulation\TestCase\ProcessList.cpp EL\ElevatorSimulation\ElevatorSimulation\TestCase\TestCase.cpp
+         TestCase.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\testcase.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\testcase.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(20): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(26): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(89): fatal error C1071: 在注释中遇到意外的文件结束
+         ProcessList.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(20): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(26): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(89): fatal error C1071: 在注释中遇到意外的文件结束
+         SupportClass.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\supportclass\supportclass.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\supportclass\supportclass.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\testcase.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(20): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(26): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(89): fatal error C1071: 在注释中遇到意外的文件结束
+         timer.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\supportclass\supportclass.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\testcase.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(20): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(26): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(89): fatal error C1071: 在注释中遇到意外的文件结束
+         peoplefactory.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\supportclass\supportclass.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\testcase.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(20): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(26): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(89): fatal error C1071: 在注释中遇到意外的文件结束
+         people.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\supportclass\supportclass.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\testcase.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(20): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(26): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(89): fatal error C1071: 在注释中遇到意外的文件结束
+         ElevatorSimulation.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\supportclass\supportclass.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\testcase.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(20): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(26): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(89): fatal error C1071: 在注释中遇到意外的文件结束
+         elevator.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\supportclass\supportclass.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\testcase.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(20): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(26): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(89): fatal error C1071: 在注释中遇到意外的文件结束
+         door.cpp
+         building.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\supportclass\supportclass.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\testcase.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(20): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(26): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\elevatorsimulation\elevatorsimulation\testcase\processlist.h(89): fatal error C1071: 在注释中遇到意外的文件结束
+         tinyxml2.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\tinyxml2\tinyxml2.cpp(24): fatal error C1083: 无法打开包括文件: “tinyxml2.h”: No such file or directory
+         TestCase.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\include\testcase.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\include\processlist.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\include\processlist.h(20): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\include\processlist.h(26): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\include\testcase.h(13): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(5): error C2653: “TestCase”: 不是类或命名空间名称
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(6): error C4430: 缺少类型说明符 - 假定为 int。注意:  C++ 不支持默认 int
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(7): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(7): error C2227: “->testCaseID”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(8): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(8): error C2227: “->processList”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(9): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(9): error C2227: “->execStatus”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(10): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(10): error C2227: “->resultStatus”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(11): warning C4508: “TestCase”: 函数应返回一个值；假定“void”返回类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(14): error C2653: “TestCase”: 不是类或命名空间名称
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(15): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(15): error C2227: “->testCaseID”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(19): error C2653: “TestCase”: 不是类或命名空间名称
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(21): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(21): error C2227: “->testCaseID”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(23): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(23): error C2227: “->processList”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(23): error C2227: “->ListIsEmpty”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(26): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(26): error C2227: “->processList”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(26): error C2227: “->ListTraverse”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(29): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(29): error C2227: “->execStatus”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(32): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(32): error C2227: “->execStatus”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(35): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(35): error C2227: “->resultStatus”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(38): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(38): error C2227: “->resultStatus”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(45): error C2653: “TestCase”: 不是类或命名空间名称
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(47): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(47): error C2227: “->processList”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(47): error C2227: “->createProcessNode”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(49): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(49): error C2227: “->processList”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(49): error C2227: “->ListInsert”的左边必须指向类/结构/联合/泛型类型
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(53): error C2653: “TestCase”: 不是类或命名空间名称
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(54): error C2355: “this”: 只能在非静态成员函数或非静态数据成员初始值设定项的内部引用
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\testcase.cpp(54): error C2227: “->resultStatus”的左边必须指向类/结构/联合/泛型类型
+         ProcessList.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\processlist.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\testcase\processlist.cpp(1): fatal error C1083: 无法打开包括文件: “ProcessList.h”: No such file or directory
+         SupportClass.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\supportclass\supportclass.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\supportclass\supportclass.cpp(2): fatal error C1083: 无法打开包括文件: “SupportClass.h”: No such file or directory
+         Socket.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\socket\socket.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\socket\socket.cpp(2): fatal error C1083: 无法打开包括文件: “Socket.h”: No such file or directory
+         ServerSocket.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\socket\serversocket.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\socket\serversocket.cpp(3): fatal error C1083: 无法打开包括文件: “ServerSocket.h”: No such file or directory
+         test.cpp
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\main\test.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+     1>e:\项目\虚拟仿真平台进度\lab603\时间约束\1.当前版本\projects\projects\el\controller\src\main\test.cpp(1): fatal error C1083: 无法打开包括文件: “ServerSocket.h”: No such file or directory
+         正在生成代码...
+     1>已完成生成项目“E:\项目\虚拟仿真平台进度\Lab603\时间约束\1.当前版本\projects\Projects\Projects.vcxproj”(Build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:04.30

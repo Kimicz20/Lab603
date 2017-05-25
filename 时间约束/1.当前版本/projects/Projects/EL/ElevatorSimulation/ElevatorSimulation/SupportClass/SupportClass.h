@@ -19,11 +19,16 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <map>
 
 typedef list<string> StringList;
 typedef list<TestCase *> TestCaseList;
 
 #define TEXT_SZ 10*1024*1024
+
+#define INIT 0
+#define START 1
+#define END 2
 
 struct shared_use_st {
   int currentIndex;   //当前测试用例ID
@@ -32,13 +37,54 @@ struct shared_use_st {
   char result[TEXT_SZ];
 };
 
+class processTime{
+	public :
+		struct timeval startTime;
+		struct timeval endTime;
+		//时间差 s
+		int interval(){
+			return 1000000 * (endTime.tv_sec - startTime.tv_sec) 
+				+ (endTime.tv_usec - startTime.tv_usec);
+		}
+		int pinterval(processTime pre){
+			return 1000000 * (endTime.tv_sec - pre.endTime.tv_sec)
+				+ (endTime.tv_usec - pre.endTime.tv_usec);
+		}
+		void show(){
+			float i1 = (1000000 * startTime.tv_sec + startTime.tv_usec) / 1000.0;
+			float i2 = (1000000 * endTime.tv_sec + endTime.tv_usec) / 1000.0;
+			cout << "startTime:" << i1 << ",sendTime:" << i2 << endl;
+		}
+		/* 
+			初始化各个时间 
+				0:最开始初始化 
+				1:起始时间 
+				2:终止时间*/
+		void init(int i){
+			switch (i){
+				case 0:
+					gettimeofday(&startTime, NULL);
+					gettimeofday(&endTime, NULL);
+					break;
+				case 1:
+					gettimeofday(&startTime, NULL);
+					break;
+				case 2:
+					gettimeofday(&endTime, NULL);
+					break;
+			}
+		}
+};
+
 class SupportClass {
 
 private:
   StringList testExecPath; //插桩路径保存
   int currentIndex;        //当前测试用例序号
 public:
-	struct timeval preProcessTime;
+  /* 上一个用例时间，当前用例时间*/
+  map<string,processTime> processTimes;
+ 
   SupportClass();
 
   /* 获取当前测试用例  */
@@ -78,5 +124,11 @@ public:
   void getTestCasesInMem();
   /* 分离 共享内存 */
   void pullMem();
+
+  /* 记录处理时间
+  0:最开始初始化
+  1:起始时间
+  2:终止时间*/
+  void timeHandle(string, int,string preProcessName = "");
 };
 #endif

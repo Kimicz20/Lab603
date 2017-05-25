@@ -16,8 +16,8 @@ private:
 	//此人能够容忍的等候时间
 	int GiveupTime;
 
-	//进出电梯的消耗时间
-	int consumeTime;
+	//该人所处的状态
+	int currentState;
 
 	//该人是什么时刻产生的
 	int StartTime;
@@ -25,7 +25,7 @@ private:
 public:
 	
 	//产生人员对象的时候需要显式指定InFloor,OutFloor,GiveupTime属性信息。
-	People(int InFloor,int OutFloor,int GiveupTime,int StartTime);
+	People(int InFloor,int OutFloor,int GiveupTime);
 
 	int getInFloor() {
 		return InFloor;
@@ -41,6 +41,18 @@ public:
 
 	int getStartTime() {
 		return StartTime;
+	}
+
+	void setStartTime(int time){
+		StartTime = time;
+	}
+	
+	void setCurrentState(PeopleState ps){
+		currentState = ps;
+	}
+
+	int getCurrentState(){
+		return currentState;
 	}
 
 	~People() {};

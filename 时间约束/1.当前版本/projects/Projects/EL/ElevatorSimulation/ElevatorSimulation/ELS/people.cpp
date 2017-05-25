@@ -1,10 +1,10 @@
 #include "people.h"
 
-People::People(int InFloor, int OutFloor, int GiveupTime, int StartTime)
+People::People(int InFloor, int OutFloor, int GiveupTime)
 {
 	this->InFloor = InFloor;
 	this->OutFloor = OutFloor;
 	this->GiveupTime = GiveupTime;
-	this->StartTime = StartTime;
-	this->consumeTime = 25;
+	this->currentState = waiting;
+	this->StartTime = -10000;
 }

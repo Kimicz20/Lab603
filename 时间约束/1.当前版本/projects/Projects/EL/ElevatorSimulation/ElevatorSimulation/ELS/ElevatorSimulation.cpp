@@ -3,7 +3,6 @@
 
 int main() {
 
-
 	// 1.创建所需的对象
 	SupportClass *supt = new SupportClass();
 
@@ -15,10 +14,9 @@ int main() {
 		}
 		supt->setCurrentTestCase();
 		cout << "testCaseID:" << supt->getCurrentTestCase()->getTestCaseID() << endl;
-		
-		gettimeofday(&supt->preProcessTime, NULL);
+
 		//2.系统初始化并运行
-		Timer timer(5000);
+		Timer timer(300);
 		timer.supt = supt;
 		timer.init();
 		timer.run();

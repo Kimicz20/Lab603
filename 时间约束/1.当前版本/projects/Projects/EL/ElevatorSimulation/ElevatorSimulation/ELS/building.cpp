@@ -1,14 +1,10 @@
 #include"building.h"
 
-tetrad dataSequence[MAXPEOPLENUMBER*FLOORSNUMBER];
-static int dataIndex = 0;
-
-
 Building::Building(ITimer * t)
 {
 	for (int i = 0; i < FLOORSNUMBER; i++)
 	{
-		this->buildingQueue[i] = new CircularQueue<People *, MAXPEOPLENUMBER>;
+		this->buildingQueue[i] = new std::queue<People *>;
 	}
 	this->timer = t;
 	elevator = new Elevator(t);
@@ -16,90 +12,91 @@ Building::Building(ITimer * t)
 
 Building::~Building()
 {
-	//ææ„æ¯ä¸ªæ¥¼å±‚é˜Ÿåˆ—é‡Œé¢çš„äººå‘˜å¯¹è±¡ã€‚
+	//Îö¹¹Ã¿¸öÂ¥²ã¶ÓÁĞÀïÃæµÄÈËÔ±¶ÔÏó¡£
 	for (int i = 0; i < FLOORSNUMBER; i++)
 	{
-		while (!this->buildingQueue[i]->empty())
-		{
-			delete this->buildingQueue[i]->frontElement();
-			this->buildingQueue[i]->popElement();
-		}
-		//ææ„æ¥¼å±‚é˜Ÿåˆ—æ•°æ®ç»“æ„ã€‚	
+		//Îö¹¹Â¥²ã¶ÓÁĞÊı¾İ½á¹¹¡£	
 		delete this->buildingQueue[i];
 	}
 
-	//ææ„ç”µæ¢¯å¯¹è±¡ã€‚
+	//Îö¹¹µçÌİ¶ÔÏó¡£
 	delete elevator;
 }
 
 
-void Building::newPeople()
+void Building::peopleComing()
 {
 	
-	//åœ¨éšæœºæ•°åºåˆ—é‡Œé¢å‰”é™¤æ‰InFloorä¸OutFloorç›¸ç­‰çš„éšæœºæ•°ç»„å…ƒç´ ã€‚
-	while (dataSequence[dataIndex].InFloor == dataSequence[dataIndex].OutFloor)
-	{
-		++dataIndex;
-	}
-	//äº§ç”Ÿäººå‘˜å¯¹è±¡ã€‚
-	People * singlePeople = new People(dataSequence[dataIndex].InFloor, dataSequence[dataIndex].OutFloor, dataSequence[dataIndex].GiveupTime, this->timer->getTime());
-	
-	this->InterTime = dataSequence[dataIndex].InterTime;
-	
-	//ä¸ºä¸‹ä¸€ä¸ªäººå‘˜å¯¹è±¡çš„äº§ç”Ÿåšå‡†å¤‡ã€‚å³æ³¨å†Œäº§ç”Ÿäººå‘˜å¯¹è±¡äº‹ä»¶ã€‚
+	//²úÉúÈËÔ±¶ÔÏó¡£
+	supt->timeHandle("newPeople", START);
+	People * singlePeople = pf.newPeople();
+	supt->timeHandle("newPeople", END,"run");
+
+	singlePeople->setStartTime(timer->getTime());
+
+	std::default_random_engine dre;
+
+	std::uniform_int_distribution<int> di2(100, 200);
+
+	this->InterTime = di2(dre) / 10 * 10;
+
+	//ÎªÏÂÒ»¸öÈËÔ±¶ÔÏóµÄ²úÉú×ö×¼±¸¡£¼´×¢²á²úÉúÈËÔ±¶ÔÏóÊÂ¼ş¡£
 	this->timer->addEventList(peopleevent1, this->InterTime);
 
-	//äº§ç”Ÿä¸‹ä¸€ä¸ªäººå‘˜å¯¹è±¡åï¼Œéœ€è¦ç›´æ¥æ³¨å†Œé‚£ä¸ªæ—¶åˆ»çš„ç”µæ¢¯å“åº”äº‹ä»¶ã€‚
+	//²úÉúÏÂÒ»¸öÈËÔ±¶ÔÏóºó£¬ĞèÒªÖ±½Ó×¢²áÄÇ¸öÊ±¿ÌµÄµçÌİÏìÓ¦ÊÂ¼ş¡£
 	this->timer->addEventList(elevatorevent1, this->InterTime);
 
+	//¼ÓÈë¶ÔÓ¦Â¥²ã¶ÓÁĞ¡£
+	this->buildingQueue[singlePeople->getInFloor()]->push(singlePeople);
 
-	//åŠ å…¥å¯¹åº”æ¥¼å±‚é˜Ÿåˆ—ã€‚
-	this->buildingQueue[singlePeople->getInFloor()]->pushElement(singlePeople);
-
-
-	//æŒ‰ä¸‹ç”µé’®å¹¶ä¸”ç­‰å€™ã€‚
+	//°´ÏÂµçÅ¥²¢ÇÒµÈºò¡£
 	if (singlePeople->getInFloor() > singlePeople->getOutFloor())
 	{
-		std::cout << "pushCallDown" << std::endl;
-		elevator->pushCallDown(singlePeople->getInFloor());  //è¯¥æ¥¼å±‚çš„å‘ä¸‹æŒ‰é’®è¢«æŒ‰ã€‚
+		supt->timeHandle("pushCallDown", START);
+		elevator->pushCallDown(singlePeople->getInFloor());  //¸ÃÂ¥²ãµÄÏòÏÂ°´Å¥±»°´¡£
+		supt->timeHandle("pushCallDown", END, "newPeople");
 	}
 	else
 	{
-		std::cout << "pushCallUp" << std::endl;
-		elevator->pushCallUp(singlePeople->getInFloor());  //è¯¥æ¥¼å±‚çš„å‘ä¸ŠæŒ‰é’®è¢«æŒ‰ã€‚
+		supt->timeHandle("pushCallUp", START);
+		elevator->pushCallUp(singlePeople->getInFloor());  //¸ÃÂ¥²ãµÄÏòÉÏ°´Å¥±»°´¡£
+		supt->timeHandle("pushCallUp", END, "newPeople");
 	}
-	//æ³¨å†Œè¾¾åˆ°å®¹å¿æ—¶åˆ»åæ­¤äººæ˜¯å¦è¿˜è¦ç»§ç»­ç­‰å¾…çš„åˆ¤æ–­äº‹ä»¶ã€‚
+
+	//×¢²á´ïµ½ÈİÈÌÊ±¿Ìºó´ËÈËÊÇ·ñ»¹Òª¼ÌĞøµÈ´ıµÄÅĞ¶ÏÊÂ¼ş¡£
 	this->timer->addEventList(peopleevent2, singlePeople->getGiveupTime());
 
-	++dataIndex;
 }
 
 void Building::peopleOutIn()
 {
-	//æœ¬å±‚ç”µæ¢¯é‡Œé¢çš„äººå…ˆå‡ºæ¥ï¼Œå‡ºæ¥çš„é€Ÿåº¦æ˜¯æ¯è¿‡25ä¸ªtå‡ºæ¥ä¸€ä¸ªäºº
+	//±¾²ãµçÌİÀïÃæµÄÈËÏÈ³öÀ´£¬³öÀ´µÄËÙ¶ÈÊÇÃ¿¹ı25¸öt³öÀ´Ò»¸öÈË
 	if (this->elevator->thisFloorOut() == true)
 	{
+		supt->timeHandle("thisFloorPeopleOut", START);
 		this->elevator->thisFloorPeopleOut();
+		supt->timeHandle("thisFloorPeopleOut", END,"open");
 		return;
 	}
-	//æœ¬å±‚ç”µæ¢¯å¤–é¢çš„äººå¼€å§‹è¿›å…¥ï¼Œè¿›æ¥çš„é€Ÿåº¦æ˜¯æ¯è¿‡25ä¸ªtè¿›æ¥ä¸€ä¸ªäºº,æ³¨æ„è¿›æ¥çš„æ—¶å€™éœ€è¦å°†ç”µæ¢¯å†…éƒ¨çš„CallCarå±æ€§æŒ‰ä¸‹ï¼ˆç”±äººå‘å‡ºï¼‰
-	//æ³¨æ„è¦è·³è¿‡å¯¹åº”æ¥¼å±‚é˜Ÿåˆ—é‡Œé¢çš„ç©ºæŒ‡é’ˆæƒ…å†µï¼Œç©ºæŒ‡é’ˆæ˜¯å› ä¸ºè¯¥äººç”±äºè¶…è¿‡ç­‰å¾…çš„å®¹å¿æ—¶é—´è€Œèµ°æ‰äº†ã€‚
+	//±¾²ãµçÌİÍâÃæµÄÈË¿ªÊ¼½øÈë£¬½øÀ´µÄËÙ¶ÈÊÇÃ¿¹ı25¸öt½øÀ´Ò»¸öÈË,×¢Òâ½øÀ´µÄÊ±ºòĞèÒª½«µçÌİÄÚ²¿µÄCallCarÊôĞÔ°´ÏÂ£¨ÓÉÈË·¢³ö£©
 	if (this->buildingQueue[this->elevator->getCurrentFloor()]->empty() == false) {
-		while (this->buildingQueue[this->elevator->getCurrentFloor()]->empty() == false && this->buildingQueue[this->elevator->getCurrentFloor()]->frontElement() == nullptr)
+		while (this->buildingQueue[this->elevator->getCurrentFloor()]->empty() == false && this->buildingQueue[this->elevator->getCurrentFloor()]->front()->getCurrentState() == leaving)
 		{
-			this->buildingQueue[this->elevator->getCurrentFloor()]->popElement();
+			this->buildingQueue[this->elevator->getCurrentFloor()]->pop();
 		}
 		if (this->buildingQueue[this->elevator->getCurrentFloor()]->empty() == false)
 		{
-			//ä»æ¥¼å±‚å¤–éƒ¨å¾€ç”µæ¢¯é‡Œé¢è¿›ä¸€ä¸ªäºº
-			this->elevator->thisFloorPeopleIn(this->buildingQueue[this->elevator->getCurrentFloor()]->frontElement());
-			this->buildingQueue[this->elevator->getCurrentFloor()]->popElement();
-			//25ä¸ªtåå†æ¬¡æŸ¥çœ‹é˜Ÿåˆ—é‡Œé¢æ˜¯å¦æœ‰äººéœ€è¦è¿›å…¥ç”µæ¢¯å†…éƒ¨ã€‚
-			this->timer->addEventList(peopleevent3, 25);
+			//´ÓÂ¥²ãÍâ²¿ÍùµçÌİÀïÃæ½øÒ»¸öÈË
+			supt->timeHandle("thisFloorPeopleIn", START);
+			this->elevator->thisFloorPeopleIn(this->buildingQueue[this->elevator->getCurrentFloor()]->front());
+			supt->timeHandle("thisFloorPeopleIn", END,"open");
+			this->buildingQueue[this->elevator->getCurrentFloor()]->pop();
+			//25¸ötºóÔÙ´Î²é¿´¶ÓÁĞÀïÃæÊÇ·ñÓĞÈËĞèÒª½øÈëµçÌİÄÚ²¿¡£
+			this->timer->addEventList(peopleevent3,25);		
 			return;
 		}
 	}
-	//å¦‚æœæœ¬æ¥¼å±‚çš„é˜Ÿåˆ—ä¸ºç©ºï¼Œç½®D1=0ï¼ŒD3ï¼=0ã€‚
+	//Èç¹û±¾Â¥²ãµÄ¶ÓÁĞÎª¿Õ£¬ÖÃD1=0£¬D3£¡=0¡£
 	if (this->buildingQueue[this->elevator->getCurrentFloor()]->empty() == true)
 	{
 		this->elevator->setD1(0);
@@ -109,56 +106,5 @@ void Building::peopleOutIn()
 
 void Building::deletePeople()
 {
-	//ä¾æ¬¡è½®è¯¢æ¯ä¸ªæ¥¼å±‚é˜Ÿåˆ—é‡Œçš„äººä»¬ï¼Œæ‰¾å‡ºå“ªäº›å‡†å¤‡æ”¾å¼ƒçš„äººå‘˜å¯¹è±¡ï¼Œç„¶åææ„æ‰è¿™äº›å¯¹è±¡ï¼Œå¹¶ä¸”æŒ‡é’ˆç½®ç©ºã€‚
-	/*for (int i = 0; i < FLOORSNUMBER; i++)
-	{
-		//å¦‚æœå½“å‰æ—¶åˆ»å‡å»giveuptimeåˆšå¥½ç­‰äºæŸä¸ªäººå‘˜å¯¹è±¡äº§ç”Ÿçš„æ—¶é—´ï¼Œé‚£ä¹ˆå°±è¦è¿›è¡Œæ˜¯å¦åˆ é™¤çš„åˆ¤æ–­äº†ã€‚
-		People * * tempPtr;
-		std::cout << "+++++++++++" << std::endl;
-		if (this->buildingQueue[i]->empty())
-			continue;
-		std::cout << "+++++++++++0" << std::endl;
-		while (tempPtr = this->buildingQueue[i]->nextElement())
-		{
-			std::cout << "+++++++++++1:" << (*tempPtr)->getGiveupTime()
-				<< "," << (*tempPtr)->getStartTime()
-				<< "," << this->timer->getTime()<<std::endl;
-			if ((*tempPtr)->getGiveupTime() + (*tempPtr)->getStartTime() == this->timer->getTime())
-			{
-				std::cout << "+++++++++++2" << std::endl;
-				//æŸ¥çœ‹å½“å‰ç”µæ¢¯æ˜¯å¦åœ¨è¿™ä¸ªäººæœŸæœ›çš„é‚£ä¸€å±‚
-				if ((*tempPtr)->getInFloor() != this->elevator->getCurrentFloor() || this->elevator->getD1() == 0)
-				{
-					std::cout <<"+++++++++++3"<< std::endl;
-					//è¯¥äººæ”¾å¼ƒï¼Œè¿›è¡Œåˆ é™¤ã€‚
-					delete (*tempPtr);
-					std::cout << "+++++++++++4" << std::endl;
-					//é˜Ÿåˆ—æŒ‡é’ˆç½®ç©º
-					*tempPtr = nullptr;
-					std::cout << "+++++++++++5" << std::endl;
-				}
-			}
-		}
-		std::cout << "www" << std::endl;
-	}*/
-}
-
-
-//éšæœºæ•°åºåˆ—ï¼Œè¾…åŠ©æ•°æ®
-tetrad * createRandomSequence()
-{
-	std::default_random_engine dre;
-	//éšæœºæ¥¼å±‚
-	std::uniform_int_distribution<int> di1(0, FLOORSNUMBER);
-	//éšæœºåœ¨300-600çš„æ—¶é—´å•ä½å†…äº§ç”Ÿä¸€ä¸ªäººï¼Œå¹¶ä¸”è¯¥äººçš„å®¹å¿æ—¶é—´è®¾ç½®ä¸º300-600çš„æ—¶é—´å•ä½ã€‚
-	std::uniform_int_distribution<int> di2(50, 100);
-
-	for (int i = 0; i < MAXPEOPLENUMBER; i++)
-	{
-		dataSequence[i].InFloor = di1(dre);
-		dataSequence[i].OutFloor = di1(dre);
-		dataSequence[i].GiveupTime = di2(dre) / 10 * 10;
-		dataSequence[i].InterTime = di2(dre) / 10 * 10;
-	}
-	return dataSequence;
+	pf.deletePeople(this->timer->getTime(), this->elevator->getCurrentFloor(), this->elevator->getD1());
 }

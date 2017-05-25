@@ -244,3 +244,34 @@ void SupportClass::pullMem() {
     cout << "共享内存从当前进程中分离成功!" << endl;
   }
 }
+
+/* 记录处理时间 */
+void SupportClass::timeHandle(string processName,int f,string preProcessName){
+	
+	processTime curProcessTime, preProcessTime;
+	switch (f){
+		case 0:
+			if (!processTimes.empty())
+				processTimes.clear();
+			curProcessTime.init(0);
+			processTimes[processName] = curProcessTime;
+			break;
+		case 1:
+			std::cout << processName << ": ";
+			curProcessTime.init(1);
+			//当前激励时间入map
+			processTimes[processName] = curProcessTime;
+			break;
+		case 2:
+			//获取当前激励时间
+			curProcessTime = processTimes[processName];
+			//修改当前激励结束时间
+			curProcessTime.init(2);
+			curProcessTime.show();
+			//计算当前激励与上一个激励之间的时间差值
+			preProcessTime = processTimes[preProcessName];
+			preProcessTime.show();
+			printf("pinterval = %f ,interval = %f\n", curProcessTime.pinterval(preProcessTime) / 1000.0, curProcessTime.interval() / 1000.0);
+			break;
+	}
+}
