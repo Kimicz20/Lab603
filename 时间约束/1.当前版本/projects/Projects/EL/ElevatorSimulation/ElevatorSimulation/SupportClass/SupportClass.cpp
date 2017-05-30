@@ -257,21 +257,20 @@ void SupportClass::timeHandle(string processName,int f,string preProcessName){
 			processTimes[processName] = curProcessTime;
 			break;
 		case 1:
-			std::cout << processName << ": ";
 			curProcessTime.init(1);
+			
+			//计算当前激励与上一个激励之间的时间差值
+			preProcessTime = processTimes[preProcessName];
+			curProcessTime.pinterval = curProcessTime.setPinterval(preProcessTime);
 			//当前激励时间入map
 			processTimes[processName] = curProcessTime;
+			curProcessTime.showPinterval(processName);
 			break;
 		case 2:
 			//获取当前激励时间
 			curProcessTime = processTimes[processName];
 			//修改当前激励结束时间
 			curProcessTime.init(2);
-			curProcessTime.show();
-			//计算当前激励与上一个激励之间的时间差值
-			preProcessTime = processTimes[preProcessName];
-			preProcessTime.show();
-			printf("pinterval = %f ,interval = %f\n", curProcessTime.pinterval(preProcessTime) / 1000.0, curProcessTime.interval() / 1000.0);
 			break;
 	}
 }

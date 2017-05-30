@@ -16,7 +16,7 @@ int main() {
 		cout << "testCaseID:" << supt->getCurrentTestCase()->getTestCaseID() << endl;
 
 		//2.系统初始化并运行
-		Timer timer(300);
+		Timer timer(100);
 		timer.supt = supt;
 		timer.init();
 		timer.run();
@@ -28,7 +28,6 @@ int main() {
 		supt->putTestCasesInMem();
 	}
 	supt->pullMem();
-
 
 	return 0;
 }

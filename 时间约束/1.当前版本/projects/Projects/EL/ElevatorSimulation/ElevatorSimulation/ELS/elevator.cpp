@@ -71,9 +71,11 @@ void Elevator::openDoor()
 {
 	this->D1 = 1;
 	this->D2 = 1;
-	supt->timeHandle("open", START);
+	supt->timeHandle("open", START, "controller");
 	door.open();			//开门活动
-	supt->timeHandle("open", END, "controller");
+	supt->timeHandle("open", END);
+	supt->timeHandle("open_return", START, "open");
+	supt->timeHandle("open_return", END);
 	this->timer->addEventList(elevatorevent6, 300);
 	this->timer->addEventList(elevatorevent3, 76);
 	this->timer->addEventList(peopleevent3, 20);	
@@ -88,9 +90,9 @@ void Elevator::closeDoor()
 	else
 	{
 		this->D3 = 0;
-		supt->timeHandle("close", START);
+		supt->timeHandle("close", START, "thisFloorPeopleIn");
 		door.close();
-		supt->timeHandle("close", END, "thisFloorPeopleIn");
+		supt->timeHandle("close", END);
 		this->timer->addEventList(elevatorevent4,20);
 	}
 }
@@ -100,6 +102,7 @@ void Elevator::controller()
 	//C1
 	if (this->State==idle)
 	{
+		this->callUp[1] = 1;
 		//C2
 		if ((this->callUp[1] != 0 || this->callDown[1] != 0 || this->callCar[1] != 0) && this->Floor == 1)
 		{
@@ -238,9 +241,9 @@ void Elevator::response()
 	//活动E1表示在一层停候，等价于this->State==idle && this->Floor==1
 	if (this->State==idle && this->Floor==1)
 	{
-		supt->timeHandle("controller", START);
+		supt->timeHandle("controller", START, "response");
 		controller();
-		supt->timeHandle("controller", END,"peopleComing");
+		supt->timeHandle("controller", END);
 	}
 }
 

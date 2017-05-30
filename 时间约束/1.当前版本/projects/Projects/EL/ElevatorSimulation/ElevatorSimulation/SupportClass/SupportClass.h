@@ -41,19 +41,22 @@ class processTime{
 	public :
 		struct timeval startTime;
 		struct timeval endTime;
+		double interval;
+		double pinterval;
 		//时间差 s
-		int interval(){
-			return 1000000 * (endTime.tv_sec - startTime.tv_sec) 
-				+ (endTime.tv_usec - startTime.tv_usec);
+		double setInterval(){
+			return 1000.0 * (endTime.tv_sec - startTime.tv_sec)
+				+ (endTime.tv_usec - startTime.tv_usec)/1000.0;
 		}
-		int pinterval(processTime pre){
-			return 1000000 * (endTime.tv_sec - pre.endTime.tv_sec)
-				+ (endTime.tv_usec - pre.endTime.tv_usec);
+		double setPinterval(processTime pre){
+			return 1000.0 * (startTime.tv_sec - pre.startTime.tv_sec)
+				+ (startTime.tv_usec - pre.startTime.tv_usec) / 1000.0;
 		}
 		void show(){
-			float i1 = (1000000 * startTime.tv_sec + startTime.tv_usec) / 1000.0;
-			float i2 = (1000000 * endTime.tv_sec + endTime.tv_usec) / 1000.0;
-			cout << "startTime:" << i1 << ",sendTime:" << i2 << endl;
+			printf("pinterval = %lf ms ,interval = %lf ms\n", pinterval, interval);
+		}
+		void showPinterval(string p){
+			cout << p << ": pinterval = " << pinterval << " ms" << endl;
 		}
 		/* 
 			初始化各个时间 
@@ -71,6 +74,7 @@ class processTime{
 					break;
 				case 2:
 					gettimeofday(&endTime, NULL);
+					interval = setInterval();
 					break;
 			}
 		}

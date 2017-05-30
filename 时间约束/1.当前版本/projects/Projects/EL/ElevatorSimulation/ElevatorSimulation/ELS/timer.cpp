@@ -52,47 +52,49 @@ void Timer::executeEvent()
 		{
 			switch (event->eventID) {
 				case peopleevent1:
-					supt->timeHandle("peopleComing",START);
+					supt->timeHandle("peopleComing", START, "run");
 					this->building->peopleComing();
-					supt->timeHandle("peopleComing", END,"run");
+					supt->timeHandle("peopleComing", END);
 					break;
-				//case peopleevent2:
-				//	this->building->deletePeople();
-				//	break;
-				//case peopleevent3:
-				//	supt->timeHandle("peopleOutIn", START);
-				//	this->building->peopleOutIn();
-				//	supt->timeHandle("peopleOutIn", END,"open");
-				//	break;
-				//case elevatorevent1:
-				//	supt->timeHandle("response", START);
-				//	this->elevator->response();
-				//	supt->timeHandle("response", END,"peopleComing");
-				//	break;
-				//case elevatorevent2:
-				//	this->elevator->openDoor();
-				//	break;
-				//case elevatorevent3:
-				//	this->elevator->closeDoor();
-				//	break;
-				//case elevatorevent4:
-				//	supt->timeHandle("prepareMove", START);
-				//	this->elevator->prepareMove();
-				//	supt->timeHandle("prepareMove", END,"close");
-				//	break;
-				//case elevatorevent5:
-				//	this->elevator->updateState();
-				//	break;
-				//case elevatorevent6:
-				//	this->elevator->makeE9();
-				//	break;
-				//case elevatorevent7:
-				//	this->elevator->goUpstairs();
-				//	break;
-				//case elevatorevent8:
-				//	this->elevator->goDownstairs();
-				//	break;
-				//case trival:
+				case peopleevent2:
+					this->building->deletePeople();
+					break;
+				case peopleevent3:
+					supt->timeHandle("peopleOutIn", START, "open_return");
+					this->building->peopleOutIn();
+					supt->timeHandle("peopleOutIn", END);
+					break;
+				case elevatorevent1:
+					supt->timeHandle("response", START, "pushCallUp");
+					this->elevator->response();
+					supt->timeHandle("response", END);
+					break;
+				case elevatorevent2:
+					this->elevator->openDoor();
+					break;
+				case elevatorevent3:
+					this->elevator->closeDoor();
+					break;
+				case elevatorevent4:
+					supt->timeHandle("prepareMove", START, "close");
+					this->elevator->prepareMove();
+					supt->timeHandle("prepareMove", END);
+					break;
+				case elevatorevent5:
+					this->elevator->updateState();
+					break;
+				case elevatorevent6:
+					this->elevator->makeE9();
+					break;
+				case elevatorevent7:
+					supt->timeHandle("goUpstairs", START, "prepareMove");
+					this->elevator->goUpstairs();
+					supt->timeHandle("goUpstairs", END);
+					break;
+				case elevatorevent8:
+					this->elevator->goDownstairs();
+					break;
+				case trival:
 					break;
 			}
 			//即将执行该时刻的下一个事件。

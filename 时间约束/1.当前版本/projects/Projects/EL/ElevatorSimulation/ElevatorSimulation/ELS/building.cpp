@@ -28,9 +28,9 @@ void Building::peopleComing()
 {
 	
 	//产生人员对象。
-	supt->timeHandle("newPeople", START);
+	supt->timeHandle("newPeople", START, "peopleComing");
 	People * singlePeople = pf.newPeople();
-	supt->timeHandle("newPeople", END,"run");
+	supt->timeHandle("newPeople", END);
 
 	singlePeople->setStartTime(timer->getTime());
 
@@ -52,15 +52,15 @@ void Building::peopleComing()
 	//按下电钮并且等候。
 	if (singlePeople->getInFloor() > singlePeople->getOutFloor())
 	{
-		supt->timeHandle("pushCallDown", START);
+		supt->timeHandle("pushCallDown", START, "newPeople");
 		elevator->pushCallDown(singlePeople->getInFloor());  //该楼层的向下按钮被按。
-		supt->timeHandle("pushCallDown", END, "newPeople");
+		supt->timeHandle("pushCallDown", END);
 	}
 	else
 	{
-		supt->timeHandle("pushCallUp", START);
+		supt->timeHandle("pushCallUp", START, "newPeople");
 		elevator->pushCallUp(singlePeople->getInFloor());  //该楼层的向上按钮被按。
-		supt->timeHandle("pushCallUp", END, "newPeople");
+		supt->timeHandle("pushCallUp", END);
 	}
 
 	//注册达到容忍时刻后此人是否还要继续等待的判断事件。
@@ -73,9 +73,9 @@ void Building::peopleOutIn()
 	//本层电梯里面的人先出来，出来的速度是每过25个t出来一个人
 	if (this->elevator->thisFloorOut() == true)
 	{
-		supt->timeHandle("thisFloorPeopleOut", START);
+		supt->timeHandle("thisFloorPeopleOut", START, "open");
 		this->elevator->thisFloorPeopleOut();
-		supt->timeHandle("thisFloorPeopleOut", END,"open");
+		supt->timeHandle("thisFloorPeopleOut", END);
 		return;
 	}
 	//本层电梯外面的人开始进入，进来的速度是每过25个t进来一个人,注意进来的时候需要将电梯内部的CallCar属性按下（由人发出）
@@ -87,9 +87,9 @@ void Building::peopleOutIn()
 		if (this->buildingQueue[this->elevator->getCurrentFloor()]->empty() == false)
 		{
 			//从楼层外部往电梯里面进一个人
-			supt->timeHandle("thisFloorPeopleIn", START);
+			supt->timeHandle("thisFloorPeopleIn", START, "open");
 			this->elevator->thisFloorPeopleIn(this->buildingQueue[this->elevator->getCurrentFloor()]->front());
-			supt->timeHandle("thisFloorPeopleIn", END,"open");
+			supt->timeHandle("thisFloorPeopleIn", END);
 			this->buildingQueue[this->elevator->getCurrentFloor()]->pop();
 			//25个t后再次查看队列里面是否有人需要进入电梯内部。
 			this->timer->addEventList(peopleevent3,25);		
