@@ -28,18 +28,21 @@ void SupportClass::setCurrentIndex() {
 }
 
 /* 设置激励回写状态：包括 测试用例执行状态 以及测试用例结果状态
-* 如果执行中没有 出现异常情况：
-*	1. 正常执行
+* 如果执行中没有
+*	1. 正常执行 
+*		[x:x] 第一个表示所用激励执行情况 1 有误，2 无误
+*			  第二个表示是否满足约束不等式 1 不满足 ，2 满足
 *	2. 按照用例执行不会出现死循环以及异常错误 但用例数据出现错误
 */
-void SupportClass::setCurTestCaseResult(string exeSituation) {
-  // 1. 设置当前测试用例执行状态
-  if (exeSituation == "OK") {
-    exeSituation = currentTestCase->getFirstProcessTime().c_str();
-  }
-  currentTestCase->setCurrenetTestCaseExecStatus(exeSituation);
-  // 2. 设置当前测试用例结果状态
-  currentTestCase->setCurrenetTestCaseResultStatus(exeSituation);
+void SupportClass::setCurTestCaseResult(string exe) {
+
+	RETURN_TYPE t;
+	//正常执行情况
+	if (exe == "OK"){
+		t = resultHandle();
+		t.isERROR = false;
+		currentTestCase->setCurrenetTestCaseStatus(t);
+	}
 }
 
 /* 在当前 测试用例 中根据激励名称以及参数名 获取参数值 */
@@ -66,24 +69,11 @@ int SupportClass::getParamValueWithNameAndKey(string processName, string key) {
 void SupportClass::setCurProcessResult(string processName, double mtime) {
 
     /* 根据激励名称以及对应状态 修改 */
-    currentTestCase->setProcessStatusWithNameAndStatus(processName,
+	result[processName] = currentTestCase->setProcessStatusWithNameAndStatus(processName,
 		this->d2s(mtime));
 	/* 设置当前激励的执行状态 */
 	currentTestCase->setcurrentProcessExecStatus(processName);
 }
-
-/*	路径操作 */
-void SupportClass::showTestExecPath() {
-  int index = 0;
-  string str = "";
-  //定义list的迭代器
-  list<string>::iterator iter;
-  //进行迭代遍历
-  for (iter = testExecPath.begin(); iter != testExecPath.end(); iter++) {
-    cout << (*iter) << endl;
-  }
-}
-void SupportClass::cleanTestExecPath() { this->testExecPath.clear(); }
 
 /*	类型转换 */
 string SupportClass::d2s(double l) {
@@ -109,9 +99,9 @@ void signal_handler(int signum) {
       //传送信号给指定的进程 ,SIGKILL:中止某个进程
       //对出错的用例进行操作处理
       string str = shared->result;
-      string exeSituation = "ERROR";
-      currentTestCase->setCurrenetTestCaseExecStatus(exeSituation);
-      currentTestCase->setCurrenetTestCaseResultStatus(exeSituation);
+	  RETURN_TYPE t;
+	  t.isERROR = true;
+	  currentTestCase->setCurrenetTestCaseStatus(t);
       string tmp = currentTestCase->showTestCase();
       if (shared->currentIndex < shared->count)
         tmp += "\n*\n";
@@ -219,19 +209,37 @@ void SupportClass::getTestCasesInMem() {
   list<string>::iterator iter;
   //进行迭代遍历
   for (iter = plist.begin(); iter != plist.end(); iter++) {
+	//1.激励名称
     tmp = "ProcessName:";
     begin = (*iter).find(tmp) + tmp.size();
     tmp = "(";
     len = (*iter).find(tmp) - begin;
-    string processName = (*iter).substr(begin, len - 1);
-    tmp = "ProcessParameter:";
+    string processName = (*iter).substr(begin, len -1);
+    
+	//2.激励参数
+	tmp = "ProcessParameter:";
     begin = (*iter).find(tmp) + tmp.size();
     tmp = "ProcessStatus:";
     len = (*iter).find(tmp) - begin;
     string processParameter = (*iter).substr(begin, len);
-    processParameter.erase(processParameter.find_last_not_of("\t")+1);
-    currentTestCase->setProcessList(processName, processParameter, "");
+	processParameter.erase(processParameter.find_last_not_of("\t") + 1);
+
+	//3.激励状态
+	begin = (*iter).find(tmp) + tmp.size();
+	tmp = ")";
+	len = (*iter).find(tmp) - begin;
+	string processStatus = (*iter).substr(begin, len-1);
+	currentTestCase->setProcessList(processName, processParameter, processStatus);
   }
+
+  //读取时间约束信息
+  tmp = "timeLimit:";
+  begin = tcStr.find(tmp) + tmp.size();
+  tmp = "]";
+  len = tcStr.rfind(tmp)- begin;
+  string timeLimit = tcStr.substr(begin, len);
+  currentTestCase->setResultStatus(timeLimit);
+
 }
 
 /* 分离 共享内存 */
@@ -257,20 +265,60 @@ void SupportClass::timeHandle(string processName,int f,string preProcessName){
 			processTimes[processName] = curProcessTime;
 			break;
 		case 1:
+			//如果key重复
 			curProcessTime.init(1);
-			
 			//计算当前激励与上一个激励之间的时间差值
 			preProcessTime = processTimes[preProcessName];
 			curProcessTime.pinterval = curProcessTime.setPinterval(preProcessTime);
 			//当前激励时间入map
 			processTimes[processName] = curProcessTime;
 			curProcessTime.showPinterval(processName);
+			//写入用例中
+			setCurProcessResult(processName, curProcessTime.pinterval);
 			break;
 		case 2:
 			//获取当前激励时间
 			curProcessTime = processTimes[processName];
-			//修改当前激励结束时间
+			//修改当前激励结束时间,并计算激励经过的时间
 			curProcessTime.init(2);
 			break;
 	}
+}
+
+//三元组转换
+map<string, double> map2map(map<string, pair<string, string>> res){
+	map<string, double> result;
+	for (map<string, pair<string, string>>::iterator mapIter = res.begin(); mapIter != res.end(); mapIter++) {
+		
+		pair<string, string> p = mapIter->second;
+		//cout << mapIter->first << "," << p.first << "," << p.second << endl;
+		// 有用元组
+		if (p.first != "0")
+			result[p.first] = atof(p.second.c_str());
+	}
+	return result;
+}
+
+
+/* 处理不等式*/
+RETURN_TYPE SupportClass::resultHandle(){
+	RETURN_TYPE finalResult;
+	finalResult.isOK = true;
+	list<string> slist = stringSplit(currentTestCase->getResultStatus(), ",");
+
+	//解析不等式字符串
+	for (list<string>::iterator iter = slist.begin(); iter != slist.end(); iter++) {
+		inequation t;
+
+		//不等式转换
+		t.transfer(*iter, map2map(result));
+		
+		if (!t.isOK){
+			finalResult.errorInfo.push_back(t.strInequation);
+		}
+	}
+
+	if (finalResult.errorInfo.size() !=0)
+		finalResult.isOK = false;
+	return finalResult;
 }

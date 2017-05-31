@@ -9,6 +9,29 @@
 #include "stdio.h"
 #include <iostream>
 #include <cstring>
+#include <map>
+#include <list>
+
+//返回类
+class RETURN_TYPE {
+public:
+	//执行是否有误
+	bool isERROR;
+	//时间不等式是否满足
+	bool isOK;
+	//出错不等式
+	list<string> errorInfo;
+
+	string error(){
+		string res ="";
+		for (list<string>::iterator i = errorInfo.begin(); i != errorInfo.end(); ++i){
+			if (i != errorInfo.begin())
+				res += ",";
+			res += *i;
+		}
+		return res;
+	}
+};
 
 //测试用例实体类
 class TestCase
@@ -47,7 +70,7 @@ class TestCase
         string getParamValueWithNameAndKey(string processName,string key);
 
         /* 根据激励名称以及对应状态 修改 */
-        void setProcessStatusWithNameAndStatus(string processName,string status);
+		pair<string, string> setProcessStatusWithNameAndStatus(string processName, string status);
 
         /* 根据激励名称 获取激励节点 */
         LinkList findProcessWithName(string processName);
@@ -55,12 +78,15 @@ class TestCase
         /* 根据激励ID 获取激励节点 */
         LinkList findProcessWithID(int ID);
 
-        /* 设置当前测试用例的执行状态*/
-        void setCurrenetTestCaseExecStatus(string execStatus);
+        /* 设置当前测试用例的执行 和 结果状态*/
+		void setCurrenetTestCaseStatus(RETURN_TYPE);
 
         /* 设置结果状态 */
-        void setCurrenetTestCaseResultStatus(string exeSituation);
-
-        string getProcessNameWithId(int index);
+		//void setCurrenetTestCaseResultStatus(RETURN_TYPE);
+		
+		/* 设置结果状态 */
+		void setResultStatus(string exeSituation);
+        
+		string getProcessNameWithId(int index);
 };
 #endif

@@ -94,13 +94,14 @@ string ProcessList::findValueWithProcessNameAndKey(string processName,
 }
 
 /* 根据激励名称以及对应状态 修改 */
-Status ProcessList::setProcessStatus(string processName, string status) {
+pair<string ,string> ProcessList::setProcessStatus(string processName, string status) {
   LinkList p = this->findProcessWithName(processName);
   if (p) {
+	  pair<string, string> result(p->processStatus, status);
 	  p->processStatus = p->processStatus + "="+status;
-    return OK;
+	  return result;
   }
-  return ERROR;
+  return pair<string, string> ("0","0");
 }
 
 /* 操作结果：在L中插入新节点s，L的长度加1 */

@@ -106,6 +106,8 @@ bool SupportClass::ReadXmlFile(string szFileName) { //读取Xml文件，并遍�
           // 5.3读取激励函数 以及 参数
           string processName(
               process->FirstChildElement("operation")->GetText());
+		  
+		  processName = processName.substr(0, processName.find("("));
           string processParameter(
               process->FirstChildElement("input")->GetText());
 		  string processStatus(

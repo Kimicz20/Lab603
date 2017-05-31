@@ -5,6 +5,7 @@
 #include "stdlib.h"
 #include <iostream>
 #include <string>
+#include <map>
 using namespace std;
 
 /* 定义 */
@@ -59,7 +60,7 @@ class ProcessList{
         string findValueWithProcessNameAndKey(string processName,string key);
 
         /* 根据激励名称以及对应状态 修改 */
-        Status setProcessStatus(string processName,string status);
+		pair<string, string> setProcessStatus(string processName, string status);
 
         /* 根据名称 查找对应激励 */
         LinkList findProcessWithName(string processName);

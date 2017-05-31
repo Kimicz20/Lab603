@@ -42,28 +42,31 @@ void TestCase::setcurrentProcessExecStatus(string processName){
 
 /* 打印测试用例 */
 string TestCase::showTestCase(){
-  string str = "";
-  string testCaseID = to_string(this->testCaseID);
-  str = str + "testcCaseID:"+testCaseID+"\n-->processList:[";
-  if(this->processList->ListIsEmpty()){
-      str += "NULL";
-  }else {
-      str += this->processList->ListTraverse();
-  }
-  str = str + "]\n-->execStatus:[";
-  if(this->execStatus == ""){
-      str +="NULL";
-  }else{
-      str += this->execStatus;
-  }
-  str +="]\n-->resultStatus:[";
-  if(this->resultStatus == ""){
-      str +="NULL";
-  }else{
-      str += this->resultStatus;
-   }
-  str +="]";
-  return str;
+	string str = "";
+	string testCaseID = to_string(this->testCaseID);
+	str = str + "testcCaseID:" + testCaseID + "\n-->processList:[";
+	if (this->processList->ListIsEmpty()){
+		str += "NULL";
+	}
+	else {
+		str += this->processList->ListTraverse();
+	}
+	str = str + "]\n-->execStatus:[";
+	if (this->execStatus == ""){
+		str += "NULL";
+	}
+	else{
+		str += this->execStatus;
+	}
+	str += "]\n-->resultStatus:[ timeLimit:";
+	if (this->resultStatus == ""){
+		str += "NULL";
+	}
+	else{
+		str += this->resultStatus;
+	}
+	str += "]";
+	return str;
 }
 
 /* 设置测试执行状态 */
@@ -89,36 +92,37 @@ string TestCase::getParamValueWithNameAndKey(string processName,string key){
 }
 
 /* 根据激励名称以及对应状态 修改 */
-void TestCase::setProcessStatusWithNameAndStatus(string processName,string status){
-    this->processList->setProcessStatus(processName,status);
+pair<string, string> TestCase::setProcessStatusWithNameAndStatus(string processName, string status){
+    return processList->setProcessStatus(processName,status);
 }
 
-/* 设置当前测试用例的执行状态*/
-void TestCase::setCurrenetTestCaseExecStatus(string execStatus){
-    if(execStatus != "ERROR"){
+/* 设置当前测试用例的执行 和 结果状态*/
+void TestCase::setCurrenetTestCaseStatus(RETURN_TYPE ret){
+	
+    if(!ret.isERROR){
+		string tStatus = "2", eStatus = "2";
         if(this->processList->findIsSuccessTest() == "失败"){
-            execStatus = "1:"+execStatus;
-        }else{
-            execStatus = "2:"+execStatus;
+			eStatus = "1"; //激励执行有误
         }
+		if (!ret.isOK){
+			tStatus = "1";//不满足时间约束
+			//设置用例结果
+			resultStatus = ret.error();
+		}
+		//设置执行结果
+		execStatus = eStatus + ":" + tStatus;
+		
     }else{
+		//程序出错
         execStatus = "3";
+		resultStatus = "3";
     }
-    this->execStatus = execStatus;
+    
 }
+
 /* 设置结果状态 */
-void TestCase::setCurrenetTestCaseResultStatus(string exeSituation){
-    //正常执行
-    if(exeSituation != "ERROR"){
-        if(this->processList->findIsSuccessTest() == "失败" ){
-            exeSituation = "1";
-        }else{
-            exeSituation = "2:"+exeSituation;
-        }
-    }else{
-        exeSituation = "3";
-    }
-    this->resultStatus = exeSituation;
+void TestCase::setResultStatus(string exeSituation){
+	this->resultStatus = exeSituation;
 }
 
 string TestCase::getProcessNameWithId(int index){
