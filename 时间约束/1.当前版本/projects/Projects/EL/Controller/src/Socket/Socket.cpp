@@ -92,17 +92,19 @@ bool Socket::accept ( Socket& new_socket ) const
 }
 
 
-bool Socket::send ( const string s ) const
+bool Socket::send(const string s) const
 {
-  int status = ::send ( sockfd, s.c_str(), s.size(), 0 );
-  if ( status == -1 )
-    {
-      return false;
-    }
-  else
-    {
-      return true;
-    }
+	int status = ::send(sockfd, s.c_str(), s.size(), 0);
+	if (status == -1)
+	{
+		cout << "传输出错" << endl;
+		return false;
+	}
+	else
+	{
+		close(sockfd);
+		return true;
+	}
 }
 
 
@@ -135,57 +137,58 @@ int Socket::recv ( string& s ) const
 
 string Socket::recvWithFile()const
 {
-    string file_name="";
-    unsigned long file_len  = 0;
-    long int read_size = 0;
-    long int rlen =0;
-    bool wirteFlag = false;
-    FILE* pf = NULL;
+	string file_name = "";
+	unsigned long file_len = 0;
+	long int read_size = 0;
+	long int rlen = 0;
+	bool wirteFlag = false;
+	FILE* pf = NULL;
 
-     while ( true )
-     {
-        // cout<<"\n\t....传输线程 ( "<<pthread_self()<<" )处理....\n";
-        string str;
-        Socket::recv(str);
-        rlen = str.size();
-        string type = str.substr(0,9);
-        if(str == "exit"){
-          break;
-        }else if(type == "fileName:"){
-          file_name = str.substr(9,rlen);
-        }else if(type == "fileSize:"){
-          file_len = atol(str.substr(9,rlen).c_str());
-        }else{
-            // 写入文件;
-           if(!wirteFlag){
-              wirteFlag = true;
+	while (true)
+	{
+		string str;
+		Socket::recv(str);
+		rlen = str.size();
+		string type = str.substr(0, 9);
+		if (str == "exit"){
+			break;
+		}
+		else if (type == "fileName:"){
+			file_name = str.substr(9, rlen);
+		}
+		else if (type == "fileSize:"){
+			file_len = atol(str.substr(9, rlen).c_str());
+		}
+		else{
+			// 写入文件;
+			if (!wirteFlag){
+				wirteFlag = true;
 
-              //获取程序路径
-              char buf[ 1024 ];
-              getcwd(buf, 1024);
-              string fulldir(buf);
-              //拼接文件完全路径
-              string tmp = "/Controller";
-              fulldir = fulldir.substr(0,fulldir.length()-tmp.length());
-              string fullPath = fulldir + "/" + file_name;
-              pf = fopen(fullPath.c_str(), "wb+");
-              if(pf == NULL)
-             {
-                cout<<"Open file error!\n";
-                close(sockfd);
-                break;
-              }
-           }
-            int wn = fwrite(str.c_str(), sizeof(char), rlen, pf);
-            read_size += rlen;
-          if(read_size >= file_len) {
-            // cout<<"Receive Over\nFile Name = "<<file_name<<", File len = "<<file_len<<" , Already read size = "<<read_size<<endl;
-            cout<<"...关闭连接..."<<endl;
-            /* 这个通讯已经结束 */
-            fclose(pf);
-            break;
-          }
-        }
-     }
-  return file_name;
+				//获取程序路径
+				char buf[1024];
+				getcwd(buf, 1024);
+				string fulldir(buf);
+				//拼接文件完全路径
+				string tmp = "/Controller";
+				fulldir = fulldir.substr(0, fulldir.length() - tmp.length());
+				string fullPath = fulldir + "/" + file_name;
+				pf = fopen(fullPath.c_str(), "wb+");
+				if (pf == NULL)
+				{
+					cout << "Open file error!\n";
+					close(sockfd);
+					break;
+				}
+			}
+			int wn = fwrite(str.c_str(), sizeof(char), rlen, pf);
+			read_size += rlen;
+			if (read_size >= file_len) {
+				// cout<<"Receive Over\nFile Name = "<<file_name<<", File len = "<<file_len<<" , Already read size = "<<read_size<<endl;
+				cout << "文件传输完成" << endl;
+				fclose(pf);
+				break;
+			}
+		}
+	}
+	return file_name;
 }

@@ -76,7 +76,7 @@ void Timer::executeEvent()
 					this->elevator->closeDoor();
 					break;
 				case elevatorevent4:
-					supt->timeHandle("prepareMove", START, "close");
+					supt->timeHandle("prepareMove", START, "close_return");
 					this->elevator->prepareMove();
 					supt->timeHandle("prepareMove", END);
 					break;

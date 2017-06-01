@@ -70,25 +70,39 @@ void Building::peopleComing()
 
 void Building::peopleOutIn()
 {
+	bool flag = this->elevator->thisFloorOut();
+	if (supt->getParamValueWithNameAndKey("thisFloorPeopleOut", "elevator_thisFloorOut") == 1)
+		flag = true;
 	//本层电梯里面的人先出来，出来的速度是每过25个t出来一个人
-	if (this->elevator->thisFloorOut() == true)
+	/*if (this->elevator->thisFloorOut() == true)*/
+	if (flag == true)
 	{
 		supt->timeHandle("thisFloorPeopleOut", START, "open");
 		this->elevator->thisFloorPeopleOut();
+		supt->timeHandle("thisFloorPeopleOut_return", START, "thisFloorPeopleOut");
+		supt->timeHandle("thisFloorPeopleOut_return", END);
 		supt->timeHandle("thisFloorPeopleOut", END);
 		return;
 	}
+	flag = this->buildingQueue[this->elevator->getCurrentFloor()]->empty();
+	if (supt->getParamValueWithNameAndKey("thisFloorPeopleIn", "getCurrentFloor_empty") == 1)
+		flag = true;
 	//本层电梯外面的人开始进入，进来的速度是每过25个t进来一个人,注意进来的时候需要将电梯内部的CallCar属性按下（由人发出）
-	if (this->buildingQueue[this->elevator->getCurrentFloor()]->empty() == false) {
+	if (flag == false) {
 		while (this->buildingQueue[this->elevator->getCurrentFloor()]->empty() == false && this->buildingQueue[this->elevator->getCurrentFloor()]->front()->getCurrentState() == leaving)
 		{
 			this->buildingQueue[this->elevator->getCurrentFloor()]->pop();
 		}
-		if (this->buildingQueue[this->elevator->getCurrentFloor()]->empty() == false)
+		flag = this->buildingQueue[this->elevator->getCurrentFloor()]->empty();
+		if (supt->getParamValueWithNameAndKey("thisFloorPeopleIn", "getCurrentFloor_empty") == 1)
+			flag = true;
+		if (flag == false) {
 		{
 			//从楼层外部往电梯里面进一个人
 			supt->timeHandle("thisFloorPeopleIn", START, "open");
 			this->elevator->thisFloorPeopleIn(this->buildingQueue[this->elevator->getCurrentFloor()]->front());
+			supt->timeHandle("thisFloorPeopleIn_return", START, "thisFloorPeopleIn");
+			supt->timeHandle("thisFloorPeopleIn_return", END);
 			supt->timeHandle("thisFloorPeopleIn", END);
 			this->buildingQueue[this->elevator->getCurrentFloor()]->pop();
 			//25个t后再次查看队列里面是否有人需要进入电梯内部。

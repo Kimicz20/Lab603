@@ -92,6 +92,8 @@ void Elevator::closeDoor()
 		this->D3 = 0;
 		supt->timeHandle("close", START, "thisFloorPeopleIn");
 		door.close();
+		supt->timeHandle("close_return", START, "close");
+		supt->timeHandle("close_return", END);
 		supt->timeHandle("close", END);
 		this->timer->addEventList(elevatorevent4,20);
 	}
@@ -240,9 +242,9 @@ void Elevator::response()
 	//在第一层等候时，该电梯必须进行有效响应
 	//活动E1表示在一层停候，等价于this->State==idle && this->Floor==1
 
-	/*if (supt->getParamValueWithNameAndKey("controller", "State") == 1)
+	if (supt->getParamValueWithNameAndKey("controller", "State") == 1)
 		State = idle;
-	Floor = supt->getParamValueWithNameAndKey("controller", "Floor");*/
+	Floor = supt->getParamValueWithNameAndKey("controller", "Floor");
 	if (this->State==idle && this->Floor==1)
 	{
 		supt->timeHandle("controller", START, "response");
