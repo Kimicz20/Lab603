@@ -761,6 +761,8 @@ void Copter::guided_pos_control_run()
 	string tmp[] = {"2","angle_ef_roll_pitch_rate_ef_yaw","angle_ef_roll_pitch_yaw"};
 	if (supt->getParamValueFormNamesWithKey(tmp, "auto_yaw_mode") == 0)
 		auto_yaw_mode = AUTO_YAW_HOLD;
+	else
+		auto_yaw_mode = AUTO_YAW_LOOK_AT_NEXT_WP;
 
     // call attitude controller
     if (auto_yaw_mode == AUTO_YAW_HOLD) {

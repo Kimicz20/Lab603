@@ -144,7 +144,7 @@ void Copter::land_gps_run()
 			this->supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
         }
 //#endif
-        return;
+       // return;
     }
 
     // relax loiter target if we might be landed
