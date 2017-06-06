@@ -421,38 +421,33 @@ void AC_AttitudeControl::rate_controller_run()
     // To-Do: should the outputs from get_rate_roll, pitch, yaw be int16_t which is the input to the motors library?
     // To-Do: skip this step if the throttle out is zero?
 	//FixÐÞ¸ÄV1.3
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("set_roll", start, 1);
+	gettimeofday(&startTime, NULL);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
     _motors.set_roll(rate_bf_to_motor_roll(_rate_bf_target.x));
 
-	end = clock();
-	this->supt->setCurProcessResult("set_roll", end, 2);
-	this->supt->setCurProcessResult("set_roll", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_roll", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("set_pitch", start, 1);
+	gettimeofday(&startTime, NULL);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
     _motors.set_pitch(rate_bf_to_motor_pitch(_rate_bf_target.y));
 
-	end = clock();
-	this->supt->setCurProcessResult("set_pitch", end, 2);
-	this->supt->setCurProcessResult("set_pitch", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_pitch", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("set_yaw", start, 1);
+	gettimeofday(&startTime, NULL);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
     _motors.set_yaw(rate_bf_to_motor_yaw(_rate_bf_target.z));
-	end = clock();
-	this->supt->setCurProcessResult("set_yaw", end, 2);
-	this->supt->setCurProcessResult("set_yaw", (end - start), 3);
+
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_yaw", startTime, endTime);
 }
 
 //

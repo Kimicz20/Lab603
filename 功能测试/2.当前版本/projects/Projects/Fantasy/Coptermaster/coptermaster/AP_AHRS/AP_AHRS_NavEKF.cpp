@@ -68,17 +68,15 @@ void AP_AHRS_NavEKF::reset_gyro_drift(void)
 void AP_AHRS_NavEKF::update(void)
 {
 	//FixÐÞ¸ÄV1.3
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update_DCM", start, 1);
+	gettimeofday(&startTime, NULL);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
     update_DCM();
 
-	end = clock();
-	this->supt->setCurProcessResult("update_DCM", end, 2);
-	this->supt->setCurProcessResult("update_DCM", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_DCM", startTime, endTime);
     //update_EKF1();
     //update_EKF2();
 }
@@ -94,26 +92,20 @@ void AP_AHRS_NavEKF::update_DCM(void)
     update_cd_values();
 	
 	//FixÐÞ¸ÄV2.0
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update", start, 1);
+	gettimeofday(&startTime, NULL);
 
 	// ------------------------  ²å×®¼¤Àø ---------------------------------
 
-
-	start = clock();
-	this->supt->setCurProcessResult("update", start, 1);
+	gettimeofday(&startTime, NULL);
     AP_AHRS_DCM::update();
 	
-	end = clock();
-	
-	this->supt->setCurProcessResult("update", end, 2);
-	this->supt->setCurProcessResult("update", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update", startTime, endTime);
 
-	end = clock();
-	this->supt->setCurProcessResult("update", end, 2);
-	this->supt->setCurProcessResult("update", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update", startTime, endTime);
     // keep DCM attitude available for get_secondary_attitude()
 	_dcm_attitude(roll, pitch, yaw);  
 }

@@ -142,7 +142,8 @@ AP_MotorsMulticopter::AP_MotorsMulticopter(uint16_t loop_rate, uint16_t speed_hz
 // output - sends commands to the motors
 void AP_MotorsMulticopter::output()
 {
-	long start, end;
+	struct timeval startTime, endTime;
+
     // update throttle filter
     update_throttle_filter();
 
@@ -166,16 +167,13 @@ void AP_MotorsMulticopter::output()
 	if ((int)_flags.armed == 1) {
 		if (_flags.interlock == 0) {
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("output_armed_zero_throttle", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			//FixÐÞ¸ÄV1.3
 			output_armed_zero_throttle();
 
-			end = clock();
-			this->supt->setCurProcessResult("output_armed_zero_throttle", end, 2);
-			this->supt->setCurProcessResult("output_armed_zero_throttle", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("output_armed_zero_throttle", startTime, endTime);
 		}
 		else if (_flags.stabilizing == 1) {
    /* if (_flags.armed) {
@@ -183,42 +181,33 @@ void AP_MotorsMulticopter::output()
             output_armed_zero_throttle();
         } else if (_flags.stabilizing) {*/
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("output_armed_stabilizing", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			//FixÐÞ¸ÄV1.3
             output_armed_stabilizing();
 
-			end = clock();
-			this->supt->setCurProcessResult("output_armed_stabilizing", end, 2);
-			this->supt->setCurProcessResult("output_armed_stabilizing", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("output_armed_stabilizing", startTime, endTime);
         } else {
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("output_armed_not_stabilizing", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			//FixÐÞ¸ÄV1.3
             output_armed_not_stabilizing();
 
-			end = clock();
-			this->supt->setCurProcessResult("output_armed_not_stabilizing", end, 2);
-			this->supt->setCurProcessResult("output_armed_not_stabilizing", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("output_armed_not_stabilizing", startTime, endTime);
         }
     } else {
         _multicopter_flags.slow_start_low_end = true;
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("output_disarmed", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		//FixÐÞ¸ÄV1.3
         output_disarmed();
 
-		end = clock();
-		this->supt->setCurProcessResult("output_disarmed", end, 2);
-		this->supt->setCurProcessResult("output_disarmed", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("output_disarmed", startTime, endTime);
     }
 };
 

@@ -184,16 +184,14 @@ AP_BattMonitor::init()
 void
 AP_BattMonitor::read()
 {
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("read", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     // exit immediately if no monitors setup
     if (_num_instances == 0) {
-		end = clock();
-		supt->setCurProcessResult("read", end, 2);
-		supt->setCurProcessResult("read", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("read", startTime, endTime);
         return;
     }
 
@@ -203,9 +201,8 @@ AP_BattMonitor::read()
         }
     }
 
-	end = clock();
-	supt->setCurProcessResult("read", end, 2);
-	supt->setCurProcessResult("read", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("read", startTime, endTime);
 }
 
 // healthy - returns true if monitor is functioning

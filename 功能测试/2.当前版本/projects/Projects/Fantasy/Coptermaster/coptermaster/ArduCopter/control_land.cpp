@@ -40,7 +40,7 @@ bool Copter::land_init(bool ignore_checks)
 // should be called at 100hz or more
 void Copter::land_run()
 {
-	long start, end;
+	struct timeval startTime, endTime;
 	//FixÐÞ¸ÄV1.4
 	string str[] = { "2", "land_gps_run", "land_nogps_run" };
 	int r = supt->getParamValueFormNamesWithKey(str, "land_with_gps");
@@ -49,23 +49,19 @@ void Copter::land_run()
 		land_with_gps = true;
     if (land_with_gps) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("land_gps_run", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         land_gps_run();
-		end = clock();
-		this->supt->setCurProcessResult("land_gps_run", end, 2);
-		this->supt->setCurProcessResult("land_gps_run", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("land_gps_run", startTime, endTime);
     }else{
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("land_nogps_run", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		
         land_nogps_run();
-		end = clock();
-		this->supt->setCurProcessResult("land_nogps_run", end, 2);
-		this->supt->setCurProcessResult("land_nogps_run", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("land_nogps_run", startTime, endTime);
 
     }
 }
@@ -75,19 +71,17 @@ void Copter::land_run()
 //      should be called at 100hz or more
 void Copter::land_gps_run()
 {
-	long start, end;
+	struct timeval startTime, endTime;
     int16_t roll_control = 0, pitch_control = 0;
     float target_yaw_rate = 0;
 
     // if not auto armed or landed or motor interlock not enabled set throttle to zero and exit immediately
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("get_interlock", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	bool has_interlock = motors.get_interlock();
-	end = clock();
-	this->supt->setCurProcessResult("get_interlock", end, 2);
-	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_interlock", startTime, endTime);
 
 	//FixÐÞ¸ÄV1.9
 	string str[] = { "4","loiter_soften_for_landing", "set_throttle_out_unstabilized", "init_loiter_target" ,"init_disarm_motors"};
@@ -111,21 +105,19 @@ void Copter::land_gps_run()
         attitude_control.angle_ef_roll_pitch_rate_ef_yaw_smooth(0, 0, 0, get_smoothing_gain());
         attitude_control.set_throttle_out(0,false,g.throttle_filt);
 #else   // multicopters do not stabilize roll/pitch/yaw when disarmed
-		start = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		// ------------------------  ²å×®µã ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         attitude_control.set_throttle_out_unstabilized(0,true,g.throttle_filt);
-		end = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_out_unstabilized", startTime, endTime);
 #endif
-		start = clock();
-		this->supt->setCurProcessResult("init_loiter_target", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		// ------------------------  ²å×®µã ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         wp_nav.init_loiter_target();
-		end = clock();
-		this->supt->setCurProcessResult("init_loiter_target", end, 2);
-		this->supt->setCurProcessResult("init_loiter_target", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("init_loiter_target", startTime, endTime);
 
 //#if LAND_REQUIRE_MIN_THROTTLE_TO_DISARM == ENABLED
 //        // disarm when the landing detector says we've landed and throttle is at minimum
@@ -135,13 +127,12 @@ void Copter::land_gps_run()
 //#else
         // disarm when the landing detector says we've landed
         if (ap.land_complete==1) {
-			start = clock();
-			this->supt->setCurProcessResult("init_disarm_motors", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			// ------------------------  ²å×®µã ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             init_disarm_motors();
-			end = clock();
-			this->supt->setCurProcessResult("init_disarm_motors", end, 2);
-			this->supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("init_disarm_motors", startTime, endTime);
         }
 //#endif
        // return;
@@ -156,13 +147,12 @@ void Copter::land_gps_run()
 		ap.land_complete_maybe = true;
 
 	if (ap.land_complete_maybe == 1) {
-		start = clock();
-		this->supt->setCurProcessResult("loiter_soften_for_landing", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		// ------------------------  ²å×®µã ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         wp_nav.loiter_soften_for_landing();
-		end = clock();
-		this->supt->setCurProcessResult("loiter_soften_for_landing", end, 2);
-		this->supt->setCurProcessResult("loiter_soften_for_landing", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("loiter_soften_for_landing", startTime, endTime);
     }
 
     // process pilot inputs
@@ -180,13 +170,12 @@ void Copter::land_gps_run()
 
 		if (g.land_repositioning == 1) {
             // apply SIMPLE mode transform to pilot inputs
-			start = clock();
-			this->supt->setCurProcessResult("update_simple_mode", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			// ------------------------  ²å×®µã ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             update_simple_mode();
-			end = clock();
-			this->supt->setCurProcessResult("update_simple_mode", end, 2);
-			this->supt->setCurProcessResult("update_simple_mode", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("update_simple_mode", startTime, endTime);
 
             // process pilot's roll and pitch input
             roll_control = channel_roll->control_in;
@@ -199,23 +188,21 @@ void Copter::land_gps_run()
         }
 
         // get pilot's desired yaw rate
-		start = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		// ------------------------  ²å×®µã ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->control_in);
-		end = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", end, 2);
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("get_pilot_desired_yaw_rate", startTime, endTime);
     }
 
     // process roll, pitch inputs
-	start = clock();
-	this->supt->setCurProcessResult("set_pilot_desired_acceleration", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	// ------------------------  ²å×®µã ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     wp_nav.set_pilot_desired_acceleration(roll_control, pitch_control);
-	end = clock();
-	this->supt->setCurProcessResult("set_pilot_desired_acceleration", end, 2);
-	this->supt->setCurProcessResult("set_pilot_desired_acceleration", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_pilot_desired_acceleration", startTime, endTime);
 
 #if PRECISION_LANDING == ENABLED
     // run precision landing
@@ -225,41 +212,26 @@ void Copter::land_gps_run()
 #endif
 
     // run loiter controller
-	start = clock();
-	this->supt->setCurProcessResult("update_loiter", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	// ------------------------  ²å×®µã ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     wp_nav.update_loiter(ekfGndSpdLimit, ekfNavVelGainScaler);
-	end = clock();
-	this->supt->setCurProcessResult("update_loiter", end, 2);
-	this->supt->setCurProcessResult("update_loiter", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_loiter", startTime, endTime);
 
     // call attitude controller
-	start = clock();
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
-	
-	//FixÐÞ¸ÄV1.9
-	start = clock();
-	this->supt->setCurProcessResult("get_roll", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
 
-	start = clock();
-	this->supt->setCurProcessResult("get_pitch", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	//FixÐÞ¸ÄV1.9
+	// ------------------------  ²å×®µã ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
+
     attitude_control.angle_ef_roll_pitch_rate_ef_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), target_yaw_rate);
 
-	end = clock();
-	this->supt->setCurProcessResult("get_pitch", end, 2);
-	this->supt->setCurProcessResult("get_pitch", (end - start), 3);
-
-	end = clock();
-	this->supt->setCurProcessResult("get_roll", end, 2);
-	this->supt->setCurProcessResult("get_roll", (end - start), 3);
-
-
-	end = clock();
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", end, 2);
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_roll", startTime, endTime);
+	supt->setCurProcessResult("get_pitch", startTime, endTime);
+	supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", startTime, endTime);
 
     // pause 4 seconds before beginning land descent
     float cmb_rate;
@@ -274,21 +246,19 @@ void Copter::land_gps_run()
     desired_climb_rate = cmb_rate;
 
     // update altitude target and call position controller
-	start = clock();
-	this->supt->setCurProcessResult("set_alt_target_from_climb_rate", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	// ------------------------  ²å×®µã ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.set_alt_target_from_climb_rate(cmb_rate, G_Dt, true);
-	end = clock();
-	this->supt->setCurProcessResult("set_alt_target_from_climb_rate", end, 2);
-	this->supt->setCurProcessResult("set_alt_target_from_climb_rate", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_alt_target_from_climb_rate", startTime, endTime);
 
-	start = clock();
-	this->supt->setCurProcessResult("update_z_controller", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	// ------------------------  ²å×®µã ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.update_z_controller();
-	end = clock();
-	this->supt->setCurProcessResult("update_z_controller", end, 2);
-	this->supt->setCurProcessResult("update_z_controller", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_z_controller", startTime, endTime);
 }
 
 // land_nogps_run - runs the land controller
@@ -298,7 +268,7 @@ void Copter::land_nogps_run()
 {
     float target_roll = 0.0f, target_pitch = 0.0f;
     float target_yaw_rate = 0;
-	long start, end;
+	struct timeval startTime, endTime;
     // process pilot inputs
 
 	//FixÐÞ¸ÄV1.4
@@ -318,44 +288,36 @@ void Copter::land_nogps_run()
         if (g.land_repositioning) {
             // apply SIMPLE mode transform to pilot inputs
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("update_simple_mode", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             update_simple_mode();
-			end = clock();
-			this->supt->setCurProcessResult("update_simple_mode", end, 2);
-			this->supt->setCurProcessResult("update_simple_mode", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("update_simple_mode", startTime, endTime);
 
             // get pilot desired lean angles
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("get_pilot_desired_lean_angles", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             get_pilot_desired_lean_angles(channel_roll->control_in, channel_pitch->control_in, target_roll, target_pitch, aparm.angle_max);
-			end = clock();
-			this->supt->setCurProcessResult("get_pilot_desired_lean_angles", end, 2);
-			this->supt->setCurProcessResult("get_pilot_desired_lean_angles", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("get_pilot_desired_lean_angles", startTime, endTime);
 		}
 
         // get pilot's desired yaw rate
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->control_in);
-		end = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", end, 2);
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("get_pilot_desired_yaw_rate", startTime, endTime);
     }
     // if not auto armed or landed or motor interlock not enabled set throttle to zero and exit immediately
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("get_interlock", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	bool has_interlock = motors.get_interlock();
-	end = clock();
-	this->supt->setCurProcessResult("get_interlock", end, 2);
-	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_interlock", startTime, endTime);
 	
 	//FixÐÞ¸ÄV1.4
 	ap.auto_armed = supt->getParamValueWithNameAndKey("set_throttle_out_unstabilized","ap.auto_armed");
@@ -369,13 +331,11 @@ void Copter::land_nogps_run()
         attitude_control.set_throttle_out(0,false,g.throttle_filt);
 #else   // multicopters do not stabilize roll/pitch/yaw when disarmed
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         attitude_control.set_throttle_out_unstabilized(0,true,g.throttle_filt);
-		end = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_out_unstabilized", startTime, endTime);
 #endif
 #if LAND_REQUIRE_MIN_THROTTLE_TO_DISARM == ENABLED
         // disarm when the landing detector says we've landed and throttle is at minimum
@@ -386,26 +346,22 @@ void Copter::land_nogps_run()
         // disarm when the landing detector says we've landed
         if (ap.land_complete==1) {
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("init_disarm_motors", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             //init_disarm_motors();
-			end = clock();
-			this->supt->setCurProcessResult("init_disarm_motors", end, 2);
-			this->supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("init_disarm_motors", startTime, endTime);
         }
 #endif
        // return;
     }
     // call attitude controller
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw_smooth", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     attitude_control.angle_ef_roll_pitch_rate_ef_yaw_smooth(target_roll, target_pitch, target_yaw_rate, get_smoothing_gain());
-	end = clock();
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw_smooth", end, 2);
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw_smooth", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw_smooth", startTime, endTime);
     // pause 4 seconds before beginning land descent
     float cmb_rate;
     if(land_pause && millis()-land_start_time < LAND_WITH_DELAY_MS) {
@@ -420,22 +376,18 @@ void Copter::land_nogps_run()
 
     // call position controller
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("set_alt_target_from_climb_rate", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.set_alt_target_from_climb_rate(cmb_rate, G_Dt, true);
-	end = clock();
-	this->supt->setCurProcessResult("set_alt_target_from_climb_rate", end, 2);
-	this->supt->setCurProcessResult("set_alt_target_from_climb_rate", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_alt_target_from_climb_rate", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update_z_controller", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.update_z_controller();
-	end = clock();
-	this->supt->setCurProcessResult("update_z_controller", end, 2);
-	this->supt->setCurProcessResult("update_z_controller", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_z_controller", startTime, endTime);
 }
 
 // get_land_descent_speed - high level landing logic

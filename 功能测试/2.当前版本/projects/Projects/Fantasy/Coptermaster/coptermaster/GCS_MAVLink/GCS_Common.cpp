@@ -815,15 +815,13 @@ void GCS_MAVLINK::send_message(enum ap_message id)
 {
 
 	//FixÐÞ¸Ä2.1
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
-	supt->setCurProcessResult("capacity_remaining_pct", start, 1);
-
-	end = clock();
-	supt->setCurProcessResult("capacity_remaining_pct", end, 2);
-	supt->setCurProcessResult("capacity_remaining_pct", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("capacity_remaining_pct", startTime, endTime);
 
     //uint8_t i, nextid;
 
@@ -874,7 +872,7 @@ void GCS_MAVLINK::send_message(enum ap_message id)
 void
 GCS_MAVLINK::update(run_cli_fn run_cli)
 {
-	long start, end;
+	struct timeval startTime, endTime;
     // receive new packets
     mavlink_message_t msg;
     mavlink_status_t status;
@@ -918,14 +916,13 @@ GCS_MAVLINK::update(run_cli_fn run_cli)
 		 if (nbytes!=0) { 
 			 //FixÐÞ¸ÄV2.0
 			 // ------------------------  ²å×®µã ---------------------------------
-			 start = clock();
-			 supt->setCurProcessResult("handleMessage", start, 1);
+			 gettimeofday(&startTime, NULL);
+			 // ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 			 handleMessage(&msg);
 
-			 end = clock();
-			 supt->setCurProcessResult("handleMessage", end, 2);
-			 supt->setCurProcessResult("handleMessage", (end - start), 3);
+			 gettimeofday(&endTime, NULL);
+			 supt->setCurProcessResult("handleMessage", startTime, endTime);
              }
       //  }
     }

@@ -21,7 +21,7 @@ bool Copter::stabilize_init(bool ignore_checks)
 // should be called at 100hz or more
 void Copter::stabilize_run()
 {
-	long start, end;
+	struct timeval startTime, endTime;
     float target_roll, target_pitch;
     float target_yaw_rate;
     int16_t pilot_throttle_scaled;
@@ -32,35 +32,28 @@ void Copter::stabilize_run()
     //    // slow start if landed
     //    if (ap.land_complete) {
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("armed", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	bool motor_state = motors.armed();
 
-	end = clock();
-	this->supt->setCurProcessResult("armed", end, 2);
-	this->supt->setCurProcessResult("armed", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("armed", startTime, endTime);
 
 	if (motor_state == false || ap.throttle_zero == true) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		attitude_control.set_throttle_out_unstabilized(0, true, g.throttle_filt);
-		end = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_out_unstabilized", startTime, endTime);
 		// slow start if landed
 		if (ap.land_complete == true) {
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             motors.slow_start(true);
-			this->supt->setCurProcessResult("slow_start", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
-            motors.slow_start(true);
-			end = clock();
-			this->supt->setCurProcessResult("slow_start", end, 2);
-			this->supt->setCurProcessResult("slow_start", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("slow_start", startTime, endTime);
         }
         return;
     }
@@ -74,50 +67,38 @@ void Copter::stabilize_run()
 
     // get pilot's desired yaw rate
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->control_in);
 
-	end = clock();
-	this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", end, 2);
-	this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_pilot_desired_yaw_rate", startTime, endTime);
 
     // get pilot's desired throttle
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("get_pilot_desired_throttle", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pilot_throttle_scaled = get_pilot_desired_throttle(channel_throttle->control_in);
 	
-	end = clock();
-	this->supt->setCurProcessResult("get_pilot_desired_throttle", end, 2);
-	this->supt->setCurProcessResult("get_pilot_desired_throttle", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_pilot_desired_throttle", startTime, endTime);
 
     // call attitude controller
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw_smooth", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     attitude_control.angle_ef_roll_pitch_rate_ef_yaw_smooth(target_roll, target_pitch, target_yaw_rate, get_smoothing_gain());
 
-	end = clock();
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw_smooth", end, 2);
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw_smooth", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw_smooth", startTime, endTime);
     // body-frame rate controller is run directly from 100hz loop
 
     // output pilot's throttle
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("set_throttle_out", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     attitude_control.set_throttle_out(pilot_throttle_scaled, true, g.throttle_filt); 
 
-	end = clock();
-	this->supt->setCurProcessResult("set_throttle_out", end, 2);
-	this->supt->setCurProcessResult("set_throttle_out", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_throttle_out", startTime, endTime);
 }

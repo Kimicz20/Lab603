@@ -53,15 +53,13 @@ void Copter::crash_check()
         // send message to gcs
 //        gcs_send_text_P(MAV_SEVERITY_CRITICAL,PSTR("Crash: Disarming"));
         // disarm motors
-		long start, end;
+		struct timeval startTime, endTime;
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("init_disarm_motors", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         init_disarm_motors();
-		end = clock();
-		supt->setCurProcessResult("init_disarm_motors", end, 2);
-		supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("init_disarm_motors", startTime, endTime);
     }
 }
 

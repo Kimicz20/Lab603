@@ -82,10 +82,10 @@ public:
 
 	//FixÐÞ¸Ä2.1
     bool has_current() const { 
-		long start, end;
+		struct timeval startTime, endTime;
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("has_current", start, 1);
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 		bool b = has_current(AP_BATT_PRIMARY_INSTANCE);
@@ -93,9 +93,8 @@ public:
 			b = true;
 		else
 			b = false;
-		end = clock();
-		supt->setCurProcessResult("has_current", end, 2);
-		supt->setCurProcessResult("has_current", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("has_current", startTime, endTime);
 
 		return b; 
 	}
@@ -105,17 +104,15 @@ public:
 
 	//FixÐÞ¸Ä2.1
     float voltage() const { 
-		long start, end;
+		struct timeval startTime, endTime;
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("voltage", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 		float b = voltage(AP_BATT_PRIMARY_INSTANCE);
 
-		end = clock();
-		supt->setCurProcessResult("voltage", end, 2);
-		supt->setCurProcessResult("voltage", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("voltage", startTime, endTime);
 
 		return b;
 	}
@@ -128,17 +125,15 @@ public:
 
 	//FixÐÞ¸Ä2.1
     float current_amps() const { 
-		long start, end;
+		struct timeval startTime, endTime;
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("current_amps", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 		float b = current_amps(AP_BATT_PRIMARY_INSTANCE);
 
-		end = clock();
-		supt->setCurProcessResult("current_amps", end, 2);
-		supt->setCurProcessResult("current_amps", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("current_amps", startTime, endTime);
 
 		return b; 
 	}
@@ -156,18 +151,16 @@ public:
 
 	//FixÐÞ¸Ä2.1
     bool exhausted(float low_voltage, float min_capacity_mah) { 
-		long start, end;
+		struct timeval startTime, endTime;
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("exhausted", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 		bool b = exhausted(AP_BATT_PRIMARY_INSTANCE, low_voltage, min_capacity_mah);
 		if (supt->getParamValueWithNameAndKey("failsafe_battery_event", "has_exhausted") == 1)
 			b = true;
-		end = clock();
-		supt->setCurProcessResult("exhausted", end, 2);
-		supt->setCurProcessResult("exhausted", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("exhausted", startTime, endTime);
 
 		return b;
 	}
@@ -175,10 +168,9 @@ public:
 	//FixÐÞ¸Ä2.1
     /// get_type - returns battery monitor type
     enum BattMonitor_Type get_type() { 
-		long start, end;
+		struct timeval startTime, endTime;
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("get_type", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		
 		enum BattMonitor_Type b = get_type(AP_BATT_PRIMARY_INSTANCE);
@@ -187,9 +179,8 @@ public:
 			b = BattMonitor_TYPE_NONE;
 		else
 			b = BattMonitor_TYPE_ANALOG_VOLTAGE_ONLY;
-		end = clock();
-		supt->setCurProcessResult("get_type", end, 2);
-		supt->setCurProcessResult("get_type", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("get_type", startTime, endTime);
 
 		return b;
 	}

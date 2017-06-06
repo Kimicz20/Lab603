@@ -46,17 +46,15 @@ int AP_Scheduler::getTick()
 void AP_Scheduler::run(uint16_t time_available)
 { 
 	//FixÐÞ¸ÄV1.5
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("micros", start, 1);
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
 	uint32_t run_started_usec = hal.scheduler->micros();
 
-	end = clock();
-	this->supt->setCurProcessResult("micros", end, 2);
-	this->supt->setCurProcessResult("micros", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("micros", startTime, endTime);
 
 	uint32_t now = run_started_usec;
 	for (uint8_t i = 0; i<_num_tasks; i++) {
@@ -75,7 +73,7 @@ void AP_Scheduler::run(uint16_t time_available)
 			uint16_t interval_ticks_product_two = interval_ticks * 2;
 			
 			//FixÐÞ¸Ä1.7
-			supt->setCurProcessResult("output",0,3);
+			supt->setCurProcessResult("output", startTime, endTime);
 			if (dt >= interval_ticks_product_two) {
 			//if (dt >= interval_ticks * 2) {
 				// we've slipped a whole run of this task!
@@ -98,15 +96,12 @@ void AP_Scheduler::run(uint16_t time_available)
 				string name = _tasks[i].name;
 				//FixÐÞ¸Ä2.1
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				this->supt->setCurProcessResult(name, start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
 				func();
 
-				end = clock();
-				this->supt->setCurProcessResult(name, end, 2);
-				this->supt->setCurProcessResult(name, (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult(name, startTime, endTime);
 
 				current_task = -1;
 
@@ -118,14 +113,12 @@ void AP_Scheduler::run(uint16_t time_available)
 
 				//FixÐÞ¸Ä1.7
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				this->supt->setCurProcessResult("micros", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
 				now = hal.scheduler->micros();
-				end = clock();
-				this->supt->setCurProcessResult("micros", end, 2);
-				this->supt->setCurProcessResult("micros", (end - start), 3);
+
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("micros", startTime, endTime);
 
 				uint32_t time_taken = now - _task_time_started;
 
@@ -160,8 +153,12 @@ void AP_Scheduler::run(uint16_t time_available)
 								"init_disarm_motors"
 						};
 				int size = sizeof(str) / sizeof(str[0]);
-				for (int i = 0; i < size;i++)
-					supt->setCurProcessResult(str[i], 0, 3);
+				gettimeofday(&startTime, NULL);
+				for (int i = 0; i < size; i++){
+					gettimeofday(&endTime, NULL);
+					supt->setCurProcessResult(str[i], startTime, endTime);
+				}
+
 				if (time_taken > _task_time_allowed) {
 					// the event overran!
 					if (_debug > 2) {

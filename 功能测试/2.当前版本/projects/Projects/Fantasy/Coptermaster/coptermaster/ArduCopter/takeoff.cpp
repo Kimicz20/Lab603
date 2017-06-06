@@ -27,27 +27,21 @@ bool Copter::current_mode_has_user_takeoff(bool must_navigate)
 // initiate user takeoff - called when MAVLink TAKEOFF command is received
 bool Copter::do_user_takeoff(float takeoff_alt_cm, bool must_navigate)
 {
-	long start, end;
+	struct timeval startTime, endTime;
     //if (motors.armed() && ap.land_complete && current_mode_has_user_takeoff(must_navigate) && takeoff_alt_cm > current_loc.alt) {
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("armed", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	bool has_armed = motors.armed();
-	end = clock();
-	supt->setCurProcessResult("armed", end, 2);
-	supt->setCurProcessResult("armed", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("armed", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("current_mode_has_user_takeoff", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	bool mode_has_user_takeoff = current_mode_has_user_takeoff(must_navigate);
-	end = clock();
-	supt->setCurProcessResult("current_mode_has_user_takeoff", end, 2);
-	supt->setCurProcessResult("current_mode_has_user_takeoff", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("current_mode_has_user_takeoff", startTime, endTime);
 	
 	//FixÐÞ¸ÄV2.0
 	string str[] = {"2","set_auto_armed","guided_takeoff_start"};
@@ -67,26 +61,20 @@ bool Copter::do_user_takeoff(float takeoff_alt_cm, bool must_navigate)
         switch(control_mode) {
             case GUIDED:
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				supt->setCurProcessResult("set_auto_armed", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
                 set_auto_armed(true); 
 
-				end = clock();
-				supt->setCurProcessResult("set_auto_armed", end, 2);
-				supt->setCurProcessResult("set_auto_armed", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("set_auto_armed", startTime, endTime);
 
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				supt->setCurProcessResult("guided_takeoff_start", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
 				guided_takeoff_start(takeoff_alt_cm);
-				end = clock();
-				supt->setCurProcessResult("guided_takeoff_start", end, 2);
-				supt->setCurProcessResult("guided_takeoff_start", (end - start), 3);
-				supt->setCurProcessResult("takeoff_timer_start", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("guided_takeoff_start", startTime, endTime);
+				supt->setCurProcessResult("takeoff_timer_start", startTime, endTime);
                 return true;
             /*case LOITER:
             case POSHOLD:

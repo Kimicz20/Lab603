@@ -17,43 +17,33 @@ void Copter::init_barometer(bool full_calibration)
 void Copter::read_barometer(void)
 {
 	// FixÐÞ¸Ä2.2
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     barometer.update();
 
-	end = clock();
-	this->supt->setCurProcessResult("update", end, 2);
-	this->supt->setCurProcessResult("update", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update", startTime, endTime);
 
  /*   if (should_log(MASK_LOG_IMU)) {
         Log_Write_Baro();
     }*/
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("get_altitude", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     baro_alt = barometer.get_altitude() * 100.0f;
 
-	end = clock();
-	this->supt->setCurProcessResult("get_altitude", end, 2);
-	this->supt->setCurProcessResult("get_altitude", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_altitude", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("get_climb_rate", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
     baro_climbrate = barometer.get_climb_rate() * 100.0f;
-
-	end = clock();
-	this->supt->setCurProcessResult("get_climb_rate", end, 2);
-	this->supt->setCurProcessResult("get_climb_rate", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_climb_rate", startTime, endTime);
 
     motors.set_air_density_ratio(barometer.get_air_density_ratio());
 }
@@ -173,7 +163,6 @@ void Copter::update_optical_flow(void)
 void Copter::read_battery(void)
 {
 	//FixÐÞ¸Ä2.1
-	long start, end;
 
 	battery.supt = supt;
 

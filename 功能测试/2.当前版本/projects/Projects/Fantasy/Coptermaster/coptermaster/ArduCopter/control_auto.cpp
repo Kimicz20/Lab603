@@ -369,17 +369,14 @@ void Copter::auto_rtl_start()
 void Copter::auto_rtl_run()
 {
     // call regular rtl flight mode run function
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("rtl_run", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	rtl_run();
 
-	end = clock();
-	this->supt->setCurProcessResult("rtl_run", end, 2);
-	this->supt->setCurProcessResult("rtl_run", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("rtl_run", startTime, endTime);
 }
 
 // auto_circle_movetoedge_start - initialise waypoint controller to move to edge of a circle with it's center at the specified location

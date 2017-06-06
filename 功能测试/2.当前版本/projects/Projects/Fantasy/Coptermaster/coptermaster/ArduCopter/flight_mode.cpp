@@ -131,23 +131,24 @@ bool Copter::set_mode(uint8_t mode)
 // called at 100hz or more
 void Copter::update_flight_mode()
 {
-    long start, end;
+	struct timeval startTime, endTime;
     // Update EKF speed limit - used to limit speed when we are using optical flow
     ahrs.getEkfControlLimits(ekfGndSpdLimit, ekfNavVelGainScaler);  
   //  cout << "ÉèÖÃ·ÉÐÐÄ£Ê½£¬1Òýµ¼2ÈÆÈ¦3ÂäµØ" << endl; 
 	//FixÐÞ¸ÄV1.4
 	int a = 6;
-	string processNames[] = { "stabilize_run", "althold_run", "auto_run", "circle_run", "guided_run", "land_run", "rtl_run" };
-	for (int i = 0; i<7; i++){
+	string processNames[] = { "stabilize_run", "althold_run", "auto_run", "circle_run", "guided_run", "land_run","land_nogps_run", "rtl_run" };
+	int len = sizeof(processNames) / sizeof(processNames[0]);
+	for (int i = 0; i<len; i++){
 		if (supt->getCurrentTestCase()->getParamValueWithNameAndKey(processNames[i], "control_mode") != ""){
 			a = i;
 			break;
 		}
 	}
 	
-	if (a == 6){
+	/*if (a == 6){
 		a = supt->getParamValueWithNameAndKey("guided_angle_control_run","control_mode");
-	}
+	}*/
 
 	switch (a){
 		case 0:
@@ -166,7 +167,11 @@ void Copter::update_flight_mode()
 			control_mode = GUIDED;
 			break;
 		case 5:
+		case 6:
 			control_mode = LAND;
+			break;
+		case 7:
+			control_mode = RTL;
 			break;
 		default:
 			break;
@@ -184,48 +189,40 @@ void Copter::update_flight_mode()
             #if FRAME_CONFIG == HELI_FRAME
                 heli_stabilize_run();
             #else
-                // ------------------------  ²å×®µã ---------------------------------
-                start = clock();
-                this->supt->setCurProcessResult("stabilize_run", start, 1);
-                // ------------------------  ²å×®¼¤Àø ---------------------------------
+			// ------------------------  ²å×®µã ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
                 stabilize_run();
-                end = clock();
-                this->supt->setCurProcessResult("stabilize_run", end, 2);
-                this->supt->setCurProcessResult("stabilize_run", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("stabilize_run", startTime, endTime);
             #endif
             break;
 
         case ALT_HOLD:
-            // ------------------------  ²å×®µã ---------------------------------
-            start = clock();
-            this->supt->setCurProcessResult("althold_run", start, 1);
-            // ------------------------  ²å×®¼¤Àø ---------------------------------
+			// ------------------------  ²å×®µã ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             althold_run();
-            end = clock();
-            this->supt->setCurProcessResult("althold_run", end, 2);
-            this->supt->setCurProcessResult("althold_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("althold_run", startTime, endTime);
             break;
 
         case AUTO:
-            // ------------------------  ²å×®µã ---------------------------------
-            start = clock();
-            this->supt->setCurProcessResult("auto_run", start, 1);
-            // ------------------------  ²å×®¼¤Àø ---------------------------------
+			// ------------------------  ²å×®µã ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             auto_run();
-            end = clock();
-            this->supt->setCurProcessResult("auto_run", end, 2);
-            this->supt->setCurProcessResult("auto_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("auto_run", startTime, endTime);
             break;
 
         case CIRCLE:
-            // ------------------------  ²å×®µã ---------------------------------
-            start = clock();
-            this->supt->setCurProcessResult("circle_run", start, 1);
-            // ------------------------  ²å×®¼¤Àø ---------------------------------
+			// ------------------------  ²å×®µã ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             circle_run();
-            end = clock();
-            this->supt->setCurProcessResult("circle_run", end, 2);
-            this->supt->setCurProcessResult("circle_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("circle_run", startTime, endTime);
             break;
 
         case LOITER:
@@ -233,37 +230,31 @@ void Copter::update_flight_mode()
             break;
 
         case GUIDED:  
-            // ------------------------  ²å×®µã ---------------------------------
-            start = clock();
-            this->supt->setCurProcessResult("guided_run", start, 1);
-            // ------------------------  ²å×®¼¤Àø ---------------------------------
+			// ------------------------  ²å×®µã ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             guided_run();
-            end = clock();
-            this->supt->setCurProcessResult("guided_run", end, 2);
-            this->supt->setCurProcessResult("guided_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("guided_run", startTime, endTime);
     
             break;
 
         case LAND:
-            // ------------------------  ²å×®µã ---------------------------------
-            start = clock();
-            this->supt->setCurProcessResult("land_run", start, 1);
-            // ------------------------  ²å×®¼¤Àø ---------------------------------
+			// ------------------------  ²å×®µã ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             land_run();
-            end = clock();
-            this->supt->setCurProcessResult("land_run", end, 2);
-            this->supt->setCurProcessResult("land_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("land_run", startTime, endTime);
             break;
 
         case RTL:
-            // ------------------------  ²å×®µã ---------------------------------
-            start = clock();
-            this->supt->setCurProcessResult("rtl_run", start, 1);
-            // ------------------------  ²å×®¼¤Àø ---------------------------------
+			// ------------------------  ²å×®µã ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             rtl_run();
-            end = clock();
-            this->supt->setCurProcessResult("rtl_run", end, 2);
-            this->supt->setCurProcessResult("rtl_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("rtl_run", startTime, endTime);
             break;
 
         case DRIFT:

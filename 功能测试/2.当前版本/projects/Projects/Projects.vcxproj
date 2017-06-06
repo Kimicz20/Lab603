@@ -535,6 +535,7 @@
     <ClInclude Include="Fantasy\Coptermaster\coptermaster\RC_Channel\RC_Channel.h" />
     <ClInclude Include="Fantasy\Coptermaster\coptermaster\RC_Channel\RC_Channel_aux.h" />
     <ClInclude Include="Fantasy\Coptermaster\coptermaster\StorageManager\StorageManager.h" />
+    <ClInclude Include="Fantasy\Coptermaster\coptermaster\SupportClass\ProcessTime.h" />
     <ClInclude Include="Fantasy\Coptermaster\coptermaster\SupportClass\SupportClass.h" />
     <ClInclude Include="Fantasy\Coptermaster\coptermaster\TestCase\ProcessList.h" />
     <ClInclude Include="Fantasy\Coptermaster\coptermaster\TestCase\TestCase.h" />

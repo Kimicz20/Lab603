@@ -83,7 +83,7 @@ static void failsafe_check_static()
 
 void Copter::init_ardupilot()
 { 
-	long start, end;
+	struct timeval startTime, endTime;
     if (!hal.gpio->usb_connected()) {
         // USB is not connected, this means UART0 may be a Xbee, with
         // its darned bricking problem. We can't write to it for at
@@ -122,31 +122,25 @@ void Copter::init_ardupilot()
     notify.init(true);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("init", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	// initialise battery monitor
 	battery.init();
 
-	end = clock();
-	supt->setCurProcessResult("init", end, 2);
-	supt->setCurProcessResult("init", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("init", startTime, endTime);
 
 
     // Init RSSI
     rssi.init();
 	
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("init", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	barometer.init();
 	
-	end = clock();
-	supt->setCurProcessResult("init", end, 2);
-	supt->setCurProcessResult("init", (end - start), 3);    
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("init", startTime, endTime);
 
     // Register the mavlink service callback. This will run
     // anytime there are more than 5ms remaining in a call to
@@ -192,28 +186,22 @@ void Copter::init_ardupilot()
 #endif
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("init_rc_in", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	// sets up rc channels from radio
 	init_rc_in();
 
-	end = clock();
-	supt->setCurProcessResult("init_rc_in", end, 2);
-	supt->setCurProcessResult("init_rc_in", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("init_rc_in", startTime, endTime);
         
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("init_rc_out", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	init_rc_out();
 	// sets up motors and output to escs 
 
-	end = clock();
-	supt->setCurProcessResult("init_rc_out", end, 2);
-	supt->setCurProcessResult("init_rc_out", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("init_rc_out", startTime, endTime);
 
 
 	 

@@ -12,14 +12,12 @@ bool initialised(void) {
 */
 void Copter::gcs_check_input(void)
 {
-	long start, end;
+	struct timeval startTime, endTime;
 	supt->Cout("gcs_check_input");
 	//FixÐÞ¸ÄV2.0
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("gcs_check_input", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 	for (uint8_t i = 0; i<1; i++) {
 		gcs[i].initialised = false;
@@ -32,24 +30,20 @@ void Copter::gcs_check_input(void)
 //#else 
 
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			supt->setCurProcessResult("update", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 			gcs[i].supt = supt;
 			gcs[i].update(NULL);
 
-			end = clock();
-			supt->setCurProcessResult("update", end, 2);
-			supt->setCurProcessResult("update", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("update", startTime, endTime);
 
 //#endif
 		}
 	}
-	end = clock();
-	supt->setCurProcessResult("gcs_check_input", end, 2);
-	supt->setCurProcessResult("gcs_check_input", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("gcs_check_input", startTime, endTime);
 
 }
 
@@ -58,18 +52,14 @@ void Copter::gcs_data_stream_send(void)
 	supt->Cout("gcs_data_stream_send");
 	//FixÐÞ¸Ä2.1
 
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	
-	supt->setCurProcessResult("gcs_data_stream_send", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	gcs[0].data_stream_send();
 
-	end = clock();
-	supt->setCurProcessResult("gcs_data_stream_send", end, 2);
-	supt->setCurProcessResult("gcs_data_stream_send", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("gcs_data_stream_send", startTime, endTime);
 	
 	/*for (uint8_t i = 0; i<1; i++) {
 
@@ -82,18 +72,14 @@ void Copter::gcs_data_stream_send(void)
 void GCS_MAVLINK::data_stream_send(void)
 {
 	//FixÐÞ¸Ä2.1
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-
-	supt->setCurProcessResult("send_location", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	send_message(MSG_EXTENDED_STATUS1);
 
-	end = clock();
-	supt->setCurProcessResult("send_location", end, 2);
-	supt->setCurProcessResult("send_location", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("send_location", startTime, endTime);
 }
 uint16_t comm_get_available(mavlink_channel_t)
 {
@@ -119,7 +105,7 @@ void Copter::gcs_send_deferred(void)
 void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 {
 	uint8_t result = MAV_RESULT_FAILED;         // assume failure.  Each messages id is responsible for return ACK or NAK if required
-	long start, end;
+	struct timeval startTime, endTime;
 	//int a = 76; 
 	//mavlink_message_t a, *msg;
 	//msg = &a;
@@ -168,19 +154,16 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 
 					float takeoff_alt = packet.param7 * 100;      // Convert m to cm
 					// ------------------------  ²å×®µã ---------------------------------
-					start = clock();
-					Copter::supt->setCurProcessResult("do_user_takeoff", start, 1);
-
-					// ------------------------  ²å×®¼¤Àø ---------------------------------
+					gettimeofday(&startTime, NULL);
+					// ------------------------  ²å×®¼¤Àø --------------------------------- 
 					if (copter.do_user_takeoff(takeoff_alt, is_zero(packet.param3))) {
 						result = MAV_RESULT_ACCEPTED;
 					}
 					else {
 						result = MAV_RESULT_FAILED;
 					}
-					end = clock();
-					Copter::supt->setCurProcessResult("do_user_takeoff", end, 2);
-					Copter::supt->setCurProcessResult("do_user_takeoff", (end - start), 3);
+					gettimeofday(&endTime, NULL);
+					supt->setCurProcessResult("do_user_takeoff", startTime, endTime);
 					break;
 				}
 			}
@@ -257,37 +240,28 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 			// send request
 			if (!pos_ignore && !vel_ignore && acc_ignore) { 
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				Copter::supt->setCurProcessResult("guided_set_destination_posvel", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
 				copter.guided_set_destination_posvel(pos_vector, vel_vector);
-				end = clock();
-				Copter::supt->setCurProcessResult("guided_set_destination_posvel", end, 2);
-				Copter::supt->setCurProcessResult("guided_set_destination_posvel", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("guided_set_destination_posvel", startTime, endTime);
 			}
 			else if (pos_ignore && !vel_ignore && acc_ignore) {
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				Copter::supt->setCurProcessResult("guided_set_velocity", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
 				copter.guided_set_velocity(vel_vector);
-				end = clock();
-				Copter::supt->setCurProcessResult("guided_set_velocity", end, 2);
-				Copter::supt->setCurProcessResult("guided_set_velocity", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("guided_set_velocity", startTime, endTime);
 			}
 			else if (!pos_ignore && vel_ignore && acc_ignore) {
 				//FixÐÞ¸ÄV2.0
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				Copter::supt->setCurProcessResult("guided_set_destination", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
 				copter.guided_set_destination(pos_vector);
-				end = clock();
-				Copter::supt->setCurProcessResult("guided_set_destination", end, 2);
-				Copter::supt->setCurProcessResult("guided_set_destination", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("guided_set_destination", startTime, endTime);
 			}
 			else {
 				result = MAV_RESULT_FAILED;
@@ -384,37 +358,28 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 			if (!pos_ignore && !vel_ignore && acc_ignore) {
 
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				Copter::supt->setCurProcessResult("guided_set_destination_posvel", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
 				copter.guided_set_destination_posvel(pos_ned, Vector3f(packet.vx * 100.0f, packet.vy * 100.0f, -packet.vz * 100.0f));
-				end = clock();
-				Copter::supt->setCurProcessResult("guided_set_destination_posvel", end, 2);
-				Copter::supt->setCurProcessResult("guided_set_destination_posvel", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("guided_set_destination_posvel", startTime, endTime);
 			}
 			else if (pos_ignore && !vel_ignore && acc_ignore) {
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				Copter::supt->setCurProcessResult("guided_set_velocity", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
 				copter.guided_set_velocity(Vector3f(packet.vx * 100.0f, packet.vy * 100.0f, -packet.vz * 100.0f));
-				end = clock();
-				Copter::supt->setCurProcessResult("guided_set_velocity", end, 2);
-				Copter::supt->setCurProcessResult("guided_set_velocity", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("guided_set_velocity", startTime, endTime);
 			}
 			else if (!pos_ignore && vel_ignore && acc_ignore) {
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				Copter::supt->setCurProcessResult("guided_set_destination", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
 				copter.guided_set_destination(pos_ned);
 				
-				end = clock();
-				Copter::supt->setCurProcessResult("guided_set_destination", end, 2);
-				Copter::supt->setCurProcessResult("guided_set_destination", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("guided_set_destination", startTime, endTime);
 			}
 			else {
 				result = MAV_RESULT_FAILED;
@@ -425,35 +390,26 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 		case MAV_CMD_COMPONENT_CZ_ARM_DISARM:    // MAV ID: 400
 		{
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			supt->setCurProcessResult("mode_has_manual_throttle", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
-			end = clock();
-			supt->setCurProcessResult("mode_has_manual_throttle", end, 2);
-			supt->setCurProcessResult("mode_has_manual_throttle", (end - start), 3);
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("mode_has_manual_throttle", startTime, endTime);
 			bool is_equal_1 = false;
 			if (supt->getParamValueWithNameAndKey("init_disarm_motors", "is_equal_1") == 1)
 				is_equal_1 = true;
 			if (is_equal_1){
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				supt->setCurProcessResult("init_disarm_motors", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
-				end = clock();
-				supt->setCurProcessResult("init_disarm_motors", end, 2);
-				supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("init_disarm_motors", startTime, endTime);
 			}
 			else{
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				supt->setCurProcessResult("init_arm_motors", start, 1);
-
-				// ------------------------  ²å×®¼¤Àø ---------------------------------
-				end = clock();
-				supt->setCurProcessResult("init_arm_motors", end, 2);
-				supt->setCurProcessResult("init_arm_motors", (end - start), 3);
+				gettimeofday(&startTime, NULL);
+				// ------------------------  ²å×®¼¤Àø --------------------------------- 
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("init_disarm_motors", startTime, endTime);
 			}
 			break;
 		}
@@ -461,15 +417,11 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
 		case MAV_CMD_COMPONENT_CZ:    // MAV ID: 11
 		{
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			supt->setCurProcessResult("handle_set_mode", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
-			end = clock();
-			supt->setCurProcessResult("handle_set_mode", end, 2);
-			supt->setCurProcessResult("handle_set_mode", (end - start), 3);
-			
-			supt->setCurProcessResult("set_mode", (end - start), 3);
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("handle_set_mode", startTime, endTime);
+			supt->setCurProcessResult("set_mode", startTime, endTime);
 			break;
 		}
 

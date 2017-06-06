@@ -87,30 +87,26 @@ public:
     // set_voltage - set voltage to be used for output scaling
     void                set_voltage(float volts){ 
 		//FixÐÞ¸Ä2.2
-		long start, end;
+		struct timeval startTime, endTime;
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_voltage", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		_batt_voltage = volts; 
 
-		end = clock();
-		supt->setCurProcessResult("set_voltage", end, 2);
-		supt->setCurProcessResult("set_voltage", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_voltage", startTime, endTime);
 	}
 
     // set_current - set current to be used for output scaling
     void                set_current(float current){ 
 		//FixÐÞ¸Ä2.2
-		long start, end;
+		struct timeval startTime, endTime;
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_current", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		_batt_current = current; 
-		end = clock();
-		supt->setCurProcessResult("set_current", end, 2);
-		supt->setCurProcessResult("set_current", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_current", startTime, endTime);
 	}
 
     // set_density_ratio - sets air density as a proportion of sea level density

@@ -20,19 +20,16 @@ static union {
 
 void Copter::read_control_switch()
 {
-	long start, end;
+	struct timeval startTime, endTime;
 	//FixÐÞ¸Ä2.1
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("millis", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
     uint32_t tnow_ms = millis(); 
 
-	end = clock();
-	this->supt->setCurProcessResult("millis", end, 2);
-	this->supt->setCurProcessResult("millis", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("millis", startTime, endTime);
 
 	// calculate position of flight mode switch
     int8_t switch_position;
@@ -64,14 +61,11 @@ void Copter::read_control_switch()
 	if (control_switch_changed && sufficient_time_elapsed && failsafe_disengaged) {
         // set flight mode and simple mode setting
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_mode", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		if (set_mode(flight_modes[switch_position])) {
-			end = clock();
-			this->supt->setCurProcessResult("set_mode", end, 2);
-			this->supt->setCurProcessResult("set_mode", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("set_mode", startTime, endTime);
             // play a tone
             if (control_switch_state.debounced_switch_position != -1) {
                 // alert user to mode change failure (except if autopilot is just starting up)

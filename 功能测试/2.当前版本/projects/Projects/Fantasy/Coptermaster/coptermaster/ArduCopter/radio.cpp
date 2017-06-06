@@ -120,17 +120,16 @@ void Copter::default_dead_zones()
 		channel_pitch->set_angle(ROLL_PITCH_INPUT_MAX);
 		channel_yaw->set_angle(4500);
 
+		struct timeval startTime, endTime;
 		// ------------------------  ²å×®µã ---------------------------------
-		long start = clock();
-		supt->setCurProcessResult("set_range", start, 1);
+		gettimeofday(&startTime, NULL);
 		g.throttle_min = supt->getParamValueWithNameAndKey("set_range","g.throttle_min");
 		
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
 		channel_throttle->set_range(g.throttle_min, THR_MAX);
 
-		long end = clock();
-		supt->setCurProcessResult("set_range", end, 2);
-		supt->setCurProcessResult("set_range", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_range", startTime, endTime);
 		
 
 		channel_roll->set_type(RC_CHANNEL_TYPE_ANGLE_RAW);
@@ -144,16 +143,13 @@ void Copter::default_dead_zones()
 		g.rc_8.set_range(0,1000);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("default_dead_zones", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		// set default dead zones
 		default_dead_zones();
 
-		end = clock();
-		supt->setCurProcessResult("default_dead_zones", end, 2);
-		supt->setCurProcessResult("default_dead_zones", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("default_dead_zones", startTime, endTime);
 
 		// initialise throttle_zero flag
 		ap.throttle_zero = true;
@@ -163,43 +159,39 @@ void Copter::default_dead_zones()
 void Copter::init_rc_out()
 {	
 	// ------------------------  ²å×®µã ---------------------------------
-		long start = clock();
-		supt->setCurProcessResult("set_update_rate", start, 1);
+		struct timeval startTime, endTime;
+		gettimeofday(&startTime, NULL);
 		g.rc_speed = supt->getParamValueWithNameAndKey("set_update_rate", "g.rc_speed");
 
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
 		motors.set_update_rate(g.rc_speed);
 
-		long end = clock();
-		supt->setCurProcessResult("set_update_rate", end, 2);
-		supt->setCurProcessResult("set_update_rate", (end - start), 3);
+		
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_update_rate", startTime, endTime);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_frame_orientation", start, 1);
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		g.frame_orientation = supt->getParamValueWithNameAndKey("set_frame_orientation", "g.frame_orientation");
 
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
 		motors.set_frame_orientation(g.frame_orientation);
 
-		end = clock();
-		supt->setCurProcessResult("set_frame_orientation", end, 2);
-		supt->setCurProcessResult("set_frame_orientation", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_frame_orientation", startTime, endTime);
 
 		motors.Init();                                              // motor initialisation
 #if FRAME_CONFIG != HELI_FRAME
 		
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_throttle_range", start, 1);
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		g.throttle_min = supt->getParamValueWithNameAndKey("set_throttle_range", "g.throttle_min");
 
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
 		motors.set_throttle_range(g.throttle_min, channel_throttle->radio_min, channel_throttle->radio_max);
 
-		end = clock();
-		supt->setCurProcessResult("set_throttle_range", end, 2);
-		supt->setCurProcessResult("set_throttle_range", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_range", startTime, endTime);
 
 		motors.set_hover_throttle(g.throttle_mid);
 #endif
@@ -209,67 +201,52 @@ void Copter::init_rc_out()
 		///////////////////////////////////////////////////////////////////
 		for (uint8_t i = 0; i < 1; i++) {
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			supt->setCurProcessResult("delay", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			delay(20);
 
-			end = clock();
-			supt->setCurProcessResult("delay", end, 2);
-			supt->setCurProcessResult("delay", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("delay", startTime, endTime);
 
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			//supt->setCurProcessResult("read_radio", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			read_radio();
 
-			end = clock();
-			supt->setCurProcessResult("read_radio", end, 2);
-			supt->setCurProcessResult("read_radio", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("read_radio", startTime, endTime);
 		}  
 		// we want the input to be scaled correctly
 		channel_throttle->set_range_out(0, 1000);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("esc_calibration_startup_check", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		// check if we should enter esc calibration mode
 		// FIXÐÞ¸ÄV1.1
 		//esc_calibration_startup_check();
 
-		end = clock();
-		supt->setCurProcessResult("esc_calibration_startup_check", end, 2);
-		supt->setCurProcessResult("esc_calibration_startup_check", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("esc_calibration_startup_check", startTime, endTime);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("pre_arm_rc_checks", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		// enable output to motors
 		pre_arm_rc_checks();
 
-		end = clock();
-		supt->setCurProcessResult("pre_arm_rc_checks", end, 2);
-		supt->setCurProcessResult("pre_arm_rc_checks", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("pre_arm_rc_checks", startTime, endTime);
 		// FIXÐÞ¸ÄV1.1
 		ap.pre_arm_rc_check = supt->getParamValueWithNameAndKey("enable_motor_output","ap.pre_arm_rc_check");
 		if (ap.pre_arm_rc_check) {
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			supt->setCurProcessResult("enable_motor_output", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			enable_motor_output();
 
-			end = clock();
-			supt->setCurProcessResult("enable_motor_output", end, 2);
-			supt->setCurProcessResult("enable_motor_output", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("enable_motor_output", startTime, endTime);
 		}
 
 		// refresh auxiliary channel to function map
@@ -290,21 +267,18 @@ void Copter::enable_motor_output()
 
 void Copter::read_radio()
 { 
-	long start, end;
+	struct timeval startTime, endTime;
 
 	//get values from barometer.init();
 	static uint32_t last_update_ms = 0;
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("millis", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     uint32_t tnow_ms = millis(); 
 
-	end = clock();
-	supt->setCurProcessResult("millis", end, 2);
-	supt->setCurProcessResult("millis", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("millis", startTime, endTime);
 
 	bool new_input = false;
 
@@ -327,52 +301,44 @@ void Copter::read_radio()
 		//void input_pwm_method();
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_pwm", start, 1);
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		roll_pwm = supt->getParamValueWithNameAndKey("set_pwm", "roll_pwm");
 
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
 		(*channel_roll).set_pwm(roll_pwm);
 
-		end = clock();
-		supt->setCurProcessResult("set_pwm", end, 2);
-		supt->setCurProcessResult("set_pwm", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_pwm", startTime, endTime);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_pwm", start, 1);
+		gettimeofday(&startTime, NULL);
 		roll_pwm = supt->getParamValueWithNameAndKey("set_pwm", "pitch_pwm");
 
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
 		(*channel_pitch).set_pwm(pitch_pwm);
 
-		end = clock();
-		supt->setCurProcessResult("set_pwm", end, 2);
-		supt->setCurProcessResult("set_pwm", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_pwm", startTime, endTime);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_pwm", start, 1);
+		gettimeofday(&startTime, NULL);
 		roll_pwm = supt->getParamValueWithNameAndKey("set_pwm", "throttle_pwm");
 
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
 		(*channel_throttle).set_pwm(throttle_pwm);
 
-		end = clock();
-		supt->setCurProcessResult("set_pwm", end, 2);
-		supt->setCurProcessResult("set_pwm", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_pwm", startTime, endTime);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_pwm", start, 1);
+		gettimeofday(&startTime, NULL);
 		roll_pwm = supt->getParamValueWithNameAndKey("set_pwm", "yaw_pwm");
 
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
 		(*channel_yaw).set_pwm(yaw_pwm);
 
-		end = clock();
-		supt->setCurProcessResult("set_pwm", end, 2);
-		supt->setCurProcessResult("set_pwm", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_pwm", startTime, endTime);
 		
 		/*channel_roll->set_pwm(roll_pwm);
 		channel_pitch->set_pwm(pitch_pwm);
@@ -381,26 +347,21 @@ void Copter::read_radio()
 		//channel_mode->set_pwm(mode_pwm); 
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_throttle_and_failsafe", start, 1);	
+		gettimeofday(&startTime, NULL);
 		
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
         set_throttle_and_failsafe(channel_throttle->radio_in);
 
-		end = clock();
-		supt->setCurProcessResult("set_throttle_and_failsafe", end, 2);
-		supt->setCurProcessResult("set_throttle_and_failsafe", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_and_failsafe", startTime, endTime);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_throttle_zero_flag", start, 1);
-
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
         set_throttle_zero_flag(channel_throttle->control_in); 
 
-		end = clock();
-		supt->setCurProcessResult("set_throttle_zero_flag", end, 2);
-		supt->setCurProcessResult("set_throttle_zero_flag", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_zero_flag", startTime, endTime);
 
         // flag we must have an rc receiver attached
         if (!failsafe.rc_override_active) {
@@ -428,29 +389,23 @@ void Copter::read_radio()
 			
 		if (((failsafe.rc_override_active == false && (elapsed >= FS_RADIO_TIMEOUT_MS)) || (failsafe.rc_override_active == true && (elapsed >= FS_RADIO_RC_OVERRIDE_TIMEOUT_MS))) && failsafe.radio == false) {
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			supt->setCurProcessResult("armed", start, 1);
-
+			gettimeofday(&startTime, NULL);
 			// ------------------------  ²å×®¼¤Àø ---------------------------------
 			bool is_armed = motors.armed();
 
-			end = clock();
-			supt->setCurProcessResult("armed", end, 2);
-			supt->setCurProcessResult("armed", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("armed", startTime, endTime);
 
 			if (g.failsafe_throttle == 1 && (ap.rc_receiver_present == true || is_armed == true))
 			{
 				//Log_Write_Error(ERROR_SUBSYSTEM_RADIO, ERROR_CODE_RADIO_LATE_FRAME);
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				supt->setCurProcessResult("set_failsafe_radio", start, 1);
-
+				gettimeofday(&startTime, NULL);
 				// ------------------------  ²å×®¼¤Àø ---------------------------------
 				set_failsafe_radio(true);
 
-				end = clock();
-				supt->setCurProcessResult("set_failsafe_radio", end, 2);
-				supt->setCurProcessResult("set_failsafe_radio", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("set_failsafe_radio", startTime, endTime);
 			}
 		}
 		if (failsafe.radio == 0) { 
@@ -465,6 +420,7 @@ void Copter::read_radio()
 #define FS_COUNTER 3        // radio failsafe kicks in after 3 consecutive throttle values below failsafe_throttle_value
 void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 {
+	struct timeval startTime, endTime;
 	//FixÐÞ¸ÄV1.2
 	string str[] = { "2", "set_pwm", "set_failsafe_radio" };
 	g.failsafe_throttle = supt->getParamValueFormNamesWithKey(str, "g.failsafe_throttle");
@@ -472,15 +428,12 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 	// if failsafe not enabled pass through throttle and exit
 	if (g.failsafe_throttle == FS_THR_DISABLED) {
 		// ------------------------  ²å×®µã ---------------------------------
-		long start = clock();
-		supt->setCurProcessResult("set_pwm", start, 1);
-
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø ---------------------------------
 		channel_throttle->set_pwm(throttle_pwm);
 
-		long end = clock();
-		supt->setCurProcessResult("set_pwm", end, 2);
-		supt->setCurProcessResult("set_pwm", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_pwm", startTime, endTime);
 	}
 	else
 	{
@@ -489,15 +442,13 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 		//check for low throttle value
 		if (throttle_pwm < (uint16_t)g.failsafe_throttle_value) {
 			// if we are already in failsafe or motors not armed pass through throttle and exit
-			long start = clock();
-			supt->setCurProcessResult("armed", start, 1);
-
+			// ------------------------  ²å×®µã ---------------------------------
+			gettimeofday(&startTime, NULL);
 			// ------------------------  ²å×®¼¤Àø ---------------------------------
 			bool has_armed = motors.armed();
 
-			long end = clock();
-			supt->setCurProcessResult("armed", end, 2);
-			supt->setCurProcessResult("armed", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("armed", startTime, endTime);
 			//FixÐÞ¸ÄV1.2
 			string str[] = {"2","set_failsafe_radio","set_pwm"};
 			failsafe.radio = supt->getParamValueFormNamesWithKey(str,"failsafe.radio");
@@ -506,15 +457,12 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 			if (failsafe.radio == true || (ap.rc_receiver_present == false && has_armed == false)) {
 
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				supt->setCurProcessResult("set_pwm", start, 1);
-
+				gettimeofday(&startTime, NULL);
 				// ------------------------  ²å×®¼¤Àø ---------------------------------
 				channel_throttle->set_pwm(throttle_pwm);
 
-				end = clock();
-				supt->setCurProcessResult("set_pwm", end, 2);
-				supt->setCurProcessResult("set_pwm", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("set_pwm", startTime, endTime);
 			}
 			else{
 				// check for 3 low throttle values
@@ -525,26 +473,20 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 				if (failsafe.radio_counter >= FS_COUNTER) {
 					failsafe.radio_counter = FS_COUNTER;  // check to ensure we don't overflow the counter
 					// ------------------------  ²å×®µã ---------------------------------
-					start = clock();
-					supt->setCurProcessResult("set_failsafe_radio", start, 1);
-
+					gettimeofday(&startTime, NULL);
 					// ------------------------  ²å×®¼¤Àø ---------------------------------
 					set_failsafe_radio(true);
 
-					end = clock();
-					supt->setCurProcessResult("set_failsafe_radio", end, 2);
-					supt->setCurProcessResult("set_failsafe_radio", (end - start), 3);
+					gettimeofday(&endTime, NULL);
+					supt->setCurProcessResult("set_failsafe_radio", startTime, endTime);
 
 					// ------------------------  ²å×®µã ---------------------------------
-					start = clock();
-					supt->setCurProcessResult("set_pwm", start, 1);
-
+					gettimeofday(&startTime, NULL);
 					// ------------------------  ²å×®¼¤Àø ---------------------------------
 					channel_throttle->set_pwm(throttle_pwm);   // pass through failsafe throttle
 
-					end = clock();
-					supt->setCurProcessResult("set_pwm", end, 2);
-					supt->setCurProcessResult("set_pwm", (end - start), 3);
+					gettimeofday(&endTime, NULL);
+					supt->setCurProcessResult("set_pwm", startTime, endTime);
 				}
 			}
 		}
@@ -558,29 +500,23 @@ void Copter::set_throttle_and_failsafe(uint16_t throttle_pwm)
 				failsafe.radio = supt->getParamValueWithNameAndKey("set_failsafe_radio", "failsafe.radio");
 				if (failsafe.radio == true) {
 					// ------------------------  ²å×®µã ---------------------------------
-					long start = clock();
-					supt->setCurProcessResult("set_failsafe_radio", start, 1);
-
+					gettimeofday(&startTime, NULL);
 					// ------------------------  ²å×®¼¤Àø ---------------------------------
 					set_failsafe_radio(false);
 
-					long end = clock();
-					supt->setCurProcessResult("set_failsafe_radio", end, 2);
-					supt->setCurProcessResult("set_failsafe_radio", (end - start), 3);
+					gettimeofday(&endTime, NULL);
+					supt->setCurProcessResult("set_failsafe_radio", startTime, endTime);
 
 				}
 			}
 			// ------------------------  ²å×®µã ---------------------------------
-			long start = clock();
-			supt->setCurProcessResult("set_pwm", start, 1);
-
+			gettimeofday(&startTime, NULL);
 			// ------------------------  ²å×®¼¤Àø ---------------------------------
 			// pass through throttle
 			channel_throttle->set_pwm(throttle_pwm);
 
-			long end = clock();
-			supt->setCurProcessResult("set_pwm", end, 2);
-			supt->setCurProcessResult("set_pwm", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("set_pwm", startTime, endTime);
 		}
 	}
   //  // if failsafe not enabled pass through throttle and exit

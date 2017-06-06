@@ -103,10 +103,9 @@ void Copter::failsafe_radio_off_event()
 void Copter::failsafe_battery_event(void)
 {
 	//FixÐÞ¸Ä2.2
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("failsafe_battery_event", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
     // return immediately if low battery event has already been triggered
@@ -118,8 +117,7 @@ void Copter::failsafe_battery_event(void)
 	//FixÐÞ¸Ä2.1
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("armed", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 	bool has_armed = motors.armed();
@@ -127,9 +125,8 @@ void Copter::failsafe_battery_event(void)
 	if (supt->getParamValueWithNameAndKey("init_disarm_motors", "has_armed") == 1)
 		has_armed = true;
 
-	end = clock();
-	supt->setCurProcessResult("armed", end, 2);
-	supt->setCurProcessResult("armed", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("armed", startTime, endTime);
 
 	g.failsafe_battery_enabled = FS_BATT_DISABLED;
 	if (supt->getParamValueWithNameAndKey("init_disarm_motors", "g.failsafe_battery_enabled") != 0)
@@ -137,11 +134,12 @@ void Copter::failsafe_battery_event(void)
 	
 	control_mode = supt->getParamValueWithNameAndKey("init_disarm_motors", "control_mode");
 
+	gettimeofday(&endTime, NULL);
 	//FixÐÞ¸Ä2.2
 	for (int i = 0; i < 3; i++){
-		supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
-		supt->setCurProcessResult("set_mode_land_with_pause", (end - start), 3);
-		supt->setCurProcessResult("set_mode_RTL_or_land_with_pause", (end - start), 3);
+		supt->setCurProcessResult("init_disarm_motors", startTime, endTime);
+		supt->setCurProcessResult("set_mode_land_with_pause", startTime, endTime);
+		supt->setCurProcessResult("set_mode_RTL_or_land_with_pause", startTime, endTime);
 	}
 		
 	//if (g.failsafe_battery_enabled != FS_BATT_DISABLED && has_armed == true){
@@ -195,22 +193,19 @@ void Copter::failsafe_battery_event(void)
 
     // set the low battery flag
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("set_failsafe_battery", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     
 	set_failsafe_battery(true);
 
-	end = clock();
-	supt->setCurProcessResult("set_failsafe_battery", end, 2);
-	supt->setCurProcessResult("set_failsafe_battery", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_failsafe_battery", startTime, endTime);
     // warn the ground station and log to dataflash
     //gcs_send_text_P(MAV_SEVERITY_CRITICAL,PSTR("Low Battery!"));
     //Log_Write_Error(ERROR_SUBSYSTEM_FAILSAFE_BATT, ERROR_CODE_FAILSAFE_OCCURRED);
 
-	end = clock();
-	supt->setCurProcessResult("failsafe_battery_event", end, 2);
-	supt->setCurProcessResult("failsafe_battery_event", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("failsafe_battery_event", startTime, endTime);
 
 }
 

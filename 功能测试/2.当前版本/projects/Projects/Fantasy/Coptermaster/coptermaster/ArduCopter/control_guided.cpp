@@ -52,289 +52,223 @@ bool Copter::guided_init(bool ignore_checks)
 // guided_takeoff_start - initialises waypoint controller to implement take-off
 void Copter::guided_takeoff_start(float final_alt_above_home)
 {
-	long start, end;
+	struct timeval startTime, endTime;
     guided_mode = Guided_TakeOff;
     
     // initialise wpnav destination
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("get_position", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     Vector3f target_pos = inertial_nav.get_position();
-	end = clock();
-	supt->setCurProcessResult("get_position", end, 2);
-	supt->setCurProcessResult("get_position", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_position", startTime, endTime);
 
 	target_pos.f_print_z();
 	target_pos.f_print_x();
 	target_pos.f_print_y();
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("pv_alt_above_origin", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	target_pos.z = pv_alt_above_origin(final_alt_above_home);   
-	end = clock();
-	supt->setCurProcessResult("pv_alt_above_origin", end, 2);
-	supt->setCurProcessResult("pv_alt_above_origin", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("pv_alt_above_origin", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("set_wp_destination", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     wp_nav.set_wp_destination(target_pos);
-	end = clock();
-	supt->setCurProcessResult("set_wp_destination", end, 2);
-	supt->setCurProcessResult("set_wp_destination", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_wp_destination", startTime, endTime);
 
     // initialise yaw
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("set_auto_yaw_mode", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     set_auto_yaw_mode(AUTO_YAW_HOLD);
-	end = clock();
-	supt->setCurProcessResult("set_auto_yaw_mode", end, 2);
-	supt->setCurProcessResult("set_auto_yaw_mode", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_auto_yaw_mode", startTime, endTime);
 
     // clear i term when we're taking off
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("set_throttle_takeoff", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     set_throttle_takeoff();
-	end = clock();
-	supt->setCurProcessResult("set_throttle_takeoff", end, 2);
-	supt->setCurProcessResult("set_throttle_takeoff", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+    supt->setCurProcessResult("set_throttle_takeoff", startTime, endTime);
 }
 
 // initialise guided mode's position controller
 void Copter::guided_pos_control_start()
 {
     // set to position control mode
-	long start, end;
+	struct timeval startTime, endTime;
     guided_mode = Guided_WP;
 
     // initialise waypoint and spline controller
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("wp_and_spline_init", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     wp_nav.wp_and_spline_init();
-	end = clock();
-	Copter::supt->setCurProcessResult("wp_and_spline_init", end, 2);
-	Copter::supt->setCurProcessResult("wp_and_spline_init", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("wp_and_spline_init", startTime, endTime);
 
     // initialise wpnav to stopping point at current altitude
     // To-Do: set to current location if disarmed?
     // To-Do: set to stopping point altitude?
     Vector3f stopping_point;  
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("get_altitude", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	stopping_point.z = inertial_nav.get_altitude(); 
-	end = clock();
-	Copter::supt->setCurProcessResult("get_altitude", end, 2);
-	Copter::supt->setCurProcessResult("get_altitude", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("get_altitude", startTime, endTime);
 
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("get_wp_stopping_point_xy", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     wp_nav.get_wp_stopping_point_xy(stopping_point);
-	end = clock();
-	Copter::supt->setCurProcessResult("get_wp_stopping_point_xy", end, 2);
-	Copter::supt->setCurProcessResult("get_wp_stopping_point_xy", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("get_wp_stopping_point_xy", startTime, endTime);
 
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_wp_destination", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     wp_nav.set_wp_destination(stopping_point);
-	end = clock();
-	Copter::supt->setCurProcessResult("set_wp_destination", end, 2);
-	Copter::supt->setCurProcessResult("set_wp_destination", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_wp_destination", startTime, endTime);
 
     // initialise yaw
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_auto_yaw_mode", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     set_auto_yaw_mode(get_default_auto_yaw_mode(false));
-	end = clock();
-	Copter::supt->setCurProcessResult("set_auto_yaw_mode", end, 2);
-	Copter::supt->setCurProcessResult("set_auto_yaw_mode", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_auto_yaw_mode", startTime, endTime);
 }
 
 // initialise guided mode's velocity controller
 void Copter::guided_vel_control_start()
 {
-	long start, end;
+	struct timeval startTime, endTime;
     // set guided_mode to velocity controller
     guided_mode = Guided_Velocity;
 
     // initialize vertical speeds and leash lengths
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_speed_z", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.set_speed_z(-g.pilot_velocity_z_max, g.pilot_velocity_z_max);
-	end = clock();
-	Copter::supt->setCurProcessResult("set_speed_z", end, 2);
-	Copter::supt->setCurProcessResult("set_speed_z", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_speed_z", startTime, endTime);
 
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_accel_z", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.set_accel_z(g.pilot_accel_z);
-	end = clock();
-	Copter::supt->setCurProcessResult("set_accel_z", end, 2);
-	Copter::supt->setCurProcessResult("set_accel_z", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_accel_z", startTime, endTime);
 
     // initialise velocity controller
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("init_vel_controller_xyz", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.init_vel_controller_xyz();
-	end = clock();
-	Copter::supt->setCurProcessResult("init_vel_controller_xyz", end, 2);
-	Copter::supt->setCurProcessResult("init_vel_controller_xyz", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("init_vel_controller_xyz", startTime, endTime);
 }
 
 // initialise guided mode's posvel controller
 void Copter::guided_posvel_control_start()
 {
-	long start, end;
+	struct timeval startTime, endTime;
     // set guided_mode to velocity controller
     guided_mode = Guided_PosVel;
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("init_xy_controller", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.init_xy_controller();
-	end = clock();
-	Copter::supt->setCurProcessResult("init_xy_controller", end, 2);
-	Copter::supt->setCurProcessResult("init_xy_controller", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("init_xy_controller", startTime, endTime);
 
     // set speed and acceleration from wpnav's speed and acceleration
-	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_speed_xy", start, 1);
 
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("get_speed_xy", start, 1);
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
     pos_control.set_speed_xy(wp_nav.get_speed_xy());
 
-	end = clock();
-	Copter::supt->setCurProcessResult("get_speed_xy", end, 2);
-	Copter::supt->setCurProcessResult("get_speed_xy", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("get_speed_xy", startTime, endTime);
 
-	end = clock();
-	Copter::supt->setCurProcessResult("set_speed_xy", end, 2);
-	Copter::supt->setCurProcessResult("set_speed_xy", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_speed_xy", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_accel_xy", start, 1);
-
-	start = clock();
-	Copter::supt->setCurProcessResult("get_wp_acceleration", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	pos_control.set_accel_xy(wp_nav.get_wp_acceleration());
 
-	end = clock();
-	Copter::supt->setCurProcessResult("get_wp_acceleration", end, 2);
-	Copter::supt->setCurProcessResult("get_wp_acceleration", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("get_wp_acceleration", startTime, endTime);
 
-	end = clock();
-	Copter::supt->setCurProcessResult("set_accel_xy", end, 2);
-	Copter::supt->setCurProcessResult("set_accel_xy", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_accel_xy", startTime, endTime);
 
     const Vector3f& curr_pos = inertial_nav.get_position();
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("get_velocity", start, 1);
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
     const Vector3f& curr_vel = inertial_nav.get_velocity();
 
-	end = clock();
-	Copter::supt->setCurProcessResult("get_velocity", end, 2);
-	Copter::supt->setCurProcessResult("get_velocity", (end - start), 3);
-	Copter::supt->setCurProcessResult("get_velocity", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("get_velocity", startTime, endTime);
+	Copter::supt->setCurProcessResult("get_velocity", startTime, endTime);
 
     // set target position and velocity to current position and velocity
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_xy_target", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.set_xy_target(curr_pos.x, curr_pos.y);
-	end = clock();
-	Copter::supt->setCurProcessResult("set_xy_target", end, 2);
-	Copter::supt->setCurProcessResult("set_xy_target", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_xy_target", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_desired_velocity_xy", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.set_desired_velocity_xy(curr_vel.x, curr_vel.y);
-	end = clock();
-	Copter::supt->setCurProcessResult("set_desired_velocity_xy", end, 2);
-	Copter::supt->setCurProcessResult("set_desired_velocity_xy", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_desired_velocity_xy", startTime, endTime);
 
     // set vertical speed and acceleration
     pos_control.set_speed_z(wp_nav.get_speed_down(), wp_nav.get_speed_up());
 
-	Copter::supt->setCurProcessResult("get_speed_down", (end - start), 3);
-	Copter::supt->setCurProcessResult("get_speed_up", (end - start), 3);
-	Copter::supt->setCurProcessResult("set_speed_z", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("get_speed_down", startTime, endTime);
+	Copter::supt->setCurProcessResult("get_speed_up", startTime, endTime);
+	Copter::supt->setCurProcessResult("set_speed_z", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_accel_z", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.set_accel_z(wp_nav.get_accel_z());
-	end = clock();
-	Copter::supt->setCurProcessResult("get_accel_z", (end - start), 3);
-	Copter::supt->setCurProcessResult("set_accel_z", end, 2);
-	Copter::supt->setCurProcessResult("set_accel_z", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("get_accel_z", startTime, endTime);
+	Copter::supt->setCurProcessResult("set_accel_z", startTime, endTime);
 
     // pilot always controls yaw
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_auto_yaw_mode", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     set_auto_yaw_mode(AUTO_YAW_HOLD);
-	end = clock();
-	Copter::supt->setCurProcessResult("set_auto_yaw_mode", end, 2);
-	Copter::supt->setCurProcessResult("set_auto_yaw_mode", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_auto_yaw_mode", startTime, endTime);
 }
 
 // initialise guided mode's angle controller
@@ -364,101 +298,81 @@ void Copter::guided_angle_control_start()
 // guided_set_destination - sets guided mode's target destination
 void Copter::guided_set_destination(const Vector3f& destination)
 {
-	long start, end;
+	struct timeval startTime, endTime;
     // ensure we are in position control mode
 	guided_mode = (GuidedMode) Copter::supt->getParamValueWithNameAndKey("set_wp_destination", "guided_mode");
 	
     if (guided_mode != Guided_WP) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		Copter::supt->setCurProcessResult("guided_pos_control_start", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         guided_pos_control_start();
-		end = clock();
-		Copter::supt->setCurProcessResult("guided_pos_control_start", end, 2);
-		Copter::supt->setCurProcessResult("guided_pos_control_start", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		Copter::supt->setCurProcessResult("guided_pos_control_start", startTime, endTime);
     }
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_wp_destination", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     wp_nav.set_wp_destination(destination);
-	end = clock();
-	Copter::supt->setCurProcessResult("set_wp_destination", end, 2);
-	Copter::supt->setCurProcessResult("set_wp_destination", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_wp_destination", startTime, endTime);
 }
 
 // guided_set_velocity - sets guided mode's target velocity
 void Copter::guided_set_velocity(const Vector3f& velocity)
 {
-	long start, end;
+	struct timeval startTime, endTime;
     // check we are in velocity control mode
     if (guided_mode != Guided_Velocity) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		Copter::supt->setCurProcessResult("guided_vel_control_start", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         guided_vel_control_start();
-		end = clock();
-		Copter::supt->setCurProcessResult("guided_vel_control_start", end, 2);
-		Copter::supt->setCurProcessResult("guided_vel_control_start", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		Copter::supt->setCurProcessResult("guided_vel_control_start", startTime, endTime);
     }
 
     vel_update_time_ms = millis();
-	Copter::supt->setCurProcessResult("millis", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("millis", startTime, endTime);
     // set position controller velocity target
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_desired_velocity", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.set_desired_velocity(velocity);
-	end = clock();
-	Copter::supt->setCurProcessResult("set_desired_velocity", end, 2);
-	Copter::supt->setCurProcessResult("set_desired_velocity", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_desired_velocity", startTime, endTime);
 }
 
 // set guided mode posvel target
 void Copter::guided_set_destination_posvel(const Vector3f& destination, const Vector3f& velocity) {
     // check we are in velocity control mode
-	long start, end;
+	struct timeval startTime, endTime;
 	guided_mode = (GuidedMode)supt->getParamValueWithNameAndKey("guided_posvel_control_start","guided_modes");
     if (guided_mode != Guided_PosVel) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		Copter::supt->setCurProcessResult("guided_posvel_control_start", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		guided_posvel_control_start();
-		end = clock();
-		Copter::supt->setCurProcessResult("guided_posvel_control_start", end, 2);
-		Copter::supt->setCurProcessResult("guided_posvel_control_start", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		Copter::supt->setCurProcessResult("guided_posvel_control_start", startTime, endTime);
     }
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("millis", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     posvel_update_time_ms = millis();
-	end = clock();
-	Copter::supt->setCurProcessResult("millis", end, 2);
-	Copter::supt->setCurProcessResult("millis", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("millis", startTime, endTime);
 
     posvel_pos_target_cm = destination;
     posvel_vel_target_cms = velocity;
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	Copter::supt->setCurProcessResult("set_pos_target", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.set_pos_target(posvel_pos_target_cm);
-	end = clock();
-	Copter::supt->setCurProcessResult("set_pos_target", end, 2);
-	Copter::supt->setCurProcessResult("set_pos_target", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	Copter::supt->setCurProcessResult("set_pos_target", startTime, endTime);
 }
 
 // set guided mode angle target
@@ -484,7 +398,7 @@ void Copter::guided_set_angle(const Quaternion &q, float climb_rate_cms)
 void Copter::guided_run()
 {
     // call the correct auto controller
-	long start, end;
+	struct timeval startTime, endTime;
 	
 	int b=5;
 	//FixÐÞ¸ÄV1.6
@@ -521,62 +435,52 @@ void Copter::guided_run()
 			// run takeoff controller
 
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("guided_takeoff_run", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			guided_takeoff_run();
-			end = clock();
-			this->supt->setCurProcessResult("guided_takeoff_run", end, 2);
-			this->supt->setCurProcessResult("guided_takeoff_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("guided_takeoff_run", startTime, endTime);
 		
 			break;
 
 		case Guided_WP:
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("guided_pos_control_run", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			// run position controller
 			guided_pos_control_run();
-			end = clock();
-			this->supt->setCurProcessResult("guided_pos_control_run", end, 2);
-			this->supt->setCurProcessResult("guided_pos_control_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("guided_pos_control_run", startTime, endTime);
 			break;
 
 		case Guided_Velocity:
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("guided_vel_control_run", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			// run velocity controller
 			guided_vel_control_run();
-			end = clock();
-			this->supt->setCurProcessResult("guided_vel_control_run", end, 2);
-			this->supt->setCurProcessResult("guided_vel_control_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("guided_vel_control_run", startTime, endTime);
 			break;
 
 		case Guided_PosVel:
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("guided_posvel_control_run", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			// run position-velocity controller
 			guided_posvel_control_run();
-			end = clock();
-			this->supt->setCurProcessResult("guided_posvel_control_run", end, 2);
-			this->supt->setCurProcessResult("guided_posvel_control_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("guided_posvel_control_run", startTime, endTime);
 			break;
 
 		case Guided_Angle:
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("guided_angle_control_run", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			// run angle controller
 			guided_angle_control_run();
-			end = clock();
-			this->supt->setCurProcessResult("guided_angle_control_run", end, 2);
-			this->supt->setCurProcessResult("guided_angle_control_run", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("guided_angle_control_run", startTime, endTime);
 			break;
     }
  }
@@ -585,18 +489,16 @@ void Copter::guided_run()
 //      called by guided_run at 100hz or more
 void Copter::guided_takeoff_run()
 {
-	long start, end;
+	struct timeval startTime, endTime;
     // if not auto armed or motors not enabled set throttle to zero and exit immediately
 	//FixÐÞ¸Ä1.8
-	start = clock();
-	this->supt->setCurProcessResult("get_interlock", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	// ------------------------  ²å×®µã ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	bool get_interlock = motors.get_interlock();
 	
-	end = clock();
-	this->supt->setCurProcessResult("get_interlock", end, 2);
-	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_interlock", startTime, endTime);
 
 	//FixÐÞ¸ÄV1.8
 	ap.auto_armed = supt->getParamValueWithNameAndKey("update_wpnav", "ap.auto_armed");
@@ -611,13 +513,11 @@ void Copter::guided_takeoff_run()
         attitude_control.set_throttle_out(0,false,g.throttle_filt);
 #else   // multicopters do not stabilize roll/pitch/yaw when disarmed
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		attitude_control.set_throttle_out_unstabilized(0, true, g.throttle_filt);
-		end = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_out_unstabilized", startTime, endTime);
         
 #endif
         return;
@@ -635,59 +535,49 @@ void Copter::guided_takeoff_run()
  //   if (!failsafe.radio) {
         // get pilot's desired yaw rate
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->control_in);
-		end = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", end, 2);
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("get_pilot_desired_yaw_rate", startTime, endTime);
     }
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update_wpnav", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     // run waypoint controller
     wp_nav.update_wpnav();
-	end = clock();
-	this->supt->setCurProcessResult("update_wpnav", end, 2);
-	this->supt->setCurProcessResult("update_wpnav", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_wpnav", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update_z_controller", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     // call z-axis position controller (wpnav should have already updated it's alt target)
     pos_control.update_z_controller();
-	end = clock();
-	this->supt->setCurProcessResult("update_z_controller", end, 2);
-	this->supt->setCurProcessResult("update_z_controller", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_z_controller", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     // roll & pitch from waypoint controller, yaw rate from pilot
     attitude_control.angle_ef_roll_pitch_rate_ef_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), target_yaw_rate);
-	end = clock();
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", end, 2);
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", startTime, endTime);
 }
 
 // guided_pos_control_run - runs the guided position controller
 // called from guided_run
 void Copter::guided_pos_control_run()
 {
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("get_interlock", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     // if not auto armed or motors not enabled set throttle to zero and exit immediately
 	bool get_interlock = motors.get_interlock();
-	end = clock();
-	this->supt->setCurProcessResult("get_interlock", end, 2);
-	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_interlock", startTime, endTime);
 
 	//FixÐÞ¸ÄV1.6
 	ap.auto_armed = supt->getParamValueWithNameAndKey("update_wpnav","ap.auto_armed");
@@ -702,13 +592,11 @@ void Copter::guided_pos_control_run()
         attitude_control.set_throttle_out(0,false,g.throttle_filt);
 #else   // multicopters do not stabilize roll/pitch/yaw when disarmed
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         attitude_control.set_throttle_out_unstabilized(0,true,g.throttle_filt);
-		end = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_out_unstabilized", startTime, endTime);
 #endif
         return;
     }
@@ -724,37 +612,31 @@ void Copter::guided_pos_control_run()
 	if (failsafe.radio == 0) {
 	//if (!failsafe.radio) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         // get pilot's desired yaw rate
         target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->control_in);
-		end = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", end, 2);
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("get_pilot_desired_yaw_rate", startTime, endTime);
         if (!is_zero(target_yaw_rate)) {
             set_auto_yaw_mode(AUTO_YAW_HOLD);
         }
     }
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update_wpnav", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     // run waypoint controller
     wp_nav.update_wpnav();
-	end = clock();
-	this->supt->setCurProcessResult("update_wpnav", end, 2);
-	this->supt->setCurProcessResult("update_wpnav", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_wpnav", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update_z_controller", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     // call z-axis position controller (wpnav should have already updated it's alt target)
     pos_control.update_z_controller();
-	end = clock();
-	this->supt->setCurProcessResult("update_z_controller", end, 2);
-	this->supt->setCurProcessResult("update_z_controller", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_z_controller", startTime, endTime);
 	
 	//FixÐÞ¸Ä1.7
 	auto_yaw_mode = 0;
@@ -767,24 +649,20 @@ void Copter::guided_pos_control_run()
     // call attitude controller
     if (auto_yaw_mode == AUTO_YAW_HOLD) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         // roll & pitch from waypoint controller, yaw rate from pilot
         attitude_control.angle_ef_roll_pitch_rate_ef_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), target_yaw_rate);
-		end = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", end, 2);
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", startTime, endTime);
     }else{
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         // roll, pitch from waypoint controller, yaw heading from auto_heading()
         attitude_control.angle_ef_roll_pitch_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), get_auto_heading(), true);
-		end = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", end, 2);
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("angle_ef_roll_pitch_yaw", startTime, endTime);
     }
 }
 
@@ -792,16 +670,14 @@ void Copter::guided_pos_control_run()
 // called from guided_run
 void Copter::guided_vel_control_run()
 {
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("get_interlock", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     // if not auto armed or motors not enabled set throttle to zero and exit immediately
 	bool get_interlock = motors.get_interlock();
-	end = clock();
-	this->supt->setCurProcessResult("get_interlock", end, 2);
-	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_interlock", startTime, endTime);
 
 	//FixÐÞ¸ÄV1.8
 	string str[] = { "3", "init_vel_controller_xyz", "get_pilot_desired_yaw_rate","millis"};
@@ -820,13 +696,11 @@ void Copter::guided_vel_control_run()
 	// if (!ap.auto_armed || !motors.get_interlock() || ap.land_complete) {
         // initialise velocity controller
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("init_vel_controller_xyz", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         pos_control.init_vel_controller_xyz();
-		end = clock();
-		this->supt->setCurProcessResult("init_vel_controller_xyz", end, 2);
-		this->supt->setCurProcessResult("init_vel_controller_xyz", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("init_vel_controller_xyz", startTime, endTime);
 
 #if FRAME_CONFIG == HELI_FRAME  // Helicopters always stabilize roll/pitch/yaw
         // call attitude controller
@@ -834,13 +708,11 @@ void Copter::guided_vel_control_run()
         attitude_control.set_throttle_out(0,false,g.throttle_filt);
 #else   // multicopters do not stabilize roll/pitch/yaw when disarmed
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         attitude_control.set_throttle_out_unstabilized(0,true,g.throttle_filt);
-		end = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_out_unstabilized", startTime, endTime);
 #endif
         return;
     }
@@ -857,13 +729,11 @@ void Copter::guided_vel_control_run()
 	//if (!failsafe.radio) {
         // get pilot's desired yaw rate
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->control_in);
-		end = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", end, 2);
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("get_pilot_desired_yaw_rate", startTime, endTime);
         if (!is_zero(target_yaw_rate)) {
             set_auto_yaw_mode(AUTO_YAW_HOLD);
         }
@@ -871,13 +741,11 @@ void Copter::guided_vel_control_run()
 
     // set velocity to zero if no updates received for 3 seconds
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("millis", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     uint32_t tnow = millis();
-	end = clock();
-	this->supt->setCurProcessResult("millis", end, 2);
-	this->supt->setCurProcessResult("millis", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("millis", startTime, endTime);
 
    // if (tnow - vel_update_time_ms > GUIDED_POSVEL_TIMEOUT_MS && !pos_control.get_desired_velocity().is_zero()) {
 	bool is_zero = pos_control.get_desired_velocity().is_zero();
@@ -890,13 +758,11 @@ void Copter::guided_vel_control_run()
 
 	if (tnow - vel_update_time_ms > GUIDED_POSVEL_TIMEOUT_MS && is_zero == false) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_desired_velocity", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		pos_control.set_desired_velocity(Vector3f(0,0,0));
-		end = clock();
-		this->supt->setCurProcessResult("set_desired_velocity", end, 2);
-		this->supt->setCurProcessResult("set_desired_velocity", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_desired_velocity", startTime, endTime);
     }
 
     // calculate dt
@@ -922,23 +788,19 @@ void Copter::guided_vel_control_run()
     if (auto_yaw_mode == AUTO_YAW_HOLD) {
         // roll & pitch from waypoint controller, yaw rate from pilot
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         attitude_control.angle_ef_roll_pitch_rate_ef_yaw(pos_control.get_roll(), pos_control.get_pitch(), target_yaw_rate);
-		end = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", end, 2);
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", startTime, endTime);
     }else{
         // roll, pitch from waypoint controller, yaw heading from auto_heading()
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         attitude_control.angle_ef_roll_pitch_yaw(pos_control.get_roll(), pos_control.get_pitch(), get_auto_heading(), true);
-		end = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", end, 2);
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("angle_ef_roll_pitch_yaw", startTime, endTime);
     }
 }
 
@@ -946,16 +808,14 @@ void Copter::guided_vel_control_run()
 // called from guided_run
 void Copter::guided_posvel_control_run()
 {
-	long start, end;
+	struct timeval startTime, endTime;
     // if not auto armed or motors not enabled set throttle to zero and exit immediately
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("get_interlock", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	bool get_interlock = motors.get_interlock();
-	end = clock();
-	this->supt->setCurProcessResult("get_interlock", end, 2);
-	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_interlock", startTime, endTime);
 
 	//FixÐÞ¸ÄV1.8
 	string str[] = { "2", "set_pos_target", "get_pilot_desired_yaw_rate" };
@@ -967,35 +827,29 @@ void Copter::guided_posvel_control_run()
 	//if (!ap.auto_armed || !motors.get_interlock() || ap.land_complete) {
         // set target position and velocity to current position and velocity
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_pos_target", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         pos_control.set_pos_target(inertial_nav.get_position());
-		end = clock();
-		this->supt->setCurProcessResult("set_pos_target", end, 2);
-		this->supt->setCurProcessResult("set_pos_target", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_pos_target", startTime, endTime);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_desired_velocity", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         pos_control.set_desired_velocity(Vector3f(0,0,0));
-		end = clock();
-		this->supt->setCurProcessResult("set_desired_velocity", end, 2);
-		this->supt->setCurProcessResult("set_desired_velocity", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_desired_velocity", startTime, endTime);
 #if FRAME_CONFIG == HELI_FRAME  // Helicopters always stabilize roll/pitch/yaw
         // call attitude controller
         attitude_control.angle_ef_roll_pitch_rate_ef_yaw_smooth(0, 0, 0, get_smoothing_gain());
         attitude_control.set_throttle_out(0,false,g.throttle_filt);
 #else   // multicopters do not stabilize roll/pitch/yaw when disarmed
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         attitude_control.set_throttle_out_unstabilized(0,true,g.throttle_filt);
-		end = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_out_unstabilized", startTime, endTime);
 #endif
         return;
     }
@@ -1010,13 +864,11 @@ void Copter::guided_posvel_control_run()
 
 	if (failsafe.radio == 0) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         target_yaw_rate = get_pilot_desired_yaw_rate(channel_yaw->control_in);
-		end = clock();
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", end, 2);
-		this->supt->setCurProcessResult("get_pilot_desired_yaw_rate", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("get_pilot_desired_yaw_rate", startTime, endTime);
         if (!is_zero(target_yaw_rate)) {
             set_auto_yaw_mode(AUTO_YAW_HOLD);
         }
@@ -1049,13 +901,11 @@ void Copter::guided_posvel_control_run()
         pos_control.update_xy_controller(AC_PosControl::XY_MODE_POS_AND_VEL_FF, ekfNavVelGainScaler, false);
     }
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update_z_controller", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.update_z_controller();
-	end = clock();
-	this->supt->setCurProcessResult("update_z_controller", end, 2);
-	this->supt->setCurProcessResult("update_z_controller", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_z_controller", startTime, endTime);
 
 	//FixÐÞ¸Ä1.7
 	auto_yaw_mode = 0;
@@ -1066,23 +916,19 @@ void Copter::guided_posvel_control_run()
     if (auto_yaw_mode == AUTO_YAW_HOLD) {
         // roll & pitch from waypoint controller, yaw rate from pilot
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         attitude_control.angle_ef_roll_pitch_rate_ef_yaw(pos_control.get_roll(), pos_control.get_pitch(), target_yaw_rate);
-		end = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", end, 2);
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("angle_ef_roll_pitch_rate_ef_yaw", startTime, endTime);
     }else{
         // roll, pitch from waypoint controller, yaw heading from auto_heading()
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         attitude_control.angle_ef_roll_pitch_yaw(pos_control.get_roll(), pos_control.get_pitch(), get_auto_heading(), true);
-		end = clock();
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", end, 2);
-		this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("angle_ef_roll_pitch_yaw", startTime, endTime);
     }
 }
 
@@ -1090,16 +936,14 @@ void Copter::guided_posvel_control_run()
 // called from guided_run
 void Copter::guided_angle_control_run()
 {
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("get_interlock", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     // if not auto armed or motors not enabled set throttle to zero and exit immediately
 	bool get_interlock = motors.get_interlock();
-	end = clock();
-	this->supt->setCurProcessResult("get_interlock", end, 2);
-	this->supt->setCurProcessResult("get_interlock", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("get_interlock", startTime, endTime);
 
 	//FixÐÞ¸ÄV1.7
 	string str[] = { "2", "set_throttle_out_unstabilized", "get_pilot_desired_yaw_rate" };
@@ -1116,22 +960,18 @@ void Copter::guided_angle_control_run()
         attitude_control.set_throttle_out(0.0f,false,g.throttle_filt);
 #else   // multicopters do not stabilize roll/pitch/yaw when disarmed
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         attitude_control.set_throttle_out_unstabilized(0.0f,true,g.throttle_filt);
-		end = clock();
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", end, 2);
-		this->supt->setCurProcessResult("set_throttle_out_unstabilized", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_out_unstabilized", startTime, endTime);
 #endif
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("relax_alt_hold_controllers", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
         pos_control.relax_alt_hold_controllers(0.0f);
-		end = clock();
-		this->supt->setCurProcessResult("relax_alt_hold_controllers", end, 2);
-		this->supt->setCurProcessResult("relax_alt_hold_controllers", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("relax_alt_hold_controllers", startTime, endTime);
        // return;
     }
 
@@ -1162,32 +1002,26 @@ void Copter::guided_angle_control_run()
 
     // call attitude controller
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     attitude_control.angle_ef_roll_pitch_yaw(roll_in, pitch_in, yaw_in, true);
-	end = clock();
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", end, 2);
-	this->supt->setCurProcessResult("angle_ef_roll_pitch_yaw", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("angle_ef_roll_pitch_yaw", startTime, endTime);
 
     // call position controller
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("set_alt_target_from_climb_rate", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.set_alt_target_from_climb_rate(climb_rate_cms, G_Dt, false);
-	end = clock();
-	this->supt->setCurProcessResult("set_alt_target_from_climb_rate", end, 2);
-	this->supt->setCurProcessResult("set_alt_target_from_climb_rate", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_alt_target_from_climb_rate", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update_z_controller", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
     pos_control.update_z_controller();
-	end = clock();
-	this->supt->setCurProcessResult("update_z_controller", end, 2);
-	this->supt->setCurProcessResult("update_z_controller", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_z_controller", startTime, endTime);
 }
 
 // Guided Limit code

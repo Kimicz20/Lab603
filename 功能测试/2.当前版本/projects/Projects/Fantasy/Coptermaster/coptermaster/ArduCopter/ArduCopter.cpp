@@ -101,7 +101,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
 
 void Copter::setup()
 {
-	long start, end;
+	struct timeval startTime, endTime;
 	cliSerial = hal.console;
 
 	// Load the default values of variables listed in var_info[]s
@@ -111,15 +111,12 @@ void Copter::setup()
 	StorageManager::set_layout_copter();
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("init_ardupilot", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	init_ardupilot();
 
-	end = clock();
-	supt->setCurProcessResult("init_ardupilot", end, 2);
-	supt->setCurProcessResult("init_ardupilot", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("init_ardupilot", startTime, endTime);
 
 	// initialise the main loop scheduler
 	scheduler.init(&scheduler_tasks[0], ARRAY_SIZE(scheduler_tasks));
@@ -135,18 +132,16 @@ if the compass is enabled then try to accumulate a reading
 void Copter::compass_accumulate(void)
 {
 	supt->Cout("compass_accumulate");
-	long start, end;
+	struct timeval startTime, endTime;
 	//ÐÞ¸ÄFix2.2
 	int a = supt->getParamValueWithNameAndKey("accumulate","g.compass_enabled");
 	if (a == 1) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("accumulate", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		compass.accumulate();
-		end = clock();
-		supt->setCurProcessResult("accumulate", end, 2);
-		supt->setCurProcessResult("accumulate", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("accumulate", startTime, endTime);
 	}
 }
 
@@ -176,7 +171,7 @@ void Copter::perf_update(void)
 
 void Copter::loop()
 {
-	long end, start;
+	struct timeval startTime, endTime;
 	// wait for an INS sample
 	//ins.wait_for_sample(); 
 
@@ -196,31 +191,25 @@ void Copter::loop()
 	// Execute the fast loop
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("fast_loop", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	fast_loop();
 
-	end = clock();
-	this->supt->setCurProcessResult("fast_loop", end, 2);
-	this->supt->setCurProcessResult("fast_loop", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("fast_loop", startTime, endTime);
 
 
 	// tell the scheduler one tick has passed
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("tick", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	//FixÐÞ¸ÄV1.5
 	scheduler.supt = supt;
 	scheduler.tick();
 
-	end = clock();
-	this->supt->setCurProcessResult("tick", end, 2);
-	this->supt->setCurProcessResult("tick", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("tick", startTime, endTime);
 
 	// run all the tasks that are due to run. Note that we only
 	// have to call this once per loop, as the tasks are scheduled
@@ -229,24 +218,18 @@ void Copter::loop()
 	// call until scheduler.tick() is called again
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("micros", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	uint32_t time_available = (timer + MAIN_LOOP_MICROS) - micros();
-	end = clock();
-	this->supt->setCurProcessResult("micros", end, 2);
-	this->supt->setCurProcessResult("micros", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("micros", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("run", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	scheduler.run(time_available);
-	end = clock();
-	this->supt->setCurProcessResult("run", end, 2);
-	this->supt->setCurProcessResult("run", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("run", startTime, endTime);
 
 	//while (1);
 }
@@ -255,47 +238,39 @@ void Copter::loop()
 // Main loop - 400hz
 void Copter::fast_loop()
 {
-	long start, end;
+	struct timeval startTime, endTime;
 	// IMU DCM Algorithm
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("read_AHRS", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	read_AHRS();
 
-	end = clock();
-	this->supt->setCurProcessResult("read_AHRS", end, 2);
-	this->supt->setCurProcessResult("read_AHRS", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("read_AHRS", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("rate_controller_run", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	// run low level rate controllers that only require IMU data
 	//FixÐÞ¸ÄV1.3
 	attitude_control.supt = supt;
 	attitude_control.rate_controller_run();
 
-	end = clock();
-	this->supt->setCurProcessResult("rate_controller_run", end, 2);
-	this->supt->setCurProcessResult("rate_controller_run", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("rate_controller_run", startTime, endTime);
 
 #if FRAME_CONFIG == HELI_FRAME
 	update_heli_control_dynamics();
 #endif //HELI_FRAME
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("motors_output", start, 1);
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	// send outputs to the motors library
 	motors_output();
 
-	end = clock();
-	this->supt->setCurProcessResult("motors_output", end, 2);
-	this->supt->setCurProcessResult("motors_output", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("motors_output", startTime, endTime);
 
 	// Inertial Nav
 	// --------------------
@@ -305,29 +280,24 @@ void Copter::fast_loop()
 	check_ekf_yaw_reset();
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update_flight_mode", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	// run the attitude controllers
 	update_flight_mode();
 
-	end = clock();
-	this->supt->setCurProcessResult("update_flight_mode", end, 2);
-	this->supt->setCurProcessResult("update_flight_mode", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_flight_mode", startTime, endTime);
 
 	// update home from EKF if necessary
 	update_home_from_EKF();
 
 	// check if we've landed or crashed
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("update_land_and_crash_detectors", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	update_land_and_crash_detectors();
-	end = clock();
-	supt->setCurProcessResult("update_land_and_crash_detectors", end, 2);
-	supt->setCurProcessResult("update_land_and_crash_detectors", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_land_and_crash_detectors", startTime, endTime);
 
 	// log sensor health
 	/* if (should_log(MASK_LOG_ANY)) {
@@ -341,26 +311,20 @@ void Copter::rc_loop()
 {
 	supt->Cout("rc_loop");
 	// Read radio and 3-position switch on radio
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	long start, end;
-	start = clock();
-	this->supt->setCurProcessResult("read_radio", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	read_radio();
-	end = clock();
-	this->supt->setCurProcessResult("read_radio", end, 2);
-	this->supt->setCurProcessResult("read_radio", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("read_radio", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("read_control_switch", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	read_control_switch();
-	end = clock();
-	this->supt->setCurProcessResult("read_control_switch", end, 2);
-	this->supt->setCurProcessResult("read_control_switch", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("read_control_switch", startTime, endTime);
 }
 
 // throttle_loop - should be run at 50 hz
@@ -406,15 +370,13 @@ void Copter::update_batt_compass(void)
 	//FixÐÞ¸Ä2.1
 	supt->Cout("update_batt_compass");
 	// read battery before compass because it may be used for motor interference compensation
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("read_battery", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	read_battery();
-	end = clock();
-	supt->setCurProcessResult("read_battery", end, 2);
-	supt->setCurProcessResult("read_battery", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("read_battery", startTime, endTime);
 	
 	g.compass_enabled = false;
 	if (supt->getParamValueWithNameAndKey("read", "g.compass_enabled") == 1)
@@ -423,24 +385,20 @@ void Copter::update_batt_compass(void)
 	if (g.compass_enabled) {
 		// update compass with throttle value - used for compassmot
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("get_throttle", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		
 		compass.set_throttle(motors.get_throttle() / 1000.0f);
 
-		end = clock();
-		supt->setCurProcessResult("get_throttle", end, 2);
-		supt->setCurProcessResult("get_throttle", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("get_throttle", startTime, endTime);
 		//FixÐÞ¸Ä2.1
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("read", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		compass.read();
-		end = clock();
-		supt->setCurProcessResult("read", end, 2);
-		supt->setCurProcessResult("read", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("read", startTime, endTime);
 
 		// log compass information
 		if (should_log(MASK_LOG_COMPASS)) {
@@ -538,49 +496,41 @@ void Copter::three_hz_loop()
 	supt->Cout("three_hz_loop");
 
 	// check if we've lost contact with the ground station
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("failsafe_gcs_check", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	failsafe_gcs_check();
-	end = clock();
-	supt->setCurProcessResult("failsafe_gcs_check", end, 2);
-	supt->setCurProcessResult("failsafe_gcs_check", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("failsafe_gcs_check", startTime, endTime);
 
 #if AC_FENCE == ENABLED
 	// check if we have breached a fence
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("fence_check", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	fence_check();
-	end = clock();
-	supt->setCurProcessResult("fence_check", end, 2);
-	supt->setCurProcessResult("fence_check", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("fence_check", startTime, endTime);
 #endif // AC_FENCE_ENABLED
 
 #if SPRAYER == ENABLED
 	sprayer.update();
 #endif
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("update_events", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	update_events();
-	end = clock();
-	supt->setCurProcessResult("update_events", end, 2);
-	supt->setCurProcessResult("update_events", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_events", startTime, endTime);
 
 	// update ch6 in flight tuning
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("tuning", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	tuning();
-	end = clock();
-	supt->setCurProcessResult("tuning", end, 2);
-	supt->setCurProcessResult("tuning", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("tuning", startTime, endTime);
 }
 
 // one_hz_loop - runs at 1Hz
@@ -595,47 +545,39 @@ void Copter::one_hz_loop()
 	// perform pre-arm checks & display failures every 30 seconds
 	static uint8_t pre_arm_display_counter = 15;
 	pre_arm_display_counter++;
-	long start, end;
+	struct timeval startTime, endTime;
 	if (pre_arm_display_counter >= 30) {
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("pre_arm_checks", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		pre_arm_checks(true);
-		end = clock();
-		supt->setCurProcessResult("pre_arm_checks", end, 2);
-		supt->setCurProcessResult("pre_arm_checks", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("pre_arm_checks", startTime, endTime);
 		pre_arm_display_counter = 0;
 	}
 	else{
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("pre_arm_checks", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		pre_arm_checks(false);
-		end = clock();
-		supt->setCurProcessResult("pre_arm_checks", end, 2);
-		supt->setCurProcessResult("pre_arm_checks", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("pre_arm_checks", startTime, endTime);
 	}
 
 	// auto disarm checks
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("auto_disarm_check", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	auto_disarm_check();
-	end = clock();
-	supt->setCurProcessResult("auto_disarm_check", end, 2);
-	supt->setCurProcessResult("auto_disarm_check", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("auto_disarm_check", startTime, endTime);
 
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("armed", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	bool isarmed = motors.armed();
-	end = clock();
-	supt->setCurProcessResult("armed", end, 2);
-	supt->setCurProcessResult("armed", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("armed", startTime, endTime);
 	
 	if (supt->getParamValueWithNameAndKey("set_orientation", "isarmed") == 1)
 		isarmed = true;
@@ -643,51 +585,43 @@ void Copter::one_hz_loop()
 		//if (!motors.armed()) {
 		// make it possible to change ahrs orientation at runtime during initial config
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_orientation", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 		ahrs.set_orientation();
 
-		end = clock();
-		supt->setCurProcessResult("set_orientation", end, 2);
-		supt->setCurProcessResult("set_orientation", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_orientation", startTime, endTime);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_frame_orientation", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 		// check the user hasn't updated the frame orientation
 		motors.set_frame_orientation(g.frame_orientation);
 
-		end = clock();
-		supt->setCurProcessResult("set_frame_orientation", end, 2);
-		supt->setCurProcessResult("set_frame_orientation", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_frame_orientation", startTime, endTime);
 
 #if FRAME_CONFIG != HELI_FRAME
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_throttle_range", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
 		// set all throttle channel settings
 		motors.set_throttle_range(g.throttle_min, channel_throttle->radio_min, channel_throttle->radio_max);
 
-		end = clock();
-		supt->setCurProcessResult("set_throttle_range", end, 2);
-		supt->setCurProcessResult("set_throttle_range", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_throttle_range", startTime, endTime);
 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_hover_throttle", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		// set hover throttle
 		motors.set_hover_throttle(g.throttle_mid);
 
-		end = clock();
-		supt->setCurProcessResult("set_hover_throttle", end, 2);
-		supt->setCurProcessResult("set_hover_throttle", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_hover_throttle", startTime, endTime);
 #endif
 	}
 
@@ -711,13 +645,11 @@ void Copter::one_hz_loop()
 
 	// update position controller alt limits
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("update_poscon_alt_max", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	update_poscon_alt_max();
-	end = clock();
-	supt->setCurProcessResult("update_poscon_alt_max", end, 2);
-	supt->setCurProcessResult("update_poscon_alt_max", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_poscon_alt_max", startTime, endTime);
 
 	// enable/disable raw gyro/accel logging
 	//ins.set_raw_logging(should_log(MASK_LOG_IMU_RAW));
@@ -730,18 +662,15 @@ void Copter::update_GPS(void)
 
 	static uint32_t last_gps_reading[GPS_MAX_INSTANCES];   // time of last gps message
 	bool gps_updated = false;
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	//FixÐÞ¸Ä2.1
 	gps.supt = supt;
 	gps.update();
-	end = clock();
-	this->supt->setCurProcessResult("update", end, 2);
-	this->supt->setCurProcessResult("update", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update", startTime, endTime);
 
 	// log after every gps message
 	for (uint8_t i = 0; i<gps.num_sensors(); i++) {
@@ -838,7 +767,7 @@ void Copter::update_super_simple_bearing(bool force_update)
 void Copter::read_AHRS(void)
 {
 	// Perform IMU calculations and get attitude info
-	long start, end;
+	struct timeval startTime, endTime;
 	//-----------------------------------------------
 #if HIL_MODE != HIL_MODE_DISABLED
 	// update hil before ahrs update 
@@ -851,17 +780,14 @@ void Copter::read_AHRS(void)
 
 #endif
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("update", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	//FixÐÞ¸ÄV1.3
 	ahrs.supt = supt;
 	ahrs.update();
 
-	end = clock();
-	this->supt->setCurProcessResult("update", end, 2);
-	this->supt->setCurProcessResult("update", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update", startTime, endTime);
 }
 
 // read baro and sonar altitude at 10hz
@@ -869,17 +795,14 @@ void Copter::update_altitude()
 {
 	supt->Cout("update_altitude");
 	// read in baro altitude
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	this->supt->setCurProcessResult("read_barometer", start, 1);
-
-	// ------------------------  ²å×®¼¤Àø ---------------------------------
+	gettimeofday(&startTime, NULL);
+	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	read_barometer();
 
-	end = clock();
-	this->supt->setCurProcessResult("read_barometer", end, 2);
-	this->supt->setCurProcessResult("read_barometer", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("read_barometer", startTime, endTime);
 
 	// read in sonar altitude
 	sonar_alt = read_sonar();

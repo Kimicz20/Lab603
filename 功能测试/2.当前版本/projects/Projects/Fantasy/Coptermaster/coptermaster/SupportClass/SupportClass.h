@@ -6,6 +6,7 @@
 #define SupportClass_class
 
 #include "../TestCase/TestCase.h"
+#include "ProcessTime.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -13,10 +14,12 @@
 #include <fcntl.h>
 #include <iostream>
 #include <list>
+#include <map>
 #include <signal.h>
 #include <sstream>
 #include <sys/shm.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 typedef list<string> StringList;
@@ -38,6 +41,8 @@ private:
   StringList testExecPath; //插桩路径保存
   int currentIndex;        //当前测试用例序号
 public:
+  /* 上一个用例时间，当前用例时间*/
+  std::map<string, ProcessTime> processTimes;
   SupportClass();
   /* 获取当前测试用例  */
   TestCase *getCurrentTestCase();
@@ -58,7 +63,7 @@ public:
 
   /* 记录当前激励 执行情况 */
   void setCurProcessResult(string processName, long mtime, int flag);
-
+  void setCurProcessResult(string, struct timeval, struct timeval);
   /* 路径 */
   void showTestExecPath();
   void cleanTestExecPath();
@@ -82,6 +87,12 @@ public:
 
   /*log 功能*/
   void Cout(string out);
+
+  /* 记录处理时间
+  0:最开始初始化
+  1:起始时间
+  2:终止时间*/
+  void timeHandle(string, int);
 };
 
 

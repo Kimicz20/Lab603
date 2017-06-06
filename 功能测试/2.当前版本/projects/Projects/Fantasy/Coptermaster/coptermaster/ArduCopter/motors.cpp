@@ -15,7 +15,7 @@ void Copter::arm_motors_check()
 {  
 	supt->Cout("arm_motors_check");
     static int16_t arming_counter;
-	long start, end;
+	struct timeval startTime, endTime;
     // ensure throttle is down
     if (channel_throttle->control_in > 0) {
         arming_counter = 0;
@@ -35,14 +35,11 @@ void Copter::arm_motors_check()
 
         // arm the motors and configure for flight
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("armed", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		bool is_armed = motors.armed();
-		end = clock();
-		this->supt->setCurProcessResult("armed", end, 2);
-		this->supt->setCurProcessResult("armed", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("armed", startTime, endTime);
 
 		//FixÐÞ¸Ä2.1
 		if (supt->getParamValueWithNameAndKey("init_arm_motors", "arming_counter") == 20)
@@ -56,16 +53,13 @@ void Copter::arm_motors_check()
 		//if (arming_counter == ARM_DELAY && !motors.armed()) {
             // reset arming counter if arming fail
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("init_arm_motors", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             if (!init_arm_motors(false)) {
                 arming_counter = 0;
             }
-			end = clock();
-			this->supt->setCurProcessResult("init_arm_motors", end, 2);
-			this->supt->setCurProcessResult("init_arm_motors", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("init_arm_motors", startTime, endTime);
         }
         // arm the motors and configure for flight
         if (arming_counter == AUTO_TRIM_DELAY && motors.armed() && control_mode == STABILIZE) {
@@ -86,13 +80,11 @@ void Copter::arm_motors_check()
             arming_counter++;
         }
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		this->supt->setCurProcessResult("armed", start, 1);
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		bool is_armed = motors.armed();
-		end = clock();
-		this->supt->setCurProcessResult("armed", end, 2);
-		this->supt->setCurProcessResult("armed", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("armed", startTime, endTime);
 
 		//FixÐÞ¸Ä2.2
 		if (supt->getParamValueWithNameAndKey("init_arm_motors", "arming_counter") == 20)
@@ -107,13 +99,11 @@ void Copter::arm_motors_check()
 		if (arming_counter == DISARM_DELAY && is_armed == true) {
 		//if (arming_counter == DISARM_DELAY && motors.armed()) {
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			this->supt->setCurProcessResult("init_disarm_motors", start, 1);
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             init_disarm_motors();
-			end = clock();
-			this->supt->setCurProcessResult("init_disarm_motors", end, 2);
-			this->supt->setCurProcessResult("init_disarm_motors", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("init_disarm_motors", startTime, endTime);
         }
     // Yaw is centered so reset arming counter
     }else{
@@ -975,6 +965,7 @@ void Copter::motors_output()
 {
     // check if we are performing the motor test
 	//FixÐÞ¸ÄV1.4
+	struct timeval startTime, endTime;
 	string str[] = { "2", "motor_test_output", "output" };
 	int r = supt->getParamValueFormNamesWithKey(str, "ap.motor_test");
 	if (r == 1){
@@ -982,15 +973,12 @@ void Copter::motors_output()
 	}
 	if (ap.motor_test == 1) {
 		// ------------------------  ²å×®µã ---------------------------------
-		long start = clock();
-		this->supt->setCurProcessResult("motor_test_output", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		motor_test_output();
 
-		long end = clock();
-		this->supt->setCurProcessResult("motor_test_output", end, 2);
-		this->supt->setCurProcessResult("motor_test_output", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("motor_test_output", startTime, endTime);
 	}
 	else {
 		if (ap.using_interlock == 0){
@@ -1004,28 +992,22 @@ void Copter::motors_output()
             // invert motor_emergency_stop status for motors to run.
 
 			// ------------------------  ²å×®µã ---------------------------------
-			long start = clock();
-			this->supt->setCurProcessResult("set_interlock", start, 1);
-
-			// ------------------------  ²å×®¼¤Àø ---------------------------------
+			gettimeofday(&startTime, NULL);
+			// ------------------------  ²å×®¼¤Àø --------------------------------- 
             motors.set_interlock(!ap.motor_emergency_stop);
 
-			long end = clock();
-			this->supt->setCurProcessResult("set_interlock", end, 2);
-			this->supt->setCurProcessResult("set_interlock", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("set_interlock", startTime, endTime);
         }
 		// ------------------------  ²å×®µã ---------------------------------
-		long start = clock();
-		this->supt->setCurProcessResult("output", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		//FixÐÞ¸ÄV1.3
 		motors.supt = supt;
         motors.output();
 
-		long end = clock();
-		this->supt->setCurProcessResult("output", end, 2);
-		this->supt->setCurProcessResult("output", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("output", startTime, endTime);
     }
 }
 

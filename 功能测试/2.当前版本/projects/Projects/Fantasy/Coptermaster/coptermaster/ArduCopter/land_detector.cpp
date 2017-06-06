@@ -15,28 +15,24 @@ void Copter::update_land_and_crash_detectors()
     accel_ef.z += GRAVITY_MSS;
     land_accel_ef_filter.apply(accel_ef, MAIN_LOOP_SECONDS);
 
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("update_land_detector", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	update_land_detector();
-	end = clock();
-	supt->setCurProcessResult("update_land_detector", end, 2);
-	supt->setCurProcessResult("update_land_detector", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("update_land_detector", startTime, endTime);
 
 #if PARACHUTE == ENABLED
     // check parachute
     parachute_check();
 #endif
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("crash_check", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	crash_check();
-	end = clock();
-	supt->setCurProcessResult("crash_check", end, 2);
-	supt->setCurProcessResult("crash_check", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("crash_check", startTime, endTime);
 }
 
 // update_land_detector - checks if we have landed and updates the ap.land_complete flag
@@ -50,15 +46,13 @@ void Copter::update_land_detector()
     // gyro output :                        on uneven surface the airframe may rock back an forth after landing
     // range finder :                       tend to be problematic at very short distances
     // input throttle :                     in slow land the input throttle may be only slightly less than hover
-	long start, end;
+	struct timeval startTime, endTime;
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("armed", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	bool has_armed = motors.armed();
-	end = clock();
-	supt->setCurProcessResult("armed", end, 2);
-	supt->setCurProcessResult("armed", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("armed", startTime, endTime);
 	
 	has_armed = false;
 	//FixÐÞ¸ÄV1.5
@@ -74,13 +68,11 @@ void Copter::update_land_detector()
 		//if (!motors.armed()) {
 		// if disarmed, always landed. 
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("set_land_complete", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		set_land_complete(true);
-		end = clock();
-		supt->setCurProcessResult("set_land_complete", end, 2);
-		supt->setCurProcessResult("set_land_complete", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("set_land_complete", startTime, endTime);
 }
 	else if (ap.land_complete == true) {
 #if FRAME_CONFIG == HELI_FRAME
@@ -89,24 +81,20 @@ void Copter::update_land_detector()
 #else
 		// if throttle output is high then clear landing flag
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("get_throttle", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		float get_the_throttle = motors.get_throttle();
-		end = clock();
-		supt->setCurProcessResult("get_throttle", end, 2);
-		supt->setCurProcessResult("get_throttle", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("get_throttle", startTime, endTime);
 
 		//FixÐÞ¸ÄV1.5
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("get_non_takeoffthrotle", start, 1);
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		float get_non_takeoffthrotle = get_non_takeoff_throttle();
 
-		end = clock();
-		supt->setCurProcessResult("get_non_takeoffthrotle", end, 2);
-		supt->setCurProcessResult("get_non_takeoffthrotle", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("get_non_takeoffthrotle", startTime, endTime);
 
 		get_the_throttle = supt->getParamValueWithNameAndKey("set_land_complete","get_the_throttle");
 		get_non_takeoffthrotle = supt->getParamValueWithNameAndKey("set_land_complete", "get_non_takeoffthrotle");
@@ -115,13 +103,11 @@ void Copter::update_land_detector()
 			//if (motors.get_throttle() > get_non_takeoff_throttle()) {
 #endif
 			// ------------------------  ²å×®µã ---------------------------------
-			start = clock();
-			supt->setCurProcessResult("set_land_complete", start, 1);
+			gettimeofday(&startTime, NULL);
 			// ------------------------  ²å×®¼¤Àø --------------------------------- 
 			set_land_complete(false);
-			end = clock();
-			supt->setCurProcessResult("set_land_complete", end, 2);
-			supt->setCurProcessResult("set_land_complete", (end - start), 3);
+			gettimeofday(&endTime, NULL);
+			supt->setCurProcessResult("set_land_complete", startTime, endTime);
 		}
 	}else {
 		//FixÐÞ¸ÄV1.6
@@ -132,14 +118,11 @@ void Copter::update_land_detector()
 		// check that the average throttle output is near minimum (less than 12.5% hover throttle)
 	
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("is_throttle_mix_min", start, 1);
-
+		gettimeofday(&startTime, NULL);
 		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 		bool motor_at_lower_limit = motors.limit.throttle_lower && motors.is_throttle_mix_min();
-		end = clock();
-		supt->setCurProcessResult("is_throttle_mix_min", end, 2);
-		supt->setCurProcessResult("is_throttle_mix_min", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("is_throttle_mix_min", startTime, endTime);
 //#endif
 
 		// check that the airframe is not accelerating (not falling or breaking after fast forward flight)
@@ -151,15 +134,13 @@ void Copter::update_land_detector()
 				land_detector_count++;
 			}
 			else {
-				long start, end;
+				struct timeval startTime, endTime;
 				// ------------------------  ²å×®µã ---------------------------------
-				start = clock();
-				supt->setCurProcessResult("set_land_complete", start, 1);
+				gettimeofday(&startTime, NULL);
 				// ------------------------  ²å×®¼¤Àø --------------------------------- 
 				set_land_complete(true);
-				end = clock();
-				supt->setCurProcessResult("set_land_complete", end, 2);
-				supt->setCurProcessResult("set_land_complete", (end - start), 3);
+				gettimeofday(&endTime, NULL);
+				supt->setCurProcessResult("set_land_complete", startTime, endTime);
 			}
 		}
 		else {
@@ -168,13 +149,11 @@ void Copter::update_land_detector()
 		}
 	}
 	// ------------------------  ²å×®µã ---------------------------------
-	start = clock();
-	supt->setCurProcessResult("set_land_complete_maybe", start, 1);
+	gettimeofday(&startTime, NULL);
 	// ------------------------  ²å×®¼¤Àø --------------------------------- 
 	set_land_complete_maybe(ap.land_complete || (land_detector_count >= LAND_DETECTOR_MAYBE_TRIGGER_SEC*MAIN_LOOP_RATE));
-	end = clock();
-	supt->setCurProcessResult("set_land_complete_maybe", end, 2);
-	supt->setCurProcessResult("set_land_complete_maybe", (end - start), 3);
+	gettimeofday(&endTime, NULL);
+	supt->setCurProcessResult("set_land_complete_maybe", startTime, endTime);
 }
 
 void Copter::set_land_complete(bool b)

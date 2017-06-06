@@ -53,7 +53,7 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
 {
   	assert(callbacks);
 	/* 被测程序预处理过程 */
-	long start, end;
+	struct timeval startTime, endTime;
 	clock_t begin;
 	// 1.创建所需的对象
 	copter.supt = new SupportClass();
@@ -73,29 +73,25 @@ void HAL_Empty::run(int argc, char* const argv[], Callbacks* callbacks) const
 		_member->init();
 		scheduler->system_initialized();
 
-		start = clock();
-		copter.supt->setCurProcessResult("setup", start, 1);
+		gettimeofday(&startTime, NULL);
 		copter.setup();
-		end = clock();
-		copter.supt->setCurProcessResult("setup", end, 2);
-		copter.supt->setCurProcessResult("setup", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		copter.supt->setCurProcessResult("setup", startTime,endTime);
 	 	
-		start = clock();
-		copter.supt->setCurProcessResult("loop", start, 1);
 		
 		begin = clock();
 
 		//Fix修改2.1
 		//loop每 2.5ms更新一次
 		while (true){
+			gettimeofday(&startTime, NULL);
 			copter.loop();
+			gettimeofday(&endTime, NULL);
+			copter.supt->setCurProcessResult("loop", startTime, endTime);
 			if (copter.scheduler.getTick() == 401)
 				break;
 		}
 		
-		end = clock();
-		copter.supt->setCurProcessResult("loop", end, 2);
-		copter.supt->setCurProcessResult("loop", (end - start), 3);
 
 		copter.supt->setCurTestCaseResult("OK");
 

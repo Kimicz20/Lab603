@@ -15,7 +15,11 @@ SupportClass::SupportClass() {
   this->currentIndex = shared->currentIndex;
 }
 /* 设置当前 测试用例实体类 从内存中获取*/
-void SupportClass::setCurrentTestCase() { this->getTestCasesInMem(); }
+void SupportClass::setCurrentTestCase() { 
+	if (processTimes.size() != 0)
+		processTimes.clear();
+	this->getTestCasesInMem(); 
+}
 
 /* 获取当前测试用例  */
 TestCase *SupportClass::getCurrentTestCase() { return currentTestCase; }
@@ -87,44 +91,48 @@ void SupportClass::Cout(string out){
 	//cout << "--- " << out << " ---" << endl;
 }
 
-int currProcessID = 1;
-int numNesting = 1;
-bool inNesintg = false;
+void SupportClass::timeHandle(string processName, int f){
+
+	ProcessTime curProcessTime;
+	switch (f){
+		case 1:
+			//如果key重复
+			curProcessTime.init(1);
+			//当前激励时间入map
+			processTimes[processName] = curProcessTime;
+			//curProcessTime.showPinterval(processName);
+			break;
+		case 2:
+			//获取当前激励时间
+			curProcessTime = processTimes[processName];
+			//修改当前激励结束时间,并计算激励经过的时间
+			curProcessTime.init(2);
+			curProcessTime.showInterval("");
+			//写入激励
+			currentTestCase->setProcessStatusWithNameAndStatus(processName,
+				this->ltos(curProcessTime.getInterval()));
+			currentTestCase->setcurrentProcessExecStatus(processName);
+			break;
+	}
+}
+
+void SupportClass::setCurProcessResult(string processName, struct timeval startTime, struct timeval endTime) {
+	double r = 1000.0 * (endTime.tv_sec - startTime.tv_sec)
+		+ (endTime.tv_usec - startTime.tv_usec) / 1000.0;
+	//写入激励
+	currentTestCase->setProcessStatusWithNameAndStatus(processName,
+		this->ltos(r));
+	currentTestCase->setcurrentProcessExecStatus(processName);
+}
+
 void SupportClass::setCurProcessResult(string processName, long mtime,
                                        int flag) {
-  if (flag == 1) {
-
-	/*  printf(FONT_COLOR_RED"**********%d : %s++++++++\n"COLOR_NONE, currProcessID, currentTestCase->findProcessWithID(currProcessID)->processName.c_str());
-	  if (inNesintg){
-		  currProcessID += numNesting;
-		  inNesintg = false;
-	  }
-	  else{
-		  currProcessID++;
-	  }*/
-	  
-  }
-  if (flag == 3) {
-	 // processName = currProcessID;
-	  /* 根据激励名称以及对应状态 修改 */
-	  currentTestCase->setProcessStatusWithNameAndStatus(processName,
-		  this->ltos(mtime));
-	  /* 设置当前激励的执行状态 */
-	  currentTestCase->setcurrentProcessExecStatus(processName);
-    //第一次进入为嵌套最内层点，逐层向外退
-	//if (preIsNotOK(currProcessID-1)){
-	//	printf(FONT_COLOR_RED"++++++++%d++++++++\n"COLOR_NONE, currProcessID);
-	//	currProcessID--;
-	//	numNesting++;
-	//}
-	////嵌套最外层点
-	//else if (!preIsNotOK(currProcessID+1)){
-	//	printf(FONT_COLOR_RED"--------%d++++++++\n"COLOR_NONE, currProcessID);
-	//	numNesting = 1;
-	//	inNesintg = true;
-	//}
-	
-  }
+  //if (flag == 1) {
+	 // timeHandle(processName,1);
+  //}
+  //if (flag == 2) {
+	 // timeHandle(processName, 2);
+  //}
 }
 /*	路径操作 */
 void SupportClass::showTestExecPath() {

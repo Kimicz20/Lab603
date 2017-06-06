@@ -401,18 +401,15 @@ AP_GPS::update(void)
 {
 	//FixÐÞ¸Ä2.1
     for (uint8_t i=0; i<GPS_MAX_INSTANCES; i++) {
-		long start, end;
+		struct timeval startTime, endTime;
 		// ------------------------  ²å×®µã ---------------------------------
-		start = clock();
-		supt->setCurProcessResult("update_instance", start, 1);
-
-		// ------------------------  ²å×®¼¤Àø ---------------------------------
+		gettimeofday(&startTime, NULL);
+		// ------------------------  ²å×®¼¤Àø --------------------------------- 
 
         update_instance(i);
 
-		end = clock();
-		supt->setCurProcessResult("update_instance", end, 2);
-		supt->setCurProcessResult("update_instance", (end - start), 3);
+		gettimeofday(&endTime, NULL);
+		supt->setCurProcessResult("update_instance", startTime, endTime);
     }
 
 #if GPS_MAX_INSTANCES > 1
