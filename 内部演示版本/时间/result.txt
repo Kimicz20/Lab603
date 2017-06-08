@@ -1,0 +1,30 @@
+testcCaseID:1
+-->processList:[
+	# ProcessID:1	ProcessName:peopleComing ( 	ProcessParameter:null	ProcessStatus:t1=0.008 ) 
+	# ProcessID:2	ProcessName:newPeople ( 	ProcessParameter:null	ProcessStatus:t2=0.081 ) 
+	# ProcessID:3	ProcessName:pushCallUp ( 	ProcessParameter:null	ProcessStatus:t3=0.045 ) 
+	# ProcessID:4	ProcessName:response ( 	ProcessParameter:null	ProcessStatus:t4=0.034 ) 
+	& ProcessID:5	ProcessName:controller ( 	ProcessParameter:Floor=0,State=0	ProcessStatus:t5 ) 
+	& ProcessID:6	ProcessName:peopleOutIn ( 	ProcessParameter:State=-1	ProcessStatus:t7 ) 
+	& ProcessID:7	ProcessName:thisFloorPeopleOut ( 	ProcessParameter:elevator_thisFloorOut=True	ProcessStatus:t9 ) 
+	& ProcessID:8	ProcessName:thisFloorPeopleOut_return ( 	ProcessParameter:elevator_thisFloorOut=True	ProcessStatus:t13 ) 
+	& ProcessID:9	ProcessName:thisFloorPeopleIn ( 	ProcessParameter:getCurrentFloor_empty=False,elevator_thisFloorOut=False,elevator_thisFloorOut=False	ProcessStatus:t18 ) 
+	& ProcessID:10	ProcessName:thisFloorPeopleIn_return ( 	ProcessParameter:getCurrentFloor_empty=False	ProcessStatus:t14 ) 
+	& ProcessID:11	ProcessName:close ( 	ProcessParameter:getCurrentFloor_empty=True,getCurrentFloor_empty=True	ProcessStatus:t21 ) 
+	& ProcessID:12	ProcessName:close_return ( 	ProcessParameter:null	ProcessStatus:t15 ) 
+	& ProcessID:13	ProcessName:prepareMove ( 	ProcessParameter:null	ProcessStatus:t22 ) 
+	& ProcessID:14	ProcessName:goUpstairs ( 	ProcessParameter:null	ProcessStatus:t23 ) ]
+-->execStatus:[1:1]
+-->resultStatus:[ timeLimit:t5<=25,t9<=30,t18<=30,t21<=25,t22<=15]
+*
+testcCaseID:2
+-->processList:[
+	# ProcessID:1	ProcessName:peopleComing ( 	ProcessParameter:null	ProcessStatus:t1=0.003 ) 
+	# ProcessID:2	ProcessName:newPeople ( 	ProcessParameter:null	ProcessStatus:t2=0.03 ) 
+	# ProcessID:3	ProcessName:pushCallUp ( 	ProcessParameter:null	ProcessStatus:t3=0.02 ) 
+	# ProcessID:4	ProcessName:response ( 	ProcessParameter:null	ProcessStatus:t4=0.018 ) 
+	& ProcessID:5	ProcessName:controller ( 	ProcessParameter:Floor=0,State=0	ProcessStatus:t5 ) 
+	& ProcessID:6	ProcessName:open ( 	ProcessParameter:Floor=0,State=0,callUp[1]=True,callDown[1]=True,callCar[1]=True	ProcessStatus:t8 ) 
+	& ProcessID:7	ProcessName:open_return ( 	ProcessParameter:Floor=0,State=0,callUp[1]=True,callDown[1]=True,callCar[1]=True	ProcessStatus:t12 ) ]
+-->execStatus:[1:1]
+-->resultStatus:[ timeLimit:t5<=25,t8<=25,t8+t12<=300]
