@@ -85,7 +85,7 @@ class processTime{
 };
 
 //不等式实体类
-class inequation{
+class Inequation{
 public:
 	//不等式的字符串表示
 	string strInequation;
@@ -97,11 +97,18 @@ public:
 	int value;
 	//不等式是否满足
 	bool isOK;
+
+	void setStrInequation(string str){
+		strInequation = str;
+	}
+
 	//判断是否满足
 	bool isEqual(){
 		double result = 0;
 		for (list<pair<string, double>>::iterator iter = process.begin(); iter != process.end(); ++iter)
 		{
+			if ((*iter).second == NOT_FIND_T)
+				return false;
 			result += (*iter).second;
 		}
 		if (symbol == "=")
@@ -121,7 +128,7 @@ public:
 			return (result >= value);
 		}
 	}
-
+	
 	/* 字符串 按某 字符 分割成list数组 */
 	list<string> stringSplit(string s,string tmp) {
 		int l = 0;
@@ -144,11 +151,8 @@ public:
 		
 	}
 
-	//不等式的转换
-	void transfer(string str,map<string, double> result){
-		
-		//0.不等式字符串
-		strInequation = str;
+	//不等式初始化
+	void init(){
 		// 1.不等式符号
 		if (strInequation.find("<=") != std::string::npos)
 			symbol = "<=";
@@ -156,28 +160,42 @@ public:
 			symbol = ">=";
 		else if (strInequation.find(">") != std::string::npos)
 			symbol = ">";
-		else 
+		else
 			symbol = "<";
-		
+
+		//2.不等式参数
 		list<string> flist = stringSplit(strInequation, symbol);
 
 		list<string>::iterator iter2 = flist.begin();
 		string tmp = *iter2;
-		//2.不等式参数
 		list<string> plist = stringSplit(tmp, "+");
+
 		for (list<string>::iterator i = plist.begin(); i != plist.end(); i++) {
-			double value = NOT_FIND_T;
-			if (result.find(*i) != result.end())
-				value = result.at(*i);
-			pair<string, double> q(*i, value);
+			pair<string, double> q(*i, 0);
 			process.push_back(q);
 		}
 		++iter2;
-		
+
 		//3.不等式值
 		value = atoi((*iter2).c_str());
-		//4.不等式是否满足
+	}
+
+	//不等式参数赋值
+	void assign(map<string, double> tmp){
+		
+		for (list<pair<string, double>>::iterator i = process.begin(); i != process.end(); i++) {
+			string key = (*i).first;
+			if (tmp.find(key) != tmp.end()){
+				(*i).second = tmp.at(key);
+			}
+		}
+
 		isOK = isEqual();
+	}
+
+	//清空
+	void clear(){
+		process.clear();
 	}
 };
 
@@ -240,5 +258,11 @@ public:
 
   /* 处理不等式*/
   RETURN_TYPE resultHandle();
+
+  //返回测试完成后所有的时间
+  string getProcess();
+
+  //清空
+  void clear();
 };
 #endif

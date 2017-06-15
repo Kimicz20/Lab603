@@ -104,10 +104,11 @@ void TestCase::setCurrenetTestCaseStatus(RETURN_TYPE ret){
         if(this->processList->findIsSuccessTest() == "失败"){
 			eStatus = "1"; //激励执行有误
         }
+		resultStatus = ret.result;
 		if (!ret.isOK){
 			tStatus = "1";//不满足时间约束
 			//设置用例结果
-			resultStatus = ret.error();
+			resultStatus += "|"+ret.error();
 		}
 		//设置执行结果
 		execStatus = eStatus + ":" + tStatus;

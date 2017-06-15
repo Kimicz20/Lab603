@@ -26,6 +26,9 @@ int main() {
 
 		//4.测试结果存放在内存区中
 		supt->putTestCasesInMem();
+
+		//5,清空
+		supt->clear();
 	}
 	supt->pullMem();
 

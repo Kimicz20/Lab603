@@ -21,6 +21,8 @@ public:
 	bool isOK;
 	//出错不等式
 	list<string> errorInfo;
+	//所有测试时间
+	string result;
 
 	string error(){
 		string res ="";
@@ -31,6 +33,8 @@ public:
 		}
 		return res;
 	}
+
+
 };
 
 //测试用例实体类

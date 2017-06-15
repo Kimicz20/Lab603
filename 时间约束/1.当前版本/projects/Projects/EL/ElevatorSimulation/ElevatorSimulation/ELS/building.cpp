@@ -96,7 +96,7 @@ void Building::peopleOutIn()
 		flag = this->buildingQueue[this->elevator->getCurrentFloor()]->empty();
 		if (supt->getParamValueWithNameAndKey("thisFloorPeopleIn", "getCurrentFloor_empty") == 1)
 			flag = true;
-		if (flag == false) {
+		if (flag == false) 
 		{
 			//从楼层外部往电梯里面进一个人
 			supt->timeHandle("thisFloorPeopleIn", START, "open");

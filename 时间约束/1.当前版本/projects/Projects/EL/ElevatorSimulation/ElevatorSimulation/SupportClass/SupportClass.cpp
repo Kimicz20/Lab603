@@ -69,8 +69,10 @@ int SupportClass::getParamValueWithNameAndKey(string processName, string key) {
 void SupportClass::setCurProcessResult(string processName, double mtime) {
 
     /* 根据激励名称以及对应状态 修改 */
-	result[processName] = currentTestCase->setProcessStatusWithNameAndStatus(processName,
+	pair<string, string> tmp = currentTestCase->setProcessStatusWithNameAndStatus(processName,
 		this->d2s(mtime));
+	if (tmp.first != "0")
+		result[processName] = tmp;
 	/* 设置当前激励的执行状态 */
 	currentTestCase->setcurrentProcessExecStatus(processName);
 }
@@ -230,8 +232,10 @@ void SupportClass::getTestCasesInMem() {
 	len = (*iter).find(tmp) - begin;
 	string processStatus = (*iter).substr(begin, len-1);
 	currentTestCase->setProcessList(processName, processParameter, processStatus);
-  }
 
+	//4.时间初始化
+	result[processName] = pair<string, string>(processStatus, "300");
+  }
   //读取时间约束信息
   tmp = "timeLimit:";
   begin = tcStr.find(tmp) + tmp.size();
@@ -259,8 +263,6 @@ void SupportClass::timeHandle(string processName,int f,string preProcessName){
 	processTime curProcessTime, preProcessTime;
 	switch (f){
 		case 0:
-			if (!processTimes.empty())
-				processTimes.clear();
 			curProcessTime.init(0);
 			processTimes[processName] = curProcessTime;
 			break;
@@ -287,38 +289,63 @@ void SupportClass::timeHandle(string processName,int f,string preProcessName){
 
 //三元组转换
 map<string, double> map2map(map<string, pair<string, string>> res){
-	map<string, double> result;
+
+	map<string, double> tmp;
 	for (map<string, pair<string, string>>::iterator mapIter = res.begin(); mapIter != res.end(); mapIter++) {
-		
 		pair<string, string> p = mapIter->second;
-		//cout << mapIter->first << "," << p.first << "," << p.second << endl;
-		// 有用元组
-		if (p.first != "0")
-			result[p.first] = atof(p.second.c_str());
+		//cout <<"###"<< mapIter->first << "," << p.first << "," << p.second << endl;
+		tmp[p.first] = atof(p.second.c_str());
 	}
-	return result;
+	return tmp;
 }
 
+//返回测试完成后所有的时间
+string SupportClass::getProcess(){
+	string rStr = currentTestCase->getResultStatus()+"|";
+	for (map<string, pair<string, string>>::iterator i = result.begin(); i != result.end(); i++) {
+		string tmp = (*i).first + "&" + (*i).second.first + "&" + (*i).second.second;
+		if (i != result.begin())
+			rStr += ",";
+		rStr += tmp;
+	}
+	return rStr;
+}
 
 /* 处理不等式*/
 RETURN_TYPE SupportClass::resultHandle(){
 	RETURN_TYPE finalResult;
 	finalResult.isOK = true;
 	list<string> slist = stringSplit(currentTestCase->getResultStatus(), ",");
-
+	//所有测试时间结果
+	finalResult.result = getProcess();
 	//解析不等式字符串
+	map<string, double> tMap = map2map(result);
+	Inequation t;
 	for (list<string>::iterator iter = slist.begin(); iter != slist.end(); iter++) {
-		inequation t;
 
-		//不等式转换
-		t.transfer(*iter, map2map(result));
+		//1.设置不等式字符串
+		t.setStrInequation(*iter); 
+		//2.不等式初始化
+		t.init();
+		//3.不等式赋值
+		t.assign(tMap);
 		
 		if (!t.isOK){
 			finalResult.errorInfo.push_back(t.strInequation);
 		}
+
+		//4.清空
+		t.clear();
 	}
 
 	if (finalResult.errorInfo.size() !=0)
 		finalResult.isOK = false;
 	return finalResult;
+}
+
+void SupportClass::clear(){
+	if (!processTimes.empty())
+		processTimes.clear();
+	if (!result.empty())
+		result.clear();
 }
