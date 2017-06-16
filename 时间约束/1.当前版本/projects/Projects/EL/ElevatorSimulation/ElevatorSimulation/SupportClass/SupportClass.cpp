@@ -132,7 +132,7 @@ void SupportClass::createMem() {
   int shmid; //共享内存标识符
 
   // 1.创建共享内存
-  shmid = shmget((key_t)2222, sizeof(struct shared_use_st), 0666 | IPC_CREAT);
+  shmid = shmget((key_t)1111, sizeof(struct shared_use_st), 0666 | IPC_CREAT);
 
   if (shmid == -1) {
     cout << "打开共享内存失败!" << endl;
@@ -237,7 +237,7 @@ void SupportClass::getTestCasesInMem() {
 	result[processName] = pair<string, string>(processStatus, "300");
   }
   //读取时间约束信息
-  tmp = "timeLimit:";
+  tmp = "-->resultStatus:[";
   begin = tcStr.find(tmp) + tmp.size();
   tmp = "]";
   len = tcStr.rfind(tmp)- begin;

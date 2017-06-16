@@ -23,7 +23,7 @@
 
 typedef list<TestCase *> TestCaseList;
 
-#define TEXT_SZ 10*1024*1024
+#define TEXT_SZ 1000*1024*1024
 
 #define INIT 0
 #define START 1

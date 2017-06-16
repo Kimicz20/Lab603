@@ -31,7 +31,7 @@ string TestCase::showTestCase(){
     }else{
         str += this->execStatus;
     }
-    str +="]\n-->resultStatus:[ timeLimit:";
+    str +="]\n-->resultStatus:[";
     if(this->resultStatus == ""){
         str +="NULL";
     }else{

@@ -162,7 +162,7 @@ TestCase *SupportClass::getTestCaseAtIndex(int ID) {
 bool SupportClass::createMem() {
 
   // 1.创建共享内存
-  shmid = shmget((key_t)2222, sizeof(struct shared_use_st), 0666 | IPC_CREAT);
+  shmid = shmget((key_t)1111, sizeof(struct shared_use_st), 0666 | IPC_CREAT);
   if (shmid == -1) {
     cout << "创建共享内存失败!" << endl;
     //exit(EXIT_FAILURE);
