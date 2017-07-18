@@ -7,56 +7,44 @@ using namespace std;
 ServerSocket::ServerSocket ( int port )
 {
 
-  new_sock = new ServerSocket();
+  sock = new Socket();
 
-  if ( ! Socket::create() )
+  if ( ! sock->create() )
     {
       throw SocketException ( "不能创建Socket连接." );
     }
 
-  if ( ! Socket::bind ( port ) )
+  if ( ! sock->bind ( port ) )
     {
       throw SocketException ( "不能绑定该端口." );
     }
 
-  if ( ! Socket::listen() )
+  if ( ! sock->listen() )
     {
       throw SocketException ( "不能监听该Socket端口." );
     }
     cout << "。。。等待链接。。。" <<endl;
-    accept (*new_sock);
+    sock->accept ();
 }
-
-ServerSocket::~ServerSocket(){}
 
 void ServerSocket::receive ( std::string& s )
 {
-  if ( ! Socket::recv ( s ) )
+  if ( ! sock->recv ( s ) )
     {
       throw SocketException ( "不能读取该Socket." );
     }
 }
 void ServerSocket::send (std::string s)
 {
-  if ( ! Socket::send ( s ) )
+  if ( ! sock->send ( s ) )
     {
       throw SocketException ( "不能改写该Socket." );
     }
 }
 
-string ServerSocket::receiveWithFile ( )
+void ServerSocket::accept ()
 {
-  string result = Socket::recvWithFile();
-  if ( result == "" )
-    {
-      throw SocketException ( "不能读取该Socket." );
-  }
-  return result;
-}
-
-void ServerSocket::accept ( ServerSocket& sock )
-{
-  if ( ! Socket::accept ( sock ) )
+  if ( ! sock->accept () )
     {
       throw SocketException ( "不能建立该Socket." );
     }
@@ -65,21 +53,9 @@ void ServerSocket::accept ( ServerSocket& sock )
 void ServerSocket::sendResult(std::string s){
     try
     {
-      new_sock->send(s);
+      sock->send(s);
     }
     catch ( SocketException& e )
-    {
-      cout << "Exception was serversocket caught:" << e.description() << "\nExiting.\n";
-    }
-}
-
-void ServerSocket::serverSend(std::string content)
-{
-   try
-    {
-       new_sock->send(content);
-    }
-  catch ( SocketException& e )
     {
       cout << "Exception was serversocket caught:" << e.description() << "\nExiting.\n";
     }
@@ -88,7 +64,7 @@ void ServerSocket::serverSend(std::string content)
 string ServerSocket::serverReceive(){
    try
     {
-      return new_sock->receiveWithFile();
+      return sock->recvWithFile();
     }
   catch ( SocketException& e )
     {

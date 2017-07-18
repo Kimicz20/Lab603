@@ -7,21 +7,14 @@
 class ServerSocket : private Socket
 {
  private:
- 	 ServerSocket *new_sock;
+ 	 Socket *sock;
  public:
      ServerSocket ( int port );
-     ServerSocket (){};
-     virtual ~ServerSocket();
      void receive ( std::string &s);
-     std::string receiveWithFile ();
      void send (std::string s);
-     void accept ( ServerSocket& );
-
+     void accept ();
      std::string serverReceive();
      void sendResult(std::string s);
-     void serverSend(std::string content);
-
-
 };
 
 
