@@ -150,20 +150,15 @@ string SupportClass::showTestCaseList() {
 bool SupportClass::countTestCases(int curr) {
 
   //1.get testcase
-  int total = testCaseList.size();
-  int count = curr * COUNT_TS_ONCE;
-  int start = (curr-1) * COUNT_TS_ONCE+1;
-  int sIndex=0,eIndex=0;
   string str = "";
+  TestCaseList tList= pieceMap[curr];
 
-  list<TestCase *>::iterator iter=testCaseList.begin();
-  //进行迭代遍历
-  for (;iter != testCaseList.end(); iter++,sIndex++,eIndex++) {
-    if(sIndex >=start && eIndex<COUNT_TS_ONCE){
+  //2.build string
+  TestCaseList::iterator iter;
+  for (iter=tList.begin();iter != tList.end(); iter++) {
       str = str + (*iter)->showTestCase() + "\n";
-    }
   }
-  //2.set shared men
+  //3.set shared men
   shared->currentIndex = 1;
   strncpy(shared->text, str.c_str(),str.size());
   shared->count = COUNT_TS_ONCE;
@@ -213,14 +208,31 @@ bool SupportClass::createMem() {
 }
 
 bool SupportClass::clearMem() {
-  shared->text=NULL;
-  shared->result=NULL;
+  shared->text[0]='\0';
+  shared->result[0]='\0';
 }
 
 /* 将 测试用例实体集 放入 共享内存中 */
 bool SupportClass::initPutIn2Men(string file_name) {
   if (this->ReadXmlFile(file_name)){
 	  if (this->createMem()){
+      Logger("####"+testCaseList->showTestCaseList());
+
+      //spilt ts and put in map in time O(n) 
+      TestCaseList::iterator iter;
+      int index=1;
+      TestCaseList list;
+      for (iter = testCaseList.begin(); iter != testCaseList.end(); iter++) {
+        int id = (*iter)->getTestCaseID();
+        if ( id <= index * COUNT_TS_ONCE) {
+          list.push_back(*iter);
+          if(id == index * COUNT_TS_ONCE || id ==testCaseList.size()){
+            pieceMap.insert(pair<int,TestCaseList>(index,list));
+            index++;
+            list.clear();
+          }
+        }
+      }
 		  return true;
 	  }
   }
@@ -259,7 +271,7 @@ void SupportClass::pullMem() {
 /* 结果写入txt 文件中*/
 void SupportClass::write2File(int i){
 	//1.文件夹路径
-	string name = this->projectPath + "/result/result_"+i+".txt";
+	string name = this->projectPath + "/result/result_"+to_string(i)+".txt";
 	//2.输入数据
 	string result = showResult();
 	//3.用流读写
@@ -275,7 +287,7 @@ void SupportClass::write2File(int i){
 	}
 }
 
-void SupportClass::witType(String file_name){
+void SupportClass::witType(string file_name){
   int begin = file_name.find("#");
   string tp = file_name.substr(begin,1);
   if(tp =="1"){
@@ -285,4 +297,9 @@ void SupportClass::witType(String file_name){
   }else{
     type = "Time";
   }
+  Logger("type is:"+type);
 }
+
+ void SupportClass::Logger(string str){
+  cout<<str<<endl;
+ }

@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <list>
+#include <map> 
 #include <iostream>
 #include <fstream>
 typedef list<TestCase *> TestCaseList;
@@ -45,7 +46,7 @@ class SupportClass{
         int shmid;						//共享内存标识符
         shared_use_st *shared;          //共享内存区
         void *shm = NULL;				//分配的共享内存的原始首地址
-
+        std::map<int, TestCaseList> pieceMap;
     public:
         string type;                    //执行类型
         bool flag = false;              //判断是否出错
@@ -78,6 +79,8 @@ class SupportClass{
 
 		/* 结果写入txt 文件中*/
 		void write2File(int i);
-        void witType(String file_name);
+        void witType(string file_name);
+
+        void Logger(string str);
 };
 #endif

@@ -9,7 +9,7 @@ extern SupportClass *supt = new SupportClass();
 
 int main() {
   
-  	string file_name;
+  	string file_name="1L#1.xml";
 	//1.Socket connect
 	// serverSocket = new ServerSocket(POST);
 	//2.receive file
@@ -30,15 +30,16 @@ int main() {
 			supt->clearMem();
 			//7.put each piece data to mem
 			if(supt->countTestCases(i)){
-			  int ERRORNUM = 0, a[supt->getTestCaseCount()];
-			  do {
-				  //exception exit ,flag is true
-				  supt->flag = false;
-				  supt->createPidAndPolling();
-				  if (supt->flag){
-					  a[ERRORNUM++] = supt->getCurrentIndex() - 1;
-				  }
-			  } while (supt->flag && supt->getCurrentIndex() <= COUNT_TS_ONCE);
+				supt->Logger(shared->text);
+			  // int ERRORNUM = 0, a[supt->getTestCaseCount()];
+			  // do {
+				 //  //exception exit ,flag is true
+				 //  supt->flag = false;
+				 //  supt->createPidAndPolling();
+				 //  if (supt->flag){
+					//   a[ERRORNUM++] = supt->getCurrentIndex() - 1;
+				 //  }
+			  // } while (supt->flag && supt->getCurrentIndex() <= COUNT_TS_ONCE);
 			  
 			  // serverSocket->sendResult(supt->showResult());
 			  // cout << "最终结果,测试的用例 统计: "
@@ -51,7 +52,7 @@ int main() {
 					//   cout << " " << a[i];
 				 //  }
 			  // }
-			  supt->write2File(i);
+			  // supt->write2File(i);
 			}  
 		}// end for
 	  supt->pullMem();
