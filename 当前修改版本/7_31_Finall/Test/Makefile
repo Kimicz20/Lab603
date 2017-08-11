@@ -1,7 +1,9 @@
 # 循环编译 两个子程序的 make文件
 # 需要make的文件目录
 SUBDIRS = Controller\
-	Function
+	Function\
+	Performance\
+	Time
 
 all:
 	@echo "make compile	:编译文件"

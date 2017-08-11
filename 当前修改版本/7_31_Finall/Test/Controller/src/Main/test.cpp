@@ -10,14 +10,13 @@ extern SupportClass *supt = new SupportClass();
 int main() {
   
   	string file_name;
-
-  	supt->type = "Function";
   
 	//1.创建连接Socket
 	serverSocket = new ServerSocket(POST);
 	//1.1文件接收
 	file_name = serverSocket->serverReceive();
 
+	supt->witType(file_name);
 	//  1.测试用例放入共享内存中
 	if (supt->putTestCasesInMem(file_name)){
 	  //2.创建子程序
@@ -37,7 +36,7 @@ int main() {
 	  } while (supt->flag && (supt->getCurrentIndex() <=
 		  supt->getTestCaseCount()));
 	  if (serverSocket !=  NULL){
-		  serverSocket->sendResult(supt->showResult());
+		  serverSocket->sendResult("exit");
 	  }
 	  cout << "最终结果,测试的用例 统计: "
 		  << "\n\t总条数：" << supt->getTestCaseCount()

@@ -76,5 +76,6 @@ class SupportClass{
 
 		/* 结果写入txt 文件中*/
 		void write2File();
+        void witType(string file_name);
 };
 #endif

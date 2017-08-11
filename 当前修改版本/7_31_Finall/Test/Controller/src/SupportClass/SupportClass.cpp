@@ -254,3 +254,16 @@ void SupportClass::write2File(){
 		cout << "文件打开失败" << endl;
 	}
 }
+
+void SupportClass::witType(string file_name){
+  int begin = file_name.find("#");
+  string tp = file_name.substr(begin+1,1);
+  if(tp =="1"){
+    type = "Function";
+  }else if(tp == "2"){
+    type = "Performance";
+  }else{
+    type = "Time";
+  }
+  Logger("type is:"+type);
+}
