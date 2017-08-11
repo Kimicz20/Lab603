@@ -1,4 +1,4 @@
-/*
+ /*
 * 辅助参数类
 *用于重写 输入输出重定向 以及两个缓冲区参数
 */
@@ -15,23 +15,26 @@
 #include <sys/shm.h>
 #include <cstdio>  
 #include <cstdlib>
-#include <cstring>
+#include <cstring>  
 #include <list>
 #include <map> 
 #include <iostream>
 #include <fstream>
 typedef list<TestCase *> TestCaseList;
 
-#define TEXT_SZ 1000*1024*1024
+#define TEXT_SZ 10*1024*1024
 //如果size为1至4096，则实际申请到的共享内存大小为4K(一页)；4097到8192，则实际申请到的共享内存大小为8K(两页)，依此类推。
-#define COUNT_TS_ONCE 300
+#define COUNT_TS_ONCE 3
 
 struct shared_use_st
 {
     int currentIndex;               //当前测试用例ID
+    int index;  //cur index
     int count;
     char text[TEXT_SZ] ;            //记录写入和读取的文本
     char result[TEXT_SZ];
+    int pTlen;  //real len of char[]
+    int pRlen;
 	bool errorFlag;
 };
 

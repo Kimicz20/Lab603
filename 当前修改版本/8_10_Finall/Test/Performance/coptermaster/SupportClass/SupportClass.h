@@ -22,14 +22,16 @@
 typedef list<string> StringList;
 typedef list<TestCase *> TestCaseList;
 
-#define TEXT_SZ 1000*1024*1024
-
+#define TEXT_SZ 10*1024*1024
 struct shared_use_st {
-  int currentIndex;   //当前测试用例ID
-  int count;
-  char text[TEXT_SZ]; //记录写入和读取的文本
-  char result[TEXT_SZ];
-  bool errorFlag;
+    int currentIndex;               //当前测试用例ID
+    int index;  //cur index
+    int count;
+    char text[TEXT_SZ] ;            //记录写入和读取的文本
+    char result[TEXT_SZ];
+    int pTlen;  //real len of char[]
+    int pRlen;
+    bool errorFlag;
 };
 
 class SupportClass {

@@ -158,9 +158,16 @@ bool SupportClass::countTestCases(int curr) {
   for (iter=tList.begin();iter != tList.end(); iter++) {
       str = str + (*iter)->showTestCase() + "\n";
   }
-  //3.set shared men
-  shared->currentIndex = 1;
-  strncpy(shared->text, str.c_str(),str.size());
+  // Logger(str);
+
+  //3.sychorinize mem
+  clearMem();
+  
+  //4.set shared men
+  shared->index = curr;
+  shared->pTlen = str.size();
+  shared->currentIndex = (curr - 1)*COUNT_TS_ONCE+1;
+  strncpy(shared->text, str.c_str(),shared->pTlen);
   shared->count = COUNT_TS_ONCE;
   
   return true;
@@ -208,15 +215,19 @@ bool SupportClass::createMem() {
 }
 
 bool SupportClass::clearMem() {
-  shared->text[0]='\0';
-  shared->result[0]='\0';
+  if(shared->pTlen != 0){
+    memset(shared->text,'\0',shared->pTlen);
+  }
+  if(shared->pRlen != 0){
+    memset(shared->result,'\0',shared->pRlen);
+  }
 }
 
 /* 将 测试用例实体集 放入 共享内存中 */
 bool SupportClass::initPutIn2Men(string file_name) {
   if (this->ReadXmlFile(file_name)){
 	  if (this->createMem()){
-      Logger("####"+testCaseList->showTestCaseList());
+      //Logger("####"+testCaseList->showTestCaseList());
 
       //spilt ts and put in map in time O(n) 
       TestCaseList::iterator iter;
@@ -245,7 +256,7 @@ void SupportClass::getTestCasesInMem() {
 }
 
 string SupportClass::showResult() {
-  return shared->result;
+  return shared->text;
 }
 
 int SupportClass::getCurrentIndex() { return shared->currentIndex; }
@@ -271,9 +282,9 @@ void SupportClass::pullMem() {
 /* 结果写入txt 文件中*/
 void SupportClass::write2File(int i){
 	//1.文件夹路径
-	string name = this->projectPath + "/result/result_"+to_string(i)+".txt";
+	string name = this->projectPath + "/result/result_"+type+"_"+to_string(i)+".txt";
 	//2.输入数据
-	string result = showResult();
+	string result = shared->result;
 	//3.用流读写
 	ofstream outdata;
 	outdata.open(name, ios::out | ios::trunc);//ios::app是尾部追加的意思
@@ -289,7 +300,7 @@ void SupportClass::write2File(int i){
 
 void SupportClass::witType(string file_name){
   int begin = file_name.find("#");
-  string tp = file_name.substr(begin,1);
+  string tp = file_name.substr(begin+1,1);
   if(tp =="1"){
     type = "Function";
   }else if(tp == "2"){

@@ -26,33 +26,32 @@ int main() {
 		//5.execute each piece
 		for (int i = 1; i <= count; ++i)
 		{
-			//6.sychorinize mem
-			supt->clearMem();
+			supt->Logger("######"+to_string(i)+"######");
 			//7.put each piece data to mem
 			if(supt->countTestCases(i)){
-				supt->Logger(shared->text);
-			  // int ERRORNUM = 0, a[supt->getTestCaseCount()];
-			  // do {
-				 //  //exception exit ,flag is true
-				 //  supt->flag = false;
-				 //  supt->createPidAndPolling();
-				 //  if (supt->flag){
-					//   a[ERRORNUM++] = supt->getCurrentIndex() - 1;
-				 //  }
-			  // } while (supt->flag && supt->getCurrentIndex() <= COUNT_TS_ONCE);
+			  // supt->Logger(supt->showResult());
+			  int ERRORNUM = 0, a[COUNT_TS_ONCE];
+			  do {
+				  //exception exit ,flag is true
+				  supt->flag = false;
+				  supt->createPidAndPolling();
+				  if (supt->flag){
+					  a[ERRORNUM++] = supt->getCurrentIndex() - 1;
+				  }
+			  } while (supt->flag && supt->getCurrentIndex() <= COUNT_TS_ONCE);
 			  
 			  // serverSocket->sendResult(supt->showResult());
-			  // cout << "最终结果,测试的用例 统计: "
-				 //  << "\n\t总条数：" << supt->getTestCaseCount()
-				 //  << "\n\t错误总数：" << ERRORNUM;
-			  // if (ERRORNUM > 0){
-				 //  cout << "\n\t出错序号：" << a[0];
-				 //  for (int i = 1; i < ERRORNUM; ++i)
-				 //  {
-					//   cout << " " << a[i];
-				 //  }
-			  // }
-			  // supt->write2File(i);
+			  cout << "最终结果,测试的用例 统计: "
+				  << "\n\t总条数：" << supt->getTestCaseCount()
+				  << "\n\t错误总数：" << ERRORNUM;
+			  if (ERRORNUM > 0){
+				  cout << "\n\t出错序号：" << a[0];
+				  for (int i = 1; i < ERRORNUM; ++i)
+				  {
+					  cout << " " << a[i];
+				  }
+			  }
+			  supt->write2File(i);
 			}  
 		}// end for
 	  supt->pullMem();

@@ -27,7 +27,7 @@ TestCase *SupportClass::getCurrentTestCase() { return currentTestCase; }
 int SupportClass::getCurrentIndex() { return this->currentIndex; }
 
 /* 获取所有的测试用例数目 */
-int SupportClass::getTestCaseCount() { return shared->count; }
+int SupportClass::getTestCaseCount() { return shared->count*shared->index; }
 
 /* 设置当前 测试用例序号 同步到内存区域中*/
 void SupportClass::setCurrentIndex() {
@@ -175,7 +175,7 @@ void signal_handler(int signum) {
       currentTestCase->setCurrenetTestCaseExecStatus(exeSituation);
       currentTestCase->setCurrenetTestCaseResultStatus(exeSituation);
       string tmp = currentTestCase->showTestCase();
-      if (shared->currentIndex < shared->count)
+      if (shared->currentIndex < (shared->count*shared->index))
         tmp += "\n*\n";
       strcat(shared->result, tmp.c_str());
       shared->currentIndex++;
@@ -231,8 +231,10 @@ void SupportClass::putTestCasesInMem() {
   //更新 数据区域
   string str = shared->result, tmp = currentTestCase->showTestCase();
   //封装测试用例结果
-  if (this->currentIndex < shared->count)
+  if (this->currentIndex < getTestCaseCount())
     tmp += "\n*\n";
+
+  shared->pRlen = tmp.size();
   strcat(shared->result, tmp.c_str());
   // if(this->currentIndex < this->count)
   this->currentIndex++;
@@ -266,7 +268,7 @@ void SupportClass::getTestCasesInMem() {
   int begin = testcase.find(tmp + to_string(this->currentIndex));
   //如果是最后一条测试用例则 是最大长度
   int len = 0;
-  if (this->currentIndex == shared->count)
+  if (this->currentIndex == getTestCaseCount())
     len = testcase.size() - begin;
   else
     len = testcase.find(tmp + to_string(this->currentIndex + 1)) - begin;

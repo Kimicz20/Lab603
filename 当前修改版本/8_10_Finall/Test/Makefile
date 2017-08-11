@@ -2,7 +2,8 @@
 # 需要make的文件目录
 SUBDIRS = Controller\
 	Function\
-	Performance
+	Performance\
+	Time
 
 all:
 	@echo "make compile	:编译文件"
